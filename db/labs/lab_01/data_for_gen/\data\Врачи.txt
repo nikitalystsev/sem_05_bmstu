@@ -1,0 +1,11 @@
+id = 10, name = ['Феоктист', 'Авдеевич', 'Яковлев'], speciality = Радиотерапевт
+, gender = M, financing = бюджетid = 1, name = ['Гущин', 'Осип', 'Демидович'], speciality = Онкопроктолог
+, gender = M, financing = платныйid = 4, name = ['Александров', 'Терентий', 'Фокич'], speciality = Онколог
+, gender = M, financing = бюджетid = 8, name = ['Емельянова', 'Екатерина', 'Афанасьевна'], speciality = Онкодерматолог
+, gender = F, financing = платныйid = 9, name = ['Сергеева', 'Антонина', 'Кирилловна'], speciality = Онкоуролог
+, gender = F, financing = бюджетid = 3, name = ['Агап', 'Еремеевич', 'Шестаков'], speciality = Торакальный онколог
+, gender = M, financing = бюджетid = 2, name = ['Софон', 'Адрианович', 'Журавлев'], speciality = Радиотерапевт
+, gender = M, financing = бюджетid = 6, name = ['Горбунова', 'Клавдия', 'Игоревна'], speciality = Торакальный онколог
+, gender = F, financing = бюджетid = 5, name = ['Устинов', 'Лонгин', 'Дорофеевич'], speciality = Онколог
+, gender = M, financing = бюджетid = 7, name = ['Пахомова', 'Элеонора', 'Эльдаровна'], speciality = Маммолог
+, gender = F, financing = бюджет
