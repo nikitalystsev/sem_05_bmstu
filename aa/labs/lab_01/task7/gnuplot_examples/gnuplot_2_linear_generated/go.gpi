@@ -1,0 +1,9 @@
+#!/usr/bin/gnuplot -persist
+reset
+NO_ANIMATION = 1
+set xlabel "Количество элементов, шт"
+set ylabel "Время, с"
+set grid
+plot sin(x)
+replot './preproc_data/data_1.txt' with linespoints
+replot './preproc_data/data_2.txt' with linespoints

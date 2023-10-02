@@ -1,0 +1,24 @@
+int distanceNotRecurWithMatrix(const std::wstring &str1, const std::wstring &str2)
+{
+    size_t l1 = str1.length(), l2 = str2.length();
+    int **mtr = matrix_alloc(l1 + 1, l2 + 1);
+    for (size_t i = 0; i <= l1; ++i)
+        mtr[i][0] = i;
+    for (size_t j = 0; j <= l2; ++j)
+        mtr[0][j] = j;
+    for (size_t i = 1; i <= l1; ++i)
+        for (size_t j = 1; j <= l2; ++j)
+        {
+            int isEqual = str1[i - 1] == str2[j - 1] ? 0 : 1;
+            mtr[i][j] = std::min({mtr[i][j - 1] + 1,
+                                  mtr[i - 1][j] + 1,
+                                  mtr[i - 1][j - 1] + isEqual});
+            if (i > 1 && j > 1 &&
+                str1[i - 1] == str2[j - 2] &&
+                str1[i - 2] == str2[j - 1])
+                mtr[i][j] = std::min(mtr[i][j], mtr[i - 2][j - 2] + 1);
+        }
+    int res = mtr[l1][l2];
+    matrix_free(mtr, l1 + 1);
+    return res;
+}

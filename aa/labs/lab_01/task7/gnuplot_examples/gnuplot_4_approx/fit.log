@@ -1,0 +1,104 @@
+
+
+*******************************************************************************
+Wed May  4 12:17:07 2022
+
+
+FIT:    data read from "./preproc_data/data_1.txt"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: InterpolantLinear(x)
+	InterpolantLinear(x) = a * x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.0025000000e+02   0.00e+00  4.74e+00    1.000000e+00
+   3 2.6903010033e+01  -2.25e-03  4.74e-03    4.280936e-01
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 26.903
+rel. change during last iteration : -2.24868e-08
+
+degrees of freedom    (FIT_NDF)                        : 9
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.72894
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.98922
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.428094         +/- 0.1155       (26.97%)
+
+
+*******************************************************************************
+Wed May  4 12:17:07 2022
+
+
+FIT:    data read from "./preproc_data/data_1.txt"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: InterpolantPoly2(x)
+	InterpolantPoly2(x) = aa * x + bb * x * x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   aa            bb           
+   0 1.1098562500e+04   0.00e+00  2.17e+01    1.000000e+00   1.000000e+00
+   4 4.9975548628e+00  -1.06e-01  2.17e-03    1.608197e+00  -1.907818e-01
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 4.99755
+rel. change during last iteration : -1.06451e-06
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.790376
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.624694
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+aa              = 1.6082           +/- 0.2062       (12.82%)
+bb              = -0.190782        +/- 0.03222      (16.89%)
+
+correlation matrix of the fit parameters:
+                aa     bb     
+aa              1.000 
+bb             -0.967  1.000 
+
+
+*******************************************************************************
+Wed May  4 12:17:07 2022
+
+
+FIT:    data read from "./preproc_data/data_1.txt"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: InterpolantPoly3(x)
+	InterpolantPoly3(x) = aaa * x + bbb * x * x + ccc * x * x * x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   aaa           bbb           ccc          
+   0 6.0670801562e+05   0.00e+00  1.24e+02    1.000000e+00   1.000000e+00   1.000000e+00
+   5 4.9903431229e+00  -6.07e-01  1.24e-03    1.664855e+00  -2.127869e-01   1.940558e-03
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 4.99034
+rel. change during last iteration : -6.06915e-06
+
+degrees of freedom    (FIT_NDF)                        : 7
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.844338
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.712906
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+aaa             = 1.66485          +/- 0.6048       (36.33%)
+bbb             = -0.212787        +/- 0.2215       (104.1%)
+ccc             = 0.00194056       +/- 0.01929      (994.3%)
+
+correlation matrix of the fit parameters:
+                aaa    bbb    ccc    
+aaa             1.000 
+bbb            -0.975  1.000 
+ccc             0.931 -0.988  1.000 

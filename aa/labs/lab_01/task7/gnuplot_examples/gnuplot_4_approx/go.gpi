@@ -1,0 +1,32 @@
+#!/usr/bin/gnuplot -persist
+reset # Сбрасываем настройки
+# Следующие две строки раскомментировать, если скрипт является частью конвейера
+# Векторное изображение в качестве терминала, размер можно изменять
+#set terminal svg size 1920, 1080
+#set output "./myfile.svg"
+# Золотое сечение как отношение осей
+#set size ratio 0.61803
+# 1080.0/1920 как отношение осей
+#set size ratio 0.5625
+# Подпись горизонтальной оси
+set xlabel "Количество элементов, шт"
+# Подпись вертикальной оси
+set ylabel "Время, ев"
+# Включение сетки
+set grid
+# Заголовок рисунка
+set title "" font "Helvetica, 20"
+# Интерполянт с коэффициентами по МНК
+InterpolantLinear(x) = a * x
+fit InterpolantLinear(x) "./preproc_data/data_1.txt" via a
+# Интерполянт с коэффициентами по МНК
+InterpolantPoly2(x) = aa * x + bb * x * x
+fit InterpolantPoly2(x) "./preproc_data/data_1.txt" via aa, bb
+# Интерполянт с коэффициентами по МНК
+InterpolantPoly3(x) = aaa * x + bbb * x * x + ccc * x * x * x
+fit InterpolantPoly3(x) "./preproc_data/data_1.txt" via aaa, bbb, ccc
+# Отрисовка
+plot "./preproc_data/data_1.txt" with linespoints ps 2
+replot InterpolantLinear(x)
+replot InterpolantPoly2(x)
+replot InterpolantPoly3(x)

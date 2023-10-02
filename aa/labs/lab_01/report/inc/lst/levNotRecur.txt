@@ -1,0 +1,18 @@
+int distanceNotRecur(const std::wstring &str1, const std::wstring &str2)
+{
+    size_t l1 = str1.length(), l2 = str2.length();
+    int currRow[l2 + 1] = {}, prevRow[l2 + 1] = {};
+    for (size_t i = 0; i <= l2; ++i)
+        prevRow[i] = i;
+    for (size_t i = 1; i <= l1; ++i)
+    {
+        currRow[0] = i;
+        for (size_t j = 1; j <= l2; ++j)
+        {
+            int isEqual = str1[i - 1] == str2[j - 1] ? 0 : 1;
+            currRow[j] = std::min({currRow[j - 1] + 1, prevRow[j] + 1, prevRow[j - 1] + isEqual});
+        }
+        swapArrays(prevRow, currRow, l2 + 1);
+    }
+    return prevRow[l2];
+}
