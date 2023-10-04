@@ -77,7 +77,7 @@ class Generator:
             writer = csv.writer(file, delimiter=',')
             all_data_dia = list()
 
-            for i in range(1025):  # количество диагнозов
+            for i in range(1046):  # количество диагнозов
                 id_dia = i + 1
                 title = self.diagnoses[i]
                 symptoms = f"{rd.choice(self.symptoms)} {rd.choice(self.symptoms)}"
