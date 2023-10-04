@@ -32,12 +32,36 @@ class Diagnoses(BaseData):
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/diagnosis.txt")
+        super().__init__("data_for_gen/diagnoses.txt")
 
 
-class Speciality(BaseData):
-    """Диагнозы"""
+class Symptoms(BaseData):
+    """Симптомы"""
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/diagnosis.txt")
+        super().__init__("data_for_gen/symptoms.txt")
+
+
+class Speciality(BaseData):
+    """Специальности"""
+
+    def __init__(self):
+        """Инициализация"""
+        super().__init__("./data_for_gen/speciality.txt")
+
+
+class RiskGroups(BaseData):
+    """Группы риска"""
+
+    def __init__(self):
+        """Инициализация"""
+        super().__init__("./data_for_gen/risk_group.txt")
+
+
+class TypeChams(BaseData):
+    """Типы палат"""
+
+    def __init__(self):
+        """Инициализация"""
+        super().__init__("./data_for_gen/type_chams.txt")

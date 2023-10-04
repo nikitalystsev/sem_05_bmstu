@@ -2,96 +2,150 @@ from faker import Faker
 
 from config import *
 
-COUNT_RECORDS = 10
-
 
 class Generator:
     """Класс для генерации данных"""
 
-    def __init__(self):
+    def __init__(self, count_record: int):
         """Инициализация"""
 
+        self.count_record = count_record
         self.diagnoses = Diagnoses()
-        self.titles_hosp = TitlesHospitals()
-        self.titles_dep = TitlesDepartment()
+        self.symptoms = Symptoms()
+        self.speciality = Speciality()
+        self.risk_groups = RiskGroups()
+        self.type_chams = TypeChams()
 
-    def gen_hospital(self):
-        """Функция генерирует больницу"""
-        faker = Faker("ru_RU")
-
-        with open("./data/Больницы.txt", "w") as file:
-            for i in range(COUNT_RECORDS):
-                id_hosp = faker.unique.random_int(1, COUNT_RECORDS)
-                title_hosp = self.titles_hosp[i]
-                address = faker.address()
-                head_physician = faker.name()
-                phone = faker.phone_number()
-
-                res = f"{id_hosp} {title_hosp} {address} {head_physician} {phone}\n"
-
-                file.write(res)
-
-    def gen_department(self):
-        """Функция генерирует отделение"""
-        faker2 = Faker("ru_RU")
-        with open("./data/Отделения.txt", "w") as file:
-            for i in range(COUNT_RECORDS):  # идем по больницам
-                faker_floor = Faker("ru_RU")
-                for j in range(len(self.titles_dep)):  # идем по отделениям
-                    id_dep = faker2.unique.random_int(1, COUNT_RECORDS * len(self.titles_dep))
-                    title_dep = self.titles_dep[j]
-                    floor_num = faker_floor.unique.random_int(1, len(self.titles_dep))
-                    ward_num = rd.randint(1, 50)
-
-                    res = f"{id_dep} {i} {title_dep} {floor_num} {ward_num} \n"
-
-                    file.write(res)
-
-    def gen_doctor(self):
+    def gen_doctors(self):
         """Функция генерирует доктора"""
         faker = Faker("ru_RU")
 
-        with open("./data/Врачи.txt", "w") as file:
-            for i in range(COUNT_RECORDS):  # идем по всем возможным отделениям
-                id_doctor = faker.unique.random_int(1, COUNT_RECORDS)
-                fio_doctor = faker.name()
-                speciality = rd.choice(rd.choice(
-                    [self.recovery, self.specialists, self.genitourinary, self.oncological, self.psychoneurological,
-                     self.dentistry, self.therapeutic, self.surgery]))
-                gender = "F" if fio_doctor.split()[0][-1] in "аеиоуыэюя" else "M"
+        with open("./data/doctors.txt", "w") as file:
+            all_data_doc = list()
+
+            ids = list(range(1, self.count_record + 1))
+            rd.shuffle(ids)
+
+            for i in range(self.count_record):
+                id_doc = ids[i]
+                fio_doc = faker.name()
+                speciality = rd.choice(self.speciality)
+                gender = "Ж" if fio_doc.split()[0][-1] in "аеиоуыэюя" else "М"
                 financing = rd.choice(["бюджет", "платный"])
 
-                res = f"{id_doctor} {fio_doctor} {speciality} {gender} {financing}\n"
+                all_data_doc.append([id_doc, fio_doc, speciality, gender, financing])
 
-                file.write(res)
+            all_data_doc.sort(key=lambda a: a[0])
 
-    @staticmethod
-    def gen_patient():
+            file.writelines(' '.join(map(str, lst)) + '\n' for lst in all_data_doc)
+
+    def gen_patients(self):
         """Функция генерирует пациента"""
         faker = Faker("ru_RU")
 
-        with open("./data/Пациенты.txt", "w") as file:
-            for i in range(COUNT_RECORDS):  # идем по всем возможным отделениям
-                id_pat = faker.unique.random_int(1, COUNT_RECORDS)
+        with open("./data/patients.txt", "w") as file:
+            all_data_pat = list()
+
+            ids = list(range(1, self.count_record + 1))
+            rd.shuffle(ids)
+
+            for i in range(self.count_record):  # идем по всем возможным отделениям
+                id_pat = ids[i]
                 fio_pat = faker.name()
-                birthday = faker.date()
-                gender = "F" if fio_pat.split()[0][-1] in "аеиоуыэюя" else "M"
+                date_of_birth = faker.date()
+                gender = "Ж" if fio_pat.split()[0][-1] in "аеиоуыэюя" else "М"
                 address = faker.address()
-                phone = faker.phone_number()
+                phone_number = faker.phone_number()
 
-                res = f"{id_pat} {fio_pat} {birthday} {gender} {address} {phone}\n"
+                all_data_pat.append([id_pat, fio_pat, date_of_birth, gender, address, phone_number])
 
-                file.write(res)
+            all_data_pat.sort(key=lambda a: a[0])
+
+            file.writelines(' '.join(map(str, lst)) + '\n' for lst in all_data_pat)
+
+    def gen_diagnoses(self):
+        """Функция генерирует диагнозы"""
+
+        with open("./data/diagnoses.txt", "w") as file:
+            all_data_dia = list()
+
+            for i in range(1025):  # количество диагнозов
+                id_dia = i + 1
+                title = self.diagnoses[i]
+                symptoms = f"{rd.choice(self.symptoms)} {rd.choice(self.symptoms)}"
+                risk_group = rd.choice(self.risk_groups)
+                probability_of_death = str(round(rd.uniform(0, 100), 2)) + "%"
+                is_chronic = rd.choice([True, False])
+                probability_of_relapse = str(round(rd.uniform(0, 100), 2)) + "%"
+
+                all_data_dia.append([id_dia, title, symptoms, risk_group, probability_of_death,
+                                     is_chronic, probability_of_relapse])
+
+            all_data_dia.sort(key=lambda a: a[0])
+
+            file.writelines(', '.join(map(str, lst)) + '\n' for lst in all_data_dia)
+
+    def gen_chambers(self):
+        """Функция генерирует палату"""
+
+        with open("./data/chambers.txt", "w") as file:
+            all_data_cham = list()
+
+            ids = list(range(1, self.count_record + 1))
+            rd.shuffle(ids)
+
+            numbers = list(range(100, self.count_record + 1000))
+            rd.shuffle(ids)
+
+            for i in range(self.count_record):  # количество диагнозов
+                id_cham = ids[i]
+                number = numbers[i]
+                type_cham = rd.choice(self.type_chams)
+                capacity = rd.randint(1, 10)
+                is_wc = rd.choice([True, False])
+                is_full = rd.choice([True, False])
+
+                all_data_cham.append([id_cham, number, type_cham, capacity, is_wc, is_full])
+
+            all_data_cham.sort(key=lambda a: a[0])
+
+            file.writelines(', '.join(map(str, lst)) + '\n' for lst in all_data_cham)
+
+    def gen_admissions(self):
+        """Функция генерирует поступления"""
+        faker = Faker("ru_RU")
+
+        with open("./data/admissions.txt", "w") as file:
+            all_data_adm = list()
+
+            ids = list(range(1, self.count_record + 1))
+            rd.shuffle(ids)
+
+            for i in range(self.count_record):  # количество диагнозов
+                id_adm = ids[i]
+                id_pac = rd.choice(ids)
+                id_doc = rd.choice(ids)
+                date_adm = faker.date()
+                is_dia = rd.choice(list(range(1, 1026)))
+                ambulatory_treatment = rd.choice([True, False])
+                id_cham = rd.choice(ids)
+
+                all_data_adm.append([id_adm, id_pac, id_doc, date_adm, is_dia, ambulatory_treatment, id_cham])
+
+            all_data_adm.sort(key=lambda a: a[0])
+
+            file.writelines(', '.join(map(str, lst)) + '\n' for lst in all_data_adm)
 
 
 def main():
     """Главная функция"""
-    gen_obj = Generator()
+    gen_obj = Generator(5000)
 
-    gen_obj.gen_hospital()
-    gen_obj.gen_department()
-    gen_obj.gen_doctor()
-    gen_obj.gen_patient()
+    gen_obj.gen_doctors()
+    gen_obj.gen_patients()
+    gen_obj.gen_diagnoses()
+    gen_obj.gen_chambers()
+    gen_obj.gen_admissions()
 
 
 if __name__ == '__main__':
