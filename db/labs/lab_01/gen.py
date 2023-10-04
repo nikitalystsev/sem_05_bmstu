@@ -1,3 +1,5 @@
+import csv
+
 from faker import Faker
 
 from config import *
@@ -20,7 +22,9 @@ class Generator:
         """Функция генерирует доктора"""
         faker = Faker("ru_RU")
 
-        with open("./data/doctors.txt", "w") as file:
+        with open("./data/doctors.csv", "w", newline='') as file:
+            writer = csv.writer(file, delimiter=',')
+
             all_data_doc = list()
 
             ids = list(range(1, self.count_record + 1))
@@ -37,13 +41,15 @@ class Generator:
 
             all_data_doc.sort(key=lambda a: a[0])
 
-            file.writelines(' '.join(map(str, lst)) + '\n' for lst in all_data_doc)
+            for lst in all_data_doc:
+                writer.writerow(lst)
 
     def gen_patients(self):
         """Функция генерирует пациента"""
         faker = Faker("ru_RU")
 
-        with open("./data/patients.txt", "w") as file:
+        with open("./data/patients.csv", "w", newline='') as file:
+            writer = csv.writer(file, delimiter=',')
             all_data_pat = list()
 
             ids = list(range(1, self.count_record + 1))
@@ -61,12 +67,14 @@ class Generator:
 
             all_data_pat.sort(key=lambda a: a[0])
 
-            file.writelines(' '.join(map(str, lst)) + '\n' for lst in all_data_pat)
+            for lst in all_data_pat:
+                writer.writerow(lst)
 
     def gen_diagnoses(self):
         """Функция генерирует диагнозы"""
 
-        with open("./data/diagnoses.txt", "w") as file:
+        with open("./data/diagnoses.csv", "w", newline='') as file:
+            writer = csv.writer(file, delimiter=',')
             all_data_dia = list()
 
             for i in range(1025):  # количество диагнозов
@@ -83,12 +91,14 @@ class Generator:
 
             all_data_dia.sort(key=lambda a: a[0])
 
-            file.writelines(', '.join(map(str, lst)) + '\n' for lst in all_data_dia)
+            for lst in all_data_dia:
+                writer.writerow(lst)
 
     def gen_chambers(self):
         """Функция генерирует палату"""
 
-        with open("./data/chambers.txt", "w") as file:
+        with open("./data/chambers.csv", "w", newline='') as file:
+            writer = csv.writer(file, delimiter=',')
             all_data_cham = list()
 
             ids = list(range(1, self.count_record + 1))
@@ -109,13 +119,15 @@ class Generator:
 
             all_data_cham.sort(key=lambda a: a[0])
 
-            file.writelines(', '.join(map(str, lst)) + '\n' for lst in all_data_cham)
+            for lst in all_data_cham:
+                writer.writerow(lst)
 
     def gen_admissions(self):
         """Функция генерирует поступления"""
         faker = Faker("ru_RU")
 
-        with open("./data/admissions.txt", "w") as file:
+        with open("./data/admissions.csv", "w", newline='') as file:
+            writer = csv.writer(file, delimiter=',')
             all_data_adm = list()
 
             ids = list(range(1, self.count_record + 1))
@@ -134,7 +146,8 @@ class Generator:
 
             all_data_adm.sort(key=lambda a: a[0])
 
-            file.writelines(', '.join(map(str, lst)) + '\n' for lst in all_data_adm)
+            for lst in all_data_adm:
+                writer.writerow(lst)
 
 
 def main():
