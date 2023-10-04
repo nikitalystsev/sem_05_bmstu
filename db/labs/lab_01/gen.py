@@ -142,7 +142,8 @@ class Generator:
                 ambulatory_treatment = rd.choice([True, False])
                 id_cham = rd.choice(ids)
 
-                all_data_adm.append([id_adm, id_pac, id_doc, date_adm, is_dia, ambulatory_treatment, id_cham])
+                all_data_adm.append([id_adm, id_pac, id_doc, date_adm,
+                                     is_dia, ambulatory_treatment, id_cham])
 
             all_data_adm.sort(key=lambda a: a[0])
 
