@@ -27,89 +27,17 @@ class BaseData:
         return len(self.__speciality)
 
 
-class Recovery(BaseData):
-    """Восстановление и реабилитация"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Восстановление_и_реабилитация.txt")
-
-
-class Specialists(BaseData):
-    """Врачи специалисты"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Врачи_специалисты.txt")
-
-
-class Genitourinary(BaseData):
-    """Врачи специалисты"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Мочеполовая_система.txt")
-
-
-class Oncological(BaseData):
-    """Онкологический профиль"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Онкологический_профиль.txt")
-
-
-class Psychoneurological(BaseData):
-    """Психоневрологический профиль"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Психоневрологический_профиль.txt")
-
-
-class Dentistry(BaseData):
-    """Стоматология"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Стоматология.txt")
-
-
-class Therapeutic(BaseData):
-    """Терапевтический профиль и узкие специалисты"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Терапевтический_профиль_и_узкие_специалисты.txt")
-
-
-class Surgery(BaseData):
-    """Хирургия"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Хирургия.txt")
-
-
 class Diagnoses(BaseData):
     """Диагнозы"""
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/Диагнозы.txt")
+        super().__init__("./data_for_gen/diagnosis.txt")
 
 
-class TitlesHospitals(BaseData):
-    """Названия больниц"""
-
-    def __init__(self):
-        """Инициализация"""
-        super().__init__("./data_for_gen/Названия_больниц.txt")
-
-
-class TitlesDepartment(BaseData):
-    """Названия больниц"""
+class Speciality(BaseData):
+    """Диагнозы"""
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/Названия_отделений.txt")
+        super().__init__("./data_for_gen/diagnosis.txt")

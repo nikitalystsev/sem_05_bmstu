@@ -11,15 +11,6 @@ class Generator:
     def __init__(self):
         """Инициализация"""
 
-        self.recovery = Recovery()
-        self.specialists = Specialists()
-        self.genitourinary = Genitourinary()
-        self.oncological = Oncological()
-        self.psychoneurological = Psychoneurological()
-        self.dentistry = Dentistry()
-        self.therapeutic = Therapeutic()
-        self.surgery = Surgery()
-
         self.diagnoses = Diagnoses()
         self.titles_hosp = TitlesHospitals()
         self.titles_dep = TitlesDepartment()
