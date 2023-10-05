@@ -10,17 +10,17 @@ class Generator:
     def __init__(self, count_record: int):
         """Инициализация"""
 
-        self.count_record = count_record
-        self.diagnoses = Diagnoses()
-        self.symptoms = Symptoms()
-        self.speciality = Speciality()
-        self.risk_groups = RiskGroups()
-        self.type_wards = TypeWards()
+        self.__count_record = count_record
+        self.__diagnoses = Diagnoses()
+        self.__symptoms = Symptoms()
+        self.__speciality = Speciality()
+        self.__risk_groups = RiskGroups()
+        self.__type_wards = TypeWards()
 
-        self.docs_id = []
-        self.pats_id = []
-        self.dias_id = []
-        self.wards_id = []
+        self.__docs_id = []
+        self.__pats_id = []
+        self.__dias_id = []
+        self.__wards_id = []
 
     @staticmethod
     def gen_snils():
@@ -59,11 +59,11 @@ class Generator:
         with open("../data/doctors.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
-            for i in range(self.count_record):
+            for i in range(self.__count_record):
                 id_doc = faker.unique.uuid4()
                 fio_doc = faker.name()
                 age = rd.randint(27, 93)
-                speciality = rd.choice(self.speciality)
+                speciality = rd.choice(self.__speciality)
                 gender = "Ж" if fio_doc.split()[0][-1] in "аеиоуыэюя" else "М"
                 type_of_financ = rd.choice(["бюджет", "платный"])
                 employment_date = faker.date()
@@ -74,7 +74,7 @@ class Generator:
                     [id_doc, fio_doc, age, speciality, gender, type_of_financ, employment_date, cabinet,
                      office_mail])
 
-                self.docs_id.append(id_doc)
+                self.__docs_id.append(id_doc)
 
     def __gen_patients(self):
         """Функция генерирует пациента"""
@@ -83,7 +83,7 @@ class Generator:
         with open("../data/patients.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
-            for i in range(self.count_record):  # идем по всем возможным отделениям
+            for i in range(self.__count_record):  # идем по всем возможным отделениям
                 id_pat = faker.unique.uuid4()
                 fio_pat = faker.name()
                 date_of_birth = faker.date()
@@ -96,7 +96,7 @@ class Generator:
                 writer.writerow(
                     [id_pat, fio_pat, date_of_birth, gender, snils, policy_oms, address_pat, phone_number, employment])
 
-                self.pats_id.append(id_pat)
+                self.__pats_id.append(id_pat)
 
     def __gen_diagnoses(self):
         """Функция генерирует диагнозы"""
@@ -107,9 +107,9 @@ class Generator:
 
             for i in range(1002):  # количество диагнозов
                 id_dia = faker.unique.uuid4()
-                title = self.diagnoses[i]
-                symptoms = f"{rd.choice(self.symptoms)} {rd.choice(self.symptoms)}"
-                risk_group = rd.choice(self.risk_groups)
+                title = self.__diagnoses[i]
+                symptoms = f"{rd.choice(self.__symptoms)} {rd.choice(self.__symptoms)}"
+                risk_group = rd.choice(self.__risk_groups)
                 probability_of_death = str(round(rd.uniform(0, 100), 2))
                 is_chronic = rd.choice([True, False])
                 probability_of_relapse = str(round(rd.uniform(0, 100), 2))
@@ -117,7 +117,7 @@ class Generator:
                 writer.writerow([id_dia, title, symptoms, risk_group, probability_of_death,
                                  is_chronic, probability_of_relapse])
 
-                self.dias_id.append(id_dia)
+                self.__dias_id.append(id_dia)
 
     def __gen_wards(self):
         """Функция генерирует палату"""
@@ -126,20 +126,20 @@ class Generator:
         with open("../data/wards.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
-            numbers = list(range(100, self.count_record + 1000))
+            numbers = list(range(100, self.__count_record + 1000))
             rd.shuffle(numbers)
 
-            for i in range(self.count_record):  # количество диагнозов
+            for i in range(self.__count_record):  # количество диагнозов
                 id_ward = faker.unique.uuid4()
                 number = numbers[i]
-                type_ward = rd.choice(self.type_wards)
+                type_ward = rd.choice(self.__type_wards)
                 capacity = rd.randint(1, 10)
                 is_wc = rd.choice([True, False])
                 is_full = rd.choice([True, False])
 
                 writer.writerow([id_ward, number, type_ward, capacity, is_wc, is_full])
 
-                self.wards_id.append(id_ward)
+                self.__wards_id.append(id_ward)
 
     def __gen_admissions(self):
         """Функция генерирует поступления"""
@@ -150,12 +150,12 @@ class Generator:
 
             already_was_dict = dict()
 
-            for i in range(self.count_record):  # количество диагнозов
+            for i in range(self.__count_record):  # количество диагнозов
                 id_adm = faker.unique.uuid4()
-                id_pac = rd.choice(self.pats_id)
-                id_doc = rd.choice(self.docs_id)
-                is_dia = rd.choice(self.dias_id)
-                id_ward = rd.choice(self.wards_id)
+                id_pac = rd.choice(self.__pats_id)
+                id_doc = rd.choice(self.__docs_id)
+                is_dia = rd.choice(self.__dias_id)
+                id_ward = rd.choice(self.__wards_id)
                 date_adm = faker.date()
                 ambulatory_treatment = rd.choice([True, False])
                 term = rd.randint(1, 365)
