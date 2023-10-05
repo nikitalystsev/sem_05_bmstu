@@ -1,5 +1,4 @@
 import csv
-
 from faker import Faker
 
 from config import *
@@ -53,7 +52,7 @@ class Generator:
 
         return formatted_oms_number
 
-    def gen_doctors(self):
+    def __gen_doctors(self):
         """Функция генерирует доктора"""
         faker = Faker("ru_RU")
 
@@ -77,7 +76,7 @@ class Generator:
 
                 self.docs_id.append(id_doc)
 
-    def gen_patients(self):
+    def __gen_patients(self):
         """Функция генерирует пациента"""
         faker = Faker("ru_RU")
 
@@ -99,7 +98,7 @@ class Generator:
 
                 self.pats_id.append(id_pat)
 
-    def gen_diagnoses(self):
+    def __gen_diagnoses(self):
         """Функция генерирует диагнозы"""
         faker = Faker("ru_RU")
 
@@ -120,7 +119,7 @@ class Generator:
 
                 self.dias_id.append(id_dia)
 
-    def gen_wards(self):
+    def __gen_wards(self):
         """Функция генерирует палату"""
         faker = Faker("ru_RU")
 
@@ -142,7 +141,7 @@ class Generator:
 
                 self.wards_id.append(id_ward)
 
-    def gen_admissions(self):
+    def __gen_admissions(self):
         """Функция генерирует поступления"""
         faker = Faker("ru_RU")
 
@@ -171,16 +170,19 @@ class Generator:
                 writer.writerow([id_adm, id_pac, id_doc, is_dia, id_ward, date_adm,
                                  ambulatory_treatment, term, already_was])
 
+    def gen_data(self):
+        """Функция генерирует все данные"""
+        self.__gen_doctors()
+        self.__gen_patients()
+        self.__gen_diagnoses()
+        self.__gen_wards()
+        self.__gen_admissions()
+
 
 def main():
     """Главная функция"""
     gen_obj = Generator(5000)
-
-    gen_obj.gen_doctors()
-    gen_obj.gen_patients()
-    gen_obj.gen_diagnoses()
-    gen_obj.gen_wards()
-    gen_obj.gen_admissions()
+    gen_obj.gen_data()
 
 
 if __name__ == '__main__':
