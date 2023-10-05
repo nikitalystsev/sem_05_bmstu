@@ -14,6 +14,8 @@ class BaseData:
         for i in range(len(self.__speciality)):
             self.__speciality[i] = self.__speciality[i].rstrip('\n')
 
+        self.__speciality = list(set(self.__speciality))
+
         rd.shuffle(self.__speciality)
 
     def __getitem__(self, item):
