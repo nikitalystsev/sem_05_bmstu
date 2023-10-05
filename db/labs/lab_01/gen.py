@@ -35,9 +35,9 @@ class Generator:
                 fio_doc = faker.name()
                 speciality = rd.choice(self.speciality)
                 gender = "Ж" if fio_doc.split()[0][-1] in "аеиоуыэюя" else "М"
-                financing = rd.choice(["бюджет", "платный"])
+                type_of_financ = rd.choice(["бюджет", "платный"])
 
-                writer.writerow([id_doc, fio_doc, speciality, gender, financing])
+                writer.writerow([id_doc, fio_doc, speciality, gender, type_of_financ])
 
                 self.docs_id.append(id_doc)
 
@@ -72,9 +72,9 @@ class Generator:
                 title = self.diagnoses[i]
                 symptoms = f"{rd.choice(self.symptoms)} {rd.choice(self.symptoms)}"
                 risk_group = rd.choice(self.risk_groups)
-                probability_of_death = str(round(rd.uniform(0, 100), 2)) + "%"
+                probability_of_death = str(round(rd.uniform(0, 100), 2))
                 is_chronic = rd.choice([True, False])
-                probability_of_relapse = str(round(rd.uniform(0, 100), 2)) + "%"
+                probability_of_relapse = str(round(rd.uniform(0, 100), 2))
 
                 writer.writerow([id_dia, title, symptoms, risk_group, probability_of_death,
                                  is_chronic, probability_of_relapse])
@@ -94,12 +94,12 @@ class Generator:
             for i in range(self.count_record):  # количество диагнозов
                 id_ward = faker.unique.uuid4()
                 number = numbers[i]
-                type_cham = rd.choice(self.type_wards)
+                type_ward = rd.choice(self.type_wards)
                 capacity = rd.randint(1, 10)
                 is_wc = rd.choice([True, False])
                 is_full = rd.choice([True, False])
 
-                writer.writerow([id_ward, number, type_cham, capacity, is_wc, is_full])
+                writer.writerow([id_ward, number, type_ward, capacity, is_wc, is_full])
 
                 self.wards_id.append(id_ward)
 
@@ -114,13 +114,13 @@ class Generator:
                 id_adm = faker.unique.uuid4()
                 id_pac = rd.choice(self.pats_id)
                 id_doc = rd.choice(self.docs_id)
-                date_adm = faker.date()
                 is_dia = rd.choice(self.dias_id)
-                ambulatory_treatment = rd.choice([True, False])
                 id_ward = rd.choice(self.wards_id)
+                date_adm = faker.date()
+                ambulatory_treatment = rd.choice([True, False])
 
-                writer.writerow([id_adm, id_pac, id_doc, date_adm,
-                                 is_dia, ambulatory_treatment, id_ward])
+                writer.writerow([id_adm, id_pac, id_doc, is_dia, id_ward, date_adm,
+                                 ambulatory_treatment])
 
 
 def main():
