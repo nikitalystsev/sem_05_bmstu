@@ -59,9 +59,9 @@ class RiskGroups(BaseData):
         super().__init__("./data_for_gen/risk_group.txt")
 
 
-class TypeChams(BaseData):
+class TypeWards(BaseData):
     """Типы палат"""
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/type_chams.txt")
+        super().__init__("./data_for_gen/type_wards.txt")

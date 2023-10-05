@@ -16,7 +16,12 @@ class Generator:
         self.symptoms = Symptoms()
         self.speciality = Speciality()
         self.risk_groups = RiskGroups()
-        self.type_chams = TypeChams()
+        self.type_wards = TypeWards()
+
+        self.docs_id = []
+        self.pats_id = []
+        self.dias_id = []
+        self.wards_id = []
 
     def gen_doctors(self):
         """Функция генерирует доктора"""
@@ -25,24 +30,16 @@ class Generator:
         with open("./data/doctors.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
-            all_data_doc = list()
-
-            ids = list(range(1, self.count_record + 1))
-            rd.shuffle(ids)
-
             for i in range(self.count_record):
-                id_doc = ids[i]
+                id_doc = faker.unique.uuid4()
                 fio_doc = faker.name()
                 speciality = rd.choice(self.speciality)
                 gender = "Ж" if fio_doc.split()[0][-1] in "аеиоуыэюя" else "М"
                 financing = rd.choice(["бюджет", "платный"])
 
-                all_data_doc.append([id_doc, fio_doc, speciality, gender, financing])
+                writer.writerow([id_doc, fio_doc, speciality, gender, financing])
 
-            all_data_doc.sort(key=lambda a: a[0])
-
-            for lst in all_data_doc:
-                writer.writerow(lst)
+                self.docs_id.append(id_doc)
 
     def gen_patients(self):
         """Функция генерирует пациента"""
@@ -50,35 +47,28 @@ class Generator:
 
         with open("./data/patients.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
-            all_data_pat = list()
-
-            ids = list(range(1, self.count_record + 1))
-            rd.shuffle(ids)
 
             for i in range(self.count_record):  # идем по всем возможным отделениям
-                id_pat = ids[i]
+                id_pat = faker.unique.uuid4()
                 fio_pat = faker.name()
                 date_of_birth = faker.date()
                 gender = "Ж" if fio_pat.split()[0][-1] in "аеиоуыэюя" else "М"
                 address = faker.address()
                 phone_number = faker.phone_number()
 
-                all_data_pat.append([id_pat, fio_pat, date_of_birth, gender, address, phone_number])
+                writer.writerow([id_pat, fio_pat, date_of_birth, gender, address, phone_number])
 
-            all_data_pat.sort(key=lambda a: a[0])
-
-            for lst in all_data_pat:
-                writer.writerow(lst)
+                self.pats_id.append(id_pat)
 
     def gen_diagnoses(self):
         """Функция генерирует диагнозы"""
+        faker = Faker("ru_RU")
 
         with open("./data/diagnoses.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
-            all_data_dia = list()
 
             for i in range(1046):  # количество диагнозов
-                id_dia = i + 1
+                id_dia = faker.unique.uuid4()
                 title = self.diagnoses[i]
                 symptoms = f"{rd.choice(self.symptoms)} {rd.choice(self.symptoms)}"
                 risk_group = rd.choice(self.risk_groups)
@@ -86,41 +76,32 @@ class Generator:
                 is_chronic = rd.choice([True, False])
                 probability_of_relapse = str(round(rd.uniform(0, 100), 2)) + "%"
 
-                all_data_dia.append([id_dia, title, symptoms, risk_group, probability_of_death,
-                                     is_chronic, probability_of_relapse])
+                writer.writerow([id_dia, title, symptoms, risk_group, probability_of_death,
+                                 is_chronic, probability_of_relapse])
 
-            all_data_dia.sort(key=lambda a: a[0])
+                self.dias_id.append(id_dia)
 
-            for lst in all_data_dia:
-                writer.writerow(lst)
-
-    def gen_chambers(self):
+    def gen_wards(self):
         """Функция генерирует палату"""
+        faker = Faker("ru_RU")
 
-        with open("./data/chambers.csv", "w", newline='') as file:
+        with open("./data/wards.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
-            all_data_cham = list()
-
-            ids = list(range(1, self.count_record + 1))
-            rd.shuffle(ids)
 
             numbers = list(range(100, self.count_record + 1000))
-            rd.shuffle(ids)
+            rd.shuffle(numbers)
 
             for i in range(self.count_record):  # количество диагнозов
-                id_cham = ids[i]
+                id_ward = faker.unique.uuid4()
                 number = numbers[i]
-                type_cham = rd.choice(self.type_chams)
+                type_cham = rd.choice(self.type_wards)
                 capacity = rd.randint(1, 10)
                 is_wc = rd.choice([True, False])
                 is_full = rd.choice([True, False])
 
-                all_data_cham.append([id_cham, number, type_cham, capacity, is_wc, is_full])
+                writer.writerow([id_ward, number, type_cham, capacity, is_wc, is_full])
 
-            all_data_cham.sort(key=lambda a: a[0])
-
-            for lst in all_data_cham:
-                writer.writerow(lst)
+                self.wards_id.append(id_ward)
 
     def gen_admissions(self):
         """Функция генерирует поступления"""
@@ -128,27 +109,18 @@ class Generator:
 
         with open("./data/admissions.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
-            all_data_adm = list()
-
-            ids = list(range(1, self.count_record + 1))
-            rd.shuffle(ids)
 
             for i in range(self.count_record):  # количество диагнозов
-                id_adm = ids[i]
-                id_pac = rd.choice(ids)
-                id_doc = rd.choice(ids)
+                id_adm = faker.unique.uuid4()
+                id_pac = rd.choice(self.pats_id)
+                id_doc = rd.choice(self.docs_id)
                 date_adm = faker.date()
-                is_dia = rd.choice(list(range(1, 1026)))
+                is_dia = rd.choice(self.dias_id)
                 ambulatory_treatment = rd.choice([True, False])
-                id_cham = rd.choice(ids)
+                id_ward = rd.choice(self.wards_id)
 
-                all_data_adm.append([id_adm, id_pac, id_doc, date_adm,
-                                     is_dia, ambulatory_treatment, id_cham])
-
-            all_data_adm.sort(key=lambda a: a[0])
-
-            for lst in all_data_adm:
-                writer.writerow(lst)
+                writer.writerow([id_adm, id_pac, id_doc, date_adm,
+                                 is_dia, ambulatory_treatment, id_ward])
 
 
 def main():
@@ -158,7 +130,7 @@ def main():
     gen_obj.gen_doctors()
     gen_obj.gen_patients()
     gen_obj.gen_diagnoses()
-    gen_obj.gen_chambers()
+    gen_obj.gen_wards()
     gen_obj.gen_admissions()
 
 
