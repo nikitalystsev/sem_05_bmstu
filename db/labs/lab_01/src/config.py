@@ -32,7 +32,7 @@ class Diagnoses(BaseData):
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("data_for_gen/diagnoses.txt")
+        super().__init__("../data_for_gen/diagnoses.txt")
 
 
 class Symptoms(BaseData):
@@ -40,7 +40,7 @@ class Symptoms(BaseData):
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("data_for_gen/symptoms.txt")
+        super().__init__("../data_for_gen/symptoms.txt")
 
 
 class Speciality(BaseData):
@@ -48,7 +48,7 @@ class Speciality(BaseData):
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/speciality.txt")
+        super().__init__("../data_for_gen/speciality.txt")
 
 
 class RiskGroups(BaseData):
@@ -56,7 +56,7 @@ class RiskGroups(BaseData):
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/risk_group.txt")
+        super().__init__("../data_for_gen/risk_group.txt")
 
 
 class TypeWards(BaseData):
@@ -64,4 +64,4 @@ class TypeWards(BaseData):
 
     def __init__(self):
         """Инициализация"""
-        super().__init__("./data_for_gen/type_wards.txt")
+        super().__init__("../data_for_gen/type_wards.txt")

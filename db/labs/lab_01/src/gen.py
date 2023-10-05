@@ -27,7 +27,7 @@ class Generator:
         """Функция генерирует доктора"""
         faker = Faker("ru_RU")
 
-        with open("./data/doctors.csv", "w", newline='') as file:
+        with open("../data/doctors.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
             for i in range(self.count_record):
@@ -45,7 +45,7 @@ class Generator:
         """Функция генерирует пациента"""
         faker = Faker("ru_RU")
 
-        with open("./data/patients.csv", "w", newline='') as file:
+        with open("../data/patients.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
             for i in range(self.count_record):  # идем по всем возможным отделениям
@@ -64,7 +64,7 @@ class Generator:
         """Функция генерирует диагнозы"""
         faker = Faker("ru_RU")
 
-        with open("./data/diagnoses.csv", "w", newline='') as file:
+        with open("../data/diagnoses.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
             for i in range(1046):  # количество диагнозов
@@ -85,7 +85,7 @@ class Generator:
         """Функция генерирует палату"""
         faker = Faker("ru_RU")
 
-        with open("./data/wards.csv", "w", newline='') as file:
+        with open("../data/wards.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
             numbers = list(range(100, self.count_record + 1000))
@@ -107,7 +107,7 @@ class Generator:
         """Функция генерирует поступления"""
         faker = Faker("ru_RU")
 
-        with open("./data/admissions.csv", "w", newline='') as file:
+        with open("../data/admissions.csv", "w", newline='') as file:
             writer = csv.writer(file, delimiter=',')
 
             for i in range(self.count_record):  # количество диагнозов
