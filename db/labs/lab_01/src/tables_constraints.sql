@@ -1,4 +1,6 @@
 -- https://metanit.com/sql/postgresql/2.6.php - можно прочитать про изменение таблиц
+-- https://habr.com/ru/articles/194738/ - можно почитать про каскадное удаление данных
+
 ALTER TABLE doctors
 ALTER COLUMN id_doc SET DEFAULT uuid_generate_v4(),
 ALTER COLUMN fio SET NOT NULL,
