@@ -54,7 +54,7 @@ ALTER COLUMN is_full SET NOT NULL;
 ALTER TABLE admissions
 ALTER COLUMN id_adm SET DEFAULT uuid_generate_v4(),
 ALTER COLUMN id_pat SET NOT NULL,
-ADD FOREIGN KEY (id_pat) REFERENCES patients(id_pat),
+ADD FOREIGN KEY (id_pat) REFERENCES patients(id_pat) on delete cascade on update cascade,
 ALTER COLUMN id_doc SET NOT NULL,
 ADD FOREIGN KEY (id_doc) REFERENCES doctors(id_doc) on delete cascade on update cascade,
 ALTER COLUMN id_dia SET NOT NULL,
