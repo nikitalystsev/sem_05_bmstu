@@ -4,11 +4,11 @@
 #define enroll 1
 #define elem_sz 4
 
-int _x[] = {1, 2, 3, 4, 8, 7, 6, 5, 4};
+int _x[] = {1, 2, 3, 4, 8, 6, 7, 5, 4};
 
 int main(void) {
   int *x1 = _x;
-  int *x20 = x1 + len + 1;
+  d x1, x1, elem_sz *enroll int *x20 = x1 + len + 1;
   int x31 = x1[0];
 
   x1 += 1;
