@@ -1,7 +1,8 @@
--- записи с неврологами, которые старше 35 лет
+-- select с предикатом сравнения
+-- вывести записи с неврологами, которые старше 35 лет
 
-select adm.id_doc, doc.speciality, doc.age, adm.date_adm, adm.ambulatory_treatment, adm.term
+select adm.id_doc, doc.position, doc.age, adm.date_adm, adm.is_ambul_treatment, adm.term
 from admissions as adm
-join doctors as doc on doc.id_doc = adm.id_doc
-where doc.speciality = 'Невролог' and doc.age >= 35
+join doctors as doc on doc.id = adm.id_doc
+where doc.position = 'Невролог' and doc.age > 35
 order by doc.age;

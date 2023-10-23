@@ -1,5 +1,6 @@
--- диагнозы с вероятностью смерти от 20 до 100
+-- select с предикатом between
+-- вывести диагнозы с вероятностью смерти от 20 до 100 процентов
 
 select *
 from diagnoses as dia
-where probability_of_death between 20 and 100;
+where dia.prob_of_death between 20 and 100;
