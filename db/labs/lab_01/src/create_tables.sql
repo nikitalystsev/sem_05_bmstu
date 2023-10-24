@@ -55,5 +55,5 @@ CREATE TABLE admissions (
     date_adm date,
     is_ambul_treatment boolean,
     term int, 
-    prev_adm UUID REFERENCES admissions(id)
+    prev_adm UUID REFERENCES admissions(id) on delete cascade on update cascade,
 );
