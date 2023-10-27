@@ -7,7 +7,7 @@ from doctors as doc
 where doc.position = 'Вирусолог';
 
 
-update doctors as doc
+update doctors 
 set wage = wage * 2
 where doc.position = 'Вирусолог';
 

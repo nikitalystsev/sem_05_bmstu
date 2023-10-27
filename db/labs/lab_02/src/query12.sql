@@ -14,6 +14,6 @@ join
 (
 	select dia.id, dia.is_chronic
 	from diagnoses as dia
-	where dia.is_chronic = true
+	where dia.is_chronic = true and dia.prob_of_relapse > 60
 ) as dia_chron
 on adm.id_dia = dia_chron.id;

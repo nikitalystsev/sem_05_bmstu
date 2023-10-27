@@ -1,9 +1,10 @@
--- select, использующий предикат exists с вложенным подзапросом
+-- Инструкция SELECT, использующая предикат EXISTS с вложенным подзапросом
 -- Найти всех врачей, у которых есть хотя бы один пациент с хроническим диагнозом
 
 select *
 from doctors as doc
-where exists (
+where exists
+(
 	select *
 	from admissions as adm
 	join patients as pat
