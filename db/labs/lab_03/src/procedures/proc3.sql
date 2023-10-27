@@ -1,35 +1,32 @@
 -- Хранимая процедура с курсором
--- найти всех пациентов, которые страдают от хронических заболеваний и отсортировать их по риску смерти
-
-CREATE OR REPLACE PROCEDURE find_patients_with_chronic_diagnoses_and_sort()
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    patient_cursor CURSOR FOR
-        -- Здесь вставьте ранее созданный запрос
-        SELECT p.fio AS patient_name, d.name AS diagnosis_name, d.prob_of_death AS death_probability
-        FROM patients p
-        JOIN admissions a ON p.id = a.id_pat
-        JOIN diagnoses d ON a.id_dia = d.id
-        WHERE d.is_chronic = TRUE
-        ORDER BY d.prob_of_death;
-
-    patient_record RECORD;
-
-BEGIN
-    -- Открываем курсор
-    OPEN patient_cursor;
-
-    -- Выводим результаты с помощью цикла
-    FOR patient_record IN patient_cursor
-    LOOP
-        RAISE NOTICE 'Patient Name: %, Diagnosis: %, Death Probability: %',
-            patient_record.patient_name, patient_record.diagnosis_name, patient_record.death_probability;
-    END LOOP;
-
-    -- Закрываем курсор
-    CLOSE patient_cursor;
-END;
+-- Всем поступившим пациентам с определенным диагнозом отменить амбулаторное лечение, если оно было назначено
+create or replace procedure cancel_ambul_treat_by_dia(in _id_dia UUID)
+language plpgsql
+as
+$$
+	declare 
+		_curs no scroll cursor for 
+		select *
+		from admissions as adm 
+		where adm.id_dia = _id_dia and adm.is_ambul_treatment = true;
+		_record record;
+	begin 
+		open _curs;
+		
+		loop
+			fetch next from _curs into _record;
+			exit when not found;
+			
+			update admissions 
+			set is_ambul_treatment = false
+			where current of _curs;
+			
+			raise notice 'Отменено амбулаторное лечение для пациента с ID: %', _record.id_pat;
+			
+		end loop;
+		
+		close _curs;
+	end
 $$;
 
-CALL find_patients_with_chronic_diagnoses_and_sort();
+call cancel_ambul_treat_by_dia('883f5dee-1528-4ebf-88a8-f43a8edad964');

@@ -12,7 +12,7 @@ $$
 	begin
 		select adm.prev_adm into _prev
 		from admissions as adm
-		where adm.id = _id_adm;
+		where adplpgsqlm.id = _id_adm;
 
 		if _prev is null then
 			raise notice 'первое поступление id = %', _id_adm;
