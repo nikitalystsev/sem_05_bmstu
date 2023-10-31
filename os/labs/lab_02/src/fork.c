@@ -31,7 +31,7 @@ int main(void)
         else
         {
             // код процесса предка
-            printf("Parent process: PID = %d, GROUP = %d, childpid[i] = %d\n",
+            printf("Parent process: PID = %d, GROUP = %d, childpid_arr[i] = %d\n",
                    getpid(), getpgrp(), childpid_arr[i]);
         }
     }
