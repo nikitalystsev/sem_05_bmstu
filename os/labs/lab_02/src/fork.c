@@ -9,9 +9,7 @@ int main(void)
 
     for (int i = 0; i < 2; ++i)
     {
-        childpid_arr[i] = fork();
-
-        if (childpid_arr[i] == -1)
+        if ((childpid_arr[i] = fork()) == -1)
         {
             perror("Can’t fork.\n");
             exit(1);

@@ -21,23 +21,23 @@ int main()
 
     if (pipe(fd) == -1)
     {
-        perror("Ошибка при создании программного канала");
+        perror("Ошибка pipe");
         exit(EXIT_FAILURE);
     }
 
     if (signal(SIGINT, sig_handler) == SIG_ERR)
     {
-        perror("Ошибка при установке обработчика сигнала");
+        perror("Ошибка signal");
         exit(EXIT_FAILURE);
     }
 
     printf("Нажмите Ctrl+C, чтобы разрешить отправку сообщений от дочерних процессов.\n");
-    sleep(5);
+    sleep(3);
 
     for (int i = 0; i < 2; ++i)
         if ((childpid_arr[i] = fork()) == -1)
         {
-            perror("Ошибка при создании первого дочернего процесса");
+            perror("Ошибка fork");
             exit(EXIT_FAILURE);
         }
         else if (childpid_arr[i] == 0)

@@ -13,14 +13,14 @@ int main()
 
     if (pipe(fd) == -1)
     {
-        perror("Ошибка при создании программного канала");
+        perror("Ошибка pipe");
         exit(EXIT_FAILURE);
     }
 
     for (int i = 0; i < 2; ++i)
         if ((childpid_arr[i] = fork()) == -1)
         {
-            perror("Ошибка при создании дочернего процесса");
+            perror("Ошибка fork");
             exit(EXIT_FAILURE);
         }
         else if (childpid_arr[i] == 0)
@@ -40,15 +40,15 @@ int main()
         if (WIFEXITED(status))
         {
             printf("Child process: PID = %d завершился с кодом %d\n",
-                   childpid_arr[i], WEXITSTATUS(status));
+                   w_pid, WEXITSTATUS(status));
         }
         else if (WIFSIGNALED(status))
         {
-            printf("killed by signal %d\n", WTERMSIG(status));
+            printf("Child process: PID = %d killed by signal %d\n", w_pid, WTERMSIG(status));
         }
         else if (WIFSTOPPED(status))
         {
-            printf("stopped by signal %d\n", WSTOPSIG(status));
+            printf("Child process: PID = %d stopped by signal %d\n", w_pid, WSTOPSIG(status));
         }
     }
 
