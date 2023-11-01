@@ -1,0 +1,110 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3324,        102]
+NotebookOptionsPosition[      2763,         84]
+NotebookOutlinePosition[      3154,        100]
+CellTagsIndexPosition[      3111,         97]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.905609044355795*^9, 3.9056090642315407`*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"583dba41-27f0-4ea5-a667-fc811bfd5525"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Import", "[", 
+   RowBox[{"\"\<report.pdf\>\"", ",", " ", "\"\<Elements\>\""}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"text", " ", "=", " ", 
+   RowBox[{"Import", "[", "\"\<aaa.txt\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"text1", " ", "=", " ", 
+   RowBox[{"StringReplace", "[", 
+    RowBox[{"text", ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"\"\<\\n\>\"", "->", "\"\< \>\""}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"textLi", " ", "=", " ", 
+   RowBox[{"StringSplit", "[", 
+    RowBox[{"text1", ",", " ", "\"\<. \>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"textLiLi", " ", "=", " ", 
+   RowBox[{"DeleteDuplicates", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"StringJoin", "[", 
+       RowBox[{"#", ",", " ", "\"\<.\>\""}], "]"}], " ", "&"}], " ", "/@", 
+     " ", 
+     RowBox[{"DeleteCases", "[", 
+      RowBox[{"textLi", ",", " ", "\"\< \>\""}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<ss.xlsx\>\"", ",", " ", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Prepend", "[", 
+       RowBox[{"textLiLi", ",", " ", "\"\<Text\>\""}], "]"}], ",", " ", 
+      RowBox[{"Prepend", "[", 
+       RowBox[{
+        RowBox[{"Append", "[", 
+         RowBox[{
+          RowBox[{"Drop", "[", 
+           RowBox[{"textLiLi", ",", " ", "1"}], "]"}], ",", " ", "\"\<\>\""}],
+          "]"}], ",", " ", "\"\<Text\>\""}], "]"}]}], "}"}], "]"}]}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.9056090691154957`*^9, 3.905609237131247*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"46ebc9bd-fba0-4b88-a785-c8deda2fbc73"],
+
+Cell[BoxData["\<\"ss.xlsx\"\>"], "Output",
+ CellChangeTimes->{3.90560929930927*^9},
+ CellLabel->"Out[7]=",ExpressionUUID->"08d7c31c-1559-422a-9676-e3df82bd3ef6"]
+}, Open  ]]
+},
+WindowSize->{808, 880},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"13.3 for Mac OS X ARM (64-bit) (July 24, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"4b8295d8-0bfd-4ef6-993e-507253cea1c4"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 269, 5, 44, "Input",ExpressionUUID->"583dba41-27f0-4ea5-a667-fc811bfd5525"],
+Cell[CellGroupData[{
+Cell[852, 29, 1731, 48, 260, "Input",ExpressionUUID->"46ebc9bd-fba0-4b88-a785-c8deda2fbc73"],
+Cell[2586, 79, 161, 2, 82, "Output",ExpressionUUID->"08d7c31c-1559-422a-9676-e3df82bd3ef6"]
+}, Open  ]]
+}
+]
+*)
+
