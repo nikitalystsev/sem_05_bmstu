@@ -1,0 +1,15 @@
+[0] Config.pm:307> INFO - This is Biber 2.17
+[0] Config.pm:310> INFO - Logfile is 'research.blg'
+[48] biber:340> INFO - === Ср ноя  8, 2023, 15:54:36
+[58] Biber.pm:418> INFO - Reading 'research.bcf'
+[115] Biber.pm:972> INFO - Found 3 citekeys in bib section 0
+[123] Biber.pm:4383> INFO - Processing section 0
+[129] Biber.pm:4574> INFO - Looking for bibtex file 'biblio.bib' for section 0
+[130] bibtex.pm:1713> INFO - LaTeX decoding ...
+[132] bibtex.pm:1518> INFO - Found BibTeX data source 'biblio.bib'
+[155] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'variable = shifted' with 'variable = non-ignorable'
+[155] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[155] Biber.pm:4203> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'ru-RU'
+[155] Biber.pm:4209> INFO - No sort tailoring available for locale 'ru-RU'
+[156] bbl.pm:654> INFO - Writing 'research.bbl' with encoding 'UTF-8'
+[157] bbl.pm:757> INFO - Output to research.bbl
