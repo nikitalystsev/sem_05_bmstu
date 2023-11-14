@@ -9,6 +9,14 @@
 #include <unistd.h>
 #include <wait.h>
 
+/*
+начальное значение флага 1 и по сигналу флаг сбрасываем
+в обработчике сигнала вывести id процесса, которые перехватил сигнал getpid
+в wait в каждом выводе выводим id и статус завершенного процесса
+
+в читалеле писалете / продюсере и консюмере exit
+*/
+
 #define COUNT_PROD 3 // количество производителей (producers)
 #define COUNT_CONS 3 // количество потребителей (consumers)
 
@@ -82,6 +90,7 @@ void producer(const int semid, const char *addr)
         perror("Ошибка semop\n");
         exit(EXIT_FAILURE);
     }
+    // exit(EXIT_SUCCESS);
 }
 
 // подпрограмма действий потребителя
@@ -116,6 +125,7 @@ void consumer(const int semid, const char *addr)
         perror("Ошибка semop\n");
         exit(EXIT_FAILURE);
     }
+    // exit(EXIT_SUCCESS);
 }
 
 int main(void)
