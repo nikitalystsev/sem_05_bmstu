@@ -52,14 +52,9 @@ struct sembuf consumers_end[2] = {
     {SE, V, 0}};
 
 // подпрограмма действий производителя
-void producer(const int semid, const char *addr)
+void producer(const int semid, char **curraddr_prod, char *alfa)
 {
     sleep(rand() % 4 + 1);
-
-    // в начале буфера лежит:
-    char **curraddr_prod = (char **)addr;                // указатель на ячейку, в которую запишет производитель
-    char **curraddr_cons = (char **)addr + sizeof(char); // указатель на ячейку, c которой будет читать потребитель
-    char *alfa = (char *)(curraddr_cons + sizeof(char)); // указатель на букву, которая будет записана следующей
 
     // захватываем SE и SB семафоры
     int rc = semop(semid, producers_begin, 2);
@@ -90,18 +85,12 @@ void producer(const int semid, const char *addr)
         perror("Ошибка semop\n");
         exit(EXIT_FAILURE);
     }
-    // exit(EXIT_SUCCESS);
 }
 
 // подпрограмма действий потребителя
-void consumer(const int semid, const char *addr)
+void consumer(const int semid, char **curraddr_cons)
 {
     sleep(rand() % 10 + 1);
-
-    // в начале буфера лежит:
-    char **curraddr_prod = (char **)addr;                // указатель на ячейку, в которую запишет производитель
-    char **curraddr_cons = (char **)addr + sizeof(char); // указатель на ячейку, c которой будет читать потребитель
-    char *alfa = (char *)(curraddr_cons + sizeof(char)); // указатель на букву, которая будет записана следующей
 
     // захватываем SF и SB семафоры
     int rc = semop(semid, consumers_begin, 2);
@@ -125,7 +114,6 @@ void consumer(const int semid, const char *addr)
         perror("Ошибка semop\n");
         exit(EXIT_FAILURE);
     }
-    // exit(EXIT_SUCCESS);
 }
 
 int main(void)
@@ -201,7 +189,7 @@ int main(void)
         else if (child_pid == 0) // код потомка
         {
             while (flag)
-                producer(semid, addr);
+                producer(semid, curraddr_prod, alfa);
             exit(EXIT_SUCCESS);
         }
     }
@@ -217,7 +205,7 @@ int main(void)
         else if (child_pid == 0) // код потомка
         {
             while (flag)
-                consumer(semid, addr);
+                consumer(semid, curraddr_cons);
             exit(EXIT_SUCCESS);
         }
     }
@@ -228,9 +216,6 @@ int main(void)
         int status;
 
         w_pid = wait(&status);
-
-        if (wait(&status) == -1)
-            perror("Error with child process.\n");
 
         if (WIFEXITED(status))
         {
