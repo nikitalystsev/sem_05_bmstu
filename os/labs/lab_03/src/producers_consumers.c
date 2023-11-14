@@ -34,7 +34,7 @@ int flag = 1; // флаг для обработчика сигнала
 void signal_handler(int sig_num)
 {
     flag = 0;
-    printf("\nПойман обработчик %d\n", sig_num);
+    printf("\nProcess (id = %d) перехватил сигнал %d\n", getpid(), sig_num);
 }
 
 struct sembuf producers_begin[2] = {
@@ -186,9 +186,9 @@ int main(void)
     char **curraddr_cons = (char **)addr + sizeof(char);
     char *alfa = (char *)(curraddr_cons + sizeof(char));
 
+    *alfa = 'a';
     *curraddr_cons = alfa + sizeof(char);
     *curraddr_prod = *curraddr_cons;
-    *alfa = 'a';
 
     for (size_t i = 0; i < COUNT_PROD; ++i)
     {
