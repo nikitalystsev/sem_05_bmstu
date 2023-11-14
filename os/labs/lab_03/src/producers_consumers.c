@@ -29,93 +29,93 @@ void signal_handler(int sig_num)
     printf("\nПойман обработчик %d\n", sig_num);
 }
 
-struct sembuf producers_begin[2] = {{SE, P, 0}, {SB, P, 0}};
-struct sembuf producers_end[2] = {{SB, V, 0}, {SF, V, 0}};
+struct sembuf producers_begin[2] = {
+    {SE, P, 0},
+    {SB, P, 0}};
+struct sembuf producers_end[2] = {
+    {SB, V, 0},
+    {SF, V, 0}};
 
-struct sembuf consumers_begin[2] = {{SF, P, 0}, {SB, P, 0}};
-struct sembuf consumers_end[2] = {{SB, V, 0}, {SE, V, 0}};
+struct sembuf consumers_begin[2] = {
+    {SF, P, 0},
+    {SB, P, 0}};
+struct sembuf consumers_end[2] = {
+    {SB, V, 0},
+    {SE, V, 0}};
 
 // подпрограмма действий производителя
 void producer(const int semid, const char *addr)
 {
+    sleep(rand() % 4 + 1);
+
     // в начале буфера лежит:
     char **curraddr_prod = (char **)addr;                // указатель на ячейку, в которую запишет производитель
     char **curraddr_cons = (char **)addr + sizeof(char); // указатель на ячейку, c которой будет читать потребитель
     char *alfa = (char *)(curraddr_cons + sizeof(char)); // указатель на букву, которая будет записана следующей
 
-    // выводим что создал producer пока сами не прервем
-    while (flag)
+    // захватываем SE и SB семафоры
+    int rc = semop(semid, producers_begin, 2);
+
+    if (rc == -1)
     {
-        // захватываем SE и SB семафоры
-        int rc = semop(semid, producers_begin, 2);
-
-        if (rc == -1)
-        {
-            perror("Ошибка semop\n");
-            exit(EXIT_FAILURE);
-        }
-
-        // помещаем букву в буфер
-        **curraddr_prod = *alfa;
-
-        printf("Producer (id = %d) write %c\n", getpid(), **curraddr_prod);
-
-        (*curraddr_prod)++;
-        (*alfa)++; // следуюшая буква
-
-        sleep(rand() % 4 + 1);
-
-        // освобождаем SB и SE семафоры
-        rc = semop(semid, producers_end, 2);
-
-        if (rc == -1)
-        {
-            perror("Ошибка semop\n");
-            exit(EXIT_FAILURE);
-        }
+        perror("Ошибка semop\n");
+        exit(EXIT_FAILURE);
     }
 
-    exit(EXIT_SUCCESS);
+    // помещаем букву в буфер
+    **curraddr_prod = *alfa;
+
+    printf("Producer (id = %d) write %c\n", getpid(), **curraddr_prod);
+
+    (*curraddr_prod)++;
+    (*alfa)++; // следуюшая буква
+
+    // Проверяем, не выходит ли за пределы алфавита
+    if (*alfa > 'z')
+        *alfa = 'a'; // Вернуться в начало алфавита
+
+    // освобождаем SB и SE семафоры
+    rc = semop(semid, producers_end, 2);
+
+    if (rc == -1)
+    {
+        perror("Ошибка semop\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 // подпрограмма действий потребителя
 void consumer(const int semid, const char *addr)
 {
+    sleep(rand() % 10 + 1);
+
     // в начале буфера лежит:
     char **curraddr_prod = (char **)addr;                // указатель на ячейку, в которую запишет производитель
     char **curraddr_cons = (char **)addr + sizeof(char); // указатель на ячейку, c которой будет читать потребитель
     char *alfa = (char *)(curraddr_cons + sizeof(char)); // указатель на букву, которая будет записана следующей
 
-    // выводим что прочитал consumer пока сами не прервем
-    while (flag)
+    // захватываем SF и SB семафоры
+    int rc = semop(semid, consumers_begin, 2);
+
+    if (rc == -1)
     {
-        // захватываем SF и SB семафоры
-        int rc = semop(semid, consumers_begin, 2);
-
-        if (rc == -1)
-        {
-            perror("Ошибка semop\n");
-            exit(EXIT_FAILURE);
-        }
-
-        // читаем букву из буфера
-        printf("Consumer (id = %d) read %c\n", getpid(), **curraddr_cons);
-
-        (*curraddr_cons)++;
-
-        sleep(rand() % 10 + 1);
-
-        // освобождаем SB и SF семафоры
-        rc = semop(semid, consumers_end, 2);
-
-        if (rc == -1)
-        {
-            perror("Ошибка semop\n");
-            exit(EXIT_FAILURE);
-        }
+        perror("Ошибка semop\n");
+        exit(EXIT_FAILURE);
     }
 
-    exit(EXIT_SUCCESS);
+    // читаем букву из буфера
+    printf("Consumer (id = %d) read %c\n", getpid(), **curraddr_cons);
+
+    (*curraddr_cons)++;
+
+    // освобождаем SB и SF семафоры
+    rc = semop(semid, consumers_end, 2);
+
+    if (rc == -1)
+    {
+        perror("Ошибка semop\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 int main(void)
@@ -190,8 +190,9 @@ int main(void)
         }
         else if (child_pid == 0) // код потомка
         {
-            producer(semid, addr);
-            exit(0);
+            while (flag)
+                producer(semid, addr);
+            exit(EXIT_SUCCESS);
         }
     }
 
@@ -205,8 +206,9 @@ int main(void)
         }
         else if (child_pid == 0) // код потомка
         {
-            consumer(semid, addr);
-            exit(0);
+            while (flag)
+                consumer(semid, addr);
+            exit(EXIT_SUCCESS);
         }
     }
 
@@ -236,22 +238,24 @@ int main(void)
 
     // в конце надо почистить семафоры и разделяемую память
 
-    if (shmdt((void *)addr) == -1)
+    // удаляем набор семафоров и его структуры данных
+    // semnum  игонорируется
+    if (semctl(semid, 0, IPC_RMID, NULL) == -1)
     {
-        perror("Ошибка shmdt.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // IPC_RMID используется для пометки сегмента как удаленного.
-    if (semctl(semid, 1, IPC_RMID, NULL) == -1)
-    {
-        perror("Can't delete semafor.\n");
+        perror("Ошибка удаления набора семафоров.\n");
         exit(EXIT_FAILURE);
     }
 
     if (shmctl(shmid, IPC_RMID, NULL) == -1)
     {
-        perror("Can't mark a segment as deleted.\n");
+        perror("Ошибка пометки для удаления\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // очищаем разделяемую память
+    if (shmdt((void *)addr) == -1)
+    {
+        perror("Ошибка shmdt.\n");
         exit(EXIT_FAILURE);
     }
 
