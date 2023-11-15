@@ -1,0 +1,34 @@
+void matrixMulStrassen(vector<vector<int>> &A,
+                       vector<vector<int>> &B,
+                       vector<vector<int>> &C, int d)
+{
+    if (!(d && !(d & (d - 1)))) // если d не степень двойки
+    {
+        d = pow(2, ceil(log2(d)));
+        A.resize(d), B.resize(d), C.resize(d);
+
+        for (int i = 0; i < d; ++i)
+            A[i].resize(d), B[i].resize(d), C[i].resize(d);
+    }
+
+    if (d <= 86)
+    {
+        C = classicMul::matrixMulClassic(A, B, d, d, d);
+        return;
+    }
+
+    int new_d = d / 2;
+    vector<int> inside(new_d);
+
+    vector<vector<int>> A11(new_d, inside);
+    vector<vector<int>> A12(new_d, inside);
+    vector<vector<int>> A21(new_d, inside);
+    vector<vector<int>> A22(new_d, inside);
+    vector<vector<int>> B11(new_d, inside);
+    vector<vector<int>> B12(new_d, inside);
+    vector<vector<int>> B21(new_d, inside);
+    vector<vector<int>> B22(new_d, inside);
+    vector<vector<int>> C11(new_d, inside);
+    vector<vector<int>> C12(new_d, inside);
+    vector<vector<int>> C21(new_d, inside);
+    vector<vector<int>> C22(new_d, inside);

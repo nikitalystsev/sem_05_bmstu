@@ -1,0 +1,22 @@
+    sub(A12, A22, result1, new_d);
+    add(B21, B22, result2, new_d);
+    vector<vector<int>> M7(new_d, inside);
+    matrixMulStrassen(result1, result2, M7, new_d);
+
+    add(M1, M4, result1, new_d);
+    add(result1, M7, result2, new_d);
+    sub(result2, M5, C11, new_d);
+
+    add(M3, M5, C12, new_d);
+
+    add(M2, M4, C21, new_d);
+
+    sub(M1, M2, result1, new_d);
+    add(M3, M6, result2, new_d);
+    add(result1, result2, C22, new_d);
+
+    join(C11, C, 0, 0, new_d);
+    join(C12, C, 0, new_d, new_d);
+    join(C21, C, new_d, 0, new_d);
+    join(C22, C, new_d, new_d, new_d);
+}

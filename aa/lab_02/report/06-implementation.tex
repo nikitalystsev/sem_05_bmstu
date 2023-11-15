@@ -1,0 +1,404 @@
+\chapter{Технологический раздел}
+
+В данном разделе будут перечислены средства реализации, листинги кода и функциональные тесты.
+
+\section{Средства реализации}
+
+В качестве языка программирования для этой лабораторной работы был выбран $C++$ \cite{pl} по следующим причинам:
+
+\begin{itemize}[label=--]
+	\item в $C++$ есть встроенный модуль $ctime$, предоставляющий необходимый функционал для замеров процессорного времени;
+	\item в стандартной библиотеке $C++$ есть оператор $sizeof$, позволяющий получить размер переданного объекта в байтах. Следовательно, $C++$ предоставляет возможности для проведения точных оценок по используемой памяти.
+\end{itemize}
+
+В качестве функции, которая будет осуществлять замеры процессорного времени, будет использована функция $clock\_gettime$ из встроенного модуля $ctime$ \cite{cpu_time_func}.
+
+\section{Сведения о модулях программы}
+
+Программа состоит из шести модулей: 
+
+\begin{enumerate}[label={\arabic*)}]
+	\item \texttt{algorithms.cpp} --- модуль, хранящий реализации алгоритмов умножения матриц;
+	\item \texttt{processTime.cpp} --- модуль, содержащий функцию для замера процессорного времени;
+	\item \texttt{memoryMeasurements.cpp} --- модуль, содержащий функции, позволяющие провести сравнительный анализ использования памяти в реализациях алгоритмов умножения матриц;
+	\item \texttt{timeMeasurements.cpp} --- модуль, содержащий функции, позволяющие провести сравнительный анализ использования времени в реализациях алгоритмов умножения матриц;
+	\item \texttt{main.cpp} --- файл, содержащий точку входа в программу;
+	\item \texttt{task7} --- модуль, содержащий набор скриптов для проведения замеров программы по времени и памяти и построения графиков по полученным данным.
+\end{enumerate}
+
+\section{Реализации алгоритмов}
+
+В листингах \ref{lst:classicMatrixMul.txt} - \ref{lst:strassenMulPart4.txt} приведены реализации алгоритмов умножения матриц.
+
+\includelisting
+{classicMatrixMul.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация классического алгоритма умножения двух матриц} % Подпись листинга
+
+\clearpage
+
+\includelisting
+{vinogradMatrixMul.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация алгоритма Винограда \textbf{для} умножения двух матриц} % Подпись листинга
+
+\clearpage
+
+\includelisting
+{vinogradMatrixMulWithOpt.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация оптимизированного алгоритма Винограда для умножения двух матриц} % Подпись листинга
+
+\clearpage
+
+\includelisting
+{strassenMulPart1.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация функций, необходимых для работы алгоритма Штрассена} % Подпись листинга
+
+Функции $split$ выполняет заполнение переданной подматрицы $B$ необходимыми значениями из основной матрицы $A$, а функция $join$ выполняет заполнение переданной результирующей матрицы $B$ необходимыми значениями из подматрицы $A$. Функции $add$ и $sub$ выполняют сложение и вычитание матриц $A$ и $B$, и результат записывается в матрицу $C$.
+
+\includelisting
+{strassenMulPart2.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация алгоритма Штрассена (начало)} % Подпись листинга
+
+\includelisting
+{strassenMulPart3.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация алгоритма Штрассена (продолжение)} % Подпись листинга
+
+\includelisting
+{strassenMulPart4.txt} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{Реализация алгоритма Штрассена (конец)} % Подпись листинга
+
+\clearpage
+
+\section{Функциональные тесты}
+
+В таблице \ref{tbl:func_tests_std}, \ref{tbl:func_tests_vin} и \ref{tbl:func_tests_stras} приведены функциональные тесты для разработанных алгоритмов умножения матриц. Все тесты пройдены успешно.
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\begin{threeparttable}
+			\caption{Функциональные тесты для классического алгоритма умножения матриц}
+			\label{tbl:func_tests_std}
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				\multicolumn{2}{|c|}{\bfseries Входные данные}
+				& \multicolumn{2}{c|}{\bfseries Результат для классического алгоритма} \\
+				\hline 
+				\bfseries Матрица 1
+				& \bfseries Матрица 2
+				& \bfseries Ожидаемый результат
+				& \bfseries Фактический результат \\
+				\hline
+				$\begin{pmatrix}
+					1 & 5 & 7\\
+					2 & 6 & 8\\
+					3 & 7 & 9
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					&
+				\end{pmatrix}$
+				&
+				\text{Сообщение об ошибке}
+				&
+				\text{Сообщение об ошибке} \\ 
+				\hline
+				$\begin{pmatrix}
+					1 & 5 & 7\\
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+				\end{pmatrix}$
+				&
+				\text{Сообщение об ошибке}
+				&
+				\text{Сообщение об ошибке} \\ 
+				\hline
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+					7 & 8 & 9 \\
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					1 & 0 & 0\\
+					0 & 1 & 0 \\
+					0 & 0 & 1 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 0 & 0\\
+					0 & 1 & 0 \\
+					0 & 0 & 1 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+					7 & 8 & 9 \\
+				\end{pmatrix}$ \\ 
+				\hline
+				$\begin{pmatrix}
+					3 & 5\\
+					2 & 1\\
+					9 & 7\\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					23 & 31 & 39 \\
+					6 & 9 & 12
+				\end{pmatrix}$ 
+				&
+				$\begin{pmatrix}
+					23 & 31 & 39 \\
+					6 & 9 & 12
+				\end{pmatrix}$ \\ 
+				\hline
+				$\begin{pmatrix}
+					10
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					35
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					350
+				\end{pmatrix}$ 
+				&
+				$\begin{pmatrix}
+					350
+				\end{pmatrix}$ \\ 
+				\hline
+			\end{tabular}
+		\end{threeparttable}
+	\end{center}
+\end{table}
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\begin{threeparttable}
+			\caption{Функциональные тесты для умножения матриц по алгоритму Винограда}
+			\label{tbl:func_tests_vin}
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				\multicolumn{2}{|c|}{\bfseries Входные данные}
+				& \multicolumn{2}{c|}{\bfseries Результат для алгоритма Винограда} \\
+				\hline 
+				\bfseries Матрица 1
+				& \bfseries Матрица 2
+				& \bfseries Ожидаемый результат
+				& \bfseries Фактический результат \\
+				\hline
+				$\begin{pmatrix}
+					1 & 5 & 7\\
+					2 & 6 & 8\\
+					3 & 7 & 9
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					&
+				\end{pmatrix}$
+				&
+				\text{Сообщение об ошибке}
+				&
+				\text{Сообщение об ошибке} \\ 
+				\hline
+				$\begin{pmatrix}
+					1 & 5 & 7\\
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+				\end{pmatrix}$
+				&
+				\text{Сообщение об ошибке}
+				&
+				\text{Сообщение об ошибке} \\ 
+				\hline
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+					7 & 8 & 9 \\
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					1 & 0 & 0\\
+					0 & 1 & 0 \\
+					0 & 0 & 1 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 0 & 0\\
+					0 & 1 & 0 \\
+					0 & 0 & 1 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+					7 & 8 & 9 \\
+				\end{pmatrix}$ \\ 
+				\hline
+				$\begin{pmatrix}
+					3 & 5\\
+					2 & 1\\
+					9 & 7\\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					23 & 31 & 39 \\
+					6 & 9 & 12
+				\end{pmatrix}$ 
+				&
+				$\begin{pmatrix}
+					23 & 31 & 39 \\
+					6 & 9 & 12
+				\end{pmatrix}$ \\ 
+				\hline
+				$\begin{pmatrix}
+					10
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					35
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					350
+				\end{pmatrix}$ 
+				&
+				$\begin{pmatrix}
+					350
+				\end{pmatrix}$ \\ 
+				\hline
+			\end{tabular}
+		\end{threeparttable}
+	\end{center}
+\end{table}
+
+\begin{table}[ht]
+	\small
+	\begin{center}
+		\begin{threeparttable}
+			\caption{Функциональные тесты для умножения матриц по алгоритму Штрассена}
+			\label{tbl:func_tests_stras}
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				\multicolumn{2}{|c|}{\bfseries Входные данные}
+				& \multicolumn{2}{c|}{\bfseries Результат для алгоритма Штрассена} \\
+				\hline 
+				\bfseries Матрица 1
+				& \bfseries Матрица 2
+				& \bfseries Ожидаемый результат
+				& \bfseries Фактический результат \\
+				\hline
+				$\begin{pmatrix}
+					1 & 2 \\
+					3 & 4 
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					5 & 6 \\
+					7 & 8 
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					19 & 22 \\
+					43 & 50
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					19 & 22 \\
+					43 & 50
+				\end{pmatrix}$ \\
+				\hline
+				$\begin{pmatrix}
+					1 & 5 & 7\\
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+				\end{pmatrix}$ 
+				&
+				\text{Сообщение об ошибке}
+				&
+				\text{Сообщение об ошибке} \\ 
+				\hline
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+					7 & 8 & 9 \\
+				\end{pmatrix}$ 
+				&  
+				$\begin{pmatrix}
+					1 & 0 & 0\\
+					0 & 1 & 0 \\
+					0 & 0 & 1 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 0 & 0\\
+					0 & 1 & 0 \\
+					0 & 0 & 1 \\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+					7 & 8 & 9 \\
+				\end{pmatrix}$ \\ 
+				\hline
+				$\begin{pmatrix}
+					3 & 5\\
+					2 & 1\\
+					9 & 7\\
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					1 & 2 & 3\\
+					4 & 5 & 6 \\
+				\end{pmatrix}$
+				&
+				\text{Сообщение об ошибке}
+				&
+				\text{Сообщение об ошибке} \\ 
+				\hline
+				$\begin{pmatrix}
+					10
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					35
+				\end{pmatrix}$
+				&
+				$\begin{pmatrix}
+					350
+				\end{pmatrix}$ 
+				&
+				$\begin{pmatrix}
+					350
+				\end{pmatrix}$ \\ 
+				\hline
+			\end{tabular}
+		\end{threeparttable}
+	\end{center}
+\end{table}
+
+\section*{Вывод}
+
+В данном разделе были реализованы и протестированы 4 алгоритма:
+классический алгоритм умножения, алгоритм Винограда для умножения двух матриц, оптимизированный алгоритм Винограда умножения двух матриц и алгоритм Штрассена умножения двух матриц.
+
+    

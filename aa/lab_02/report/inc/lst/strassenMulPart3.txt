@@ -1,0 +1,37 @@
+    split(A, A11, 0, 0, new_d);
+    split(A, A12, 0, new_d, new_d);
+    split(A, A21, new_d, 0, new_d);
+    split(A, A22, new_d, new_d, new_d);
+    split(B, B11, 0, 0, new_d);
+    split(B, B12, 0, new_d, new_d);
+    split(B, B21, new_d, 0, new_d);
+    split(B, B22, new_d, new_d, new_d);
+
+    vector<vector<int>> result1(new_d, inside);
+    vector<vector<int>> result2(new_d, inside);
+
+    add(A11, A22, result1, new_d);
+    add(B11, B22, result2, new_d);
+    vector<vector<int>> M1(new_d, inside);
+    matrixMulStrassen(result1, result2, M1, new_d);
+
+    add(A21, A22, result1, new_d);
+    vector<vector<int>> M2(new_d, inside);
+    matrixMulStrassen(result1, B11, M2, new_d);
+
+    sub(B12, B22, result2, new_d);
+    vector<vector<int>> M3(new_d, inside);
+    matrixMulStrassen(A11, result2, M3, new_d);
+
+    sub(B21, B11, result2, new_d);
+    vector<vector<int>> M4(new_d, inside);
+    matrixMulStrassen(A22, result2, M4, new_d);
+
+    add(A11, A12, result1, new_d);
+    vector<vector<int>> M5(new_d, inside);
+    matrixMulStrassen(result1, B22, M5, new_d);
+
+    sub(A21, A11, result1, new_d);
+    add(B11, B12, result2, new_d);
+    vector<vector<int>> M6(new_d, inside);
+    matrixMulStrassen(result1, result2, M6, new_d);

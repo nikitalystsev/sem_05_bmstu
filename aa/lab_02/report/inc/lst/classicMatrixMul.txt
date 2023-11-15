@@ -1,0 +1,15 @@
+vector<vector<int>> matrixMulClassic(
+    vector<vector<int>> &mtr1,
+    vector<vector<int>> &mtr2,
+    int cRow, int cCol, int cColRes)
+{ 
+
+    vector<vector<int>> mtrRes(cRow, vector<int>(cColRes, 0));
+
+    for (int i = 0; i < cRow; ++i)
+        for (int j = 0; j < cColRes; ++j)
+            for (int k = 0; k < cCol; ++k)
+                mtrRes[i][j] = mtrRes[i][j] + mtr1[i][k] * mtr2[k][j];
+
+    return mtrRes;
+}

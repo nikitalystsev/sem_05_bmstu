@@ -1,0 +1,32 @@
+vector<vector<int>> matrixMulVinograd(
+    vector<vector<int>> &mtr1,
+    vector<vector<int>> &mtr2,
+    int cRow, int cCol, int cColRes)
+{ 
+    vector<vector<int>> mtrRes(cRow, vector<int>(cColRes, 0));
+    vector<int> rowFactor(cRow, 0), colFactor(cRow, 0);
+
+    for (int i = 0; i < cRow; ++i)
+        for (int j = 0; j < cCol / 2; ++j)
+            rowFactor[i] = rowFactor[i] + mtr1[i][2 * j] * mtr1[i][2 * j + 1];
+
+    for (int j = 0; j < cColRes; ++j)
+        for (int i = 0; i < cCol / 2; ++i)
+            colFactor[j] = colFactor[j] + mtr2[i * 2][j] * mtr2[i * 2 + 1][j];
+
+    for (int i = 0; i < cRow; ++i)
+        for (int j = 0; j < cColRes; ++j)
+        {
+            mtrRes[i][j] = -rowFactor[i] - colFactor[j];
+
+            for (int k = 0; k < cCol / 2; ++k)
+                mtrRes[i][j] = mtrRes[i][j] + (mtr1[i][2 * k] + mtr2[2 * k + 1][j]) * (mtr1[i][2 * k + 1] + mtr2[2 * k][j]);
+        }
+
+    if (cCol % 2 != 0)
+        for (int i = 0; i < cCol; ++i)
+            for (int j = 0; j < cColRes; ++j)
+                mtrRes[i][j] = mtrRes[i][j] + mtr1[i][cCol - 1] * mtr2[cCol - 1][j];
+
+    return mtrRes;
+}
