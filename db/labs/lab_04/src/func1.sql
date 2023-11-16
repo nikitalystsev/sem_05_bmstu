@@ -1,3 +1,5 @@
+create extension if not exists plpython3u;
+
 -- Определяемая пользователем скалярная функция CLR
 -- Скалярная функция, считающая сколько осталось свободных мест в палате
 
@@ -10,4 +12,5 @@ $$
 $$;
 
 select w.number, w.capacity, w.engaged, get_count_beds_available(w.capacity, w.engaged) as count_available
-from wards as w;
+from wards as w
+order by w.number;
