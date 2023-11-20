@@ -11,6 +11,8 @@ set grid
 
 set logscale y
 
+set key bottom right
+
 plot "../postproc_data/graph3/mtrMulClassicMem.txt" with linespoints pt 5 lt rgb "red" title "Классическое умножение матриц", \
 "../postproc_data/graph3/mtrMulVinogradMem.txt" with linespoints title "Стандартный Виноград", \
 "../postproc_data/graph3/mtrMulVinogradWithOptMem.txt" with linespoints title "Оптимизированный Виноград", \

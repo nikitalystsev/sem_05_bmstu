@@ -11,6 +11,8 @@ set grid
 
 set logscale y
 
+set key bottom right
+
 plot "../postproc_data/graph1/mtrMulClassicTime.txt" with linespoints pt 5 lt rgb "red" title "Классическое умножение матриц", \
 "../postproc_data/graph1/mtrMulVinogradTime.txt" with linespoints title "Стандартный Виноград", \
 "../postproc_data/graph1/mtrMulVinogradWithOptTime.txt" with linespoints title "Оптимизированный Виноград", \
