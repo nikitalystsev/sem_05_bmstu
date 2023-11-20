@@ -1,0 +1,20 @@
+static int _distanceRecur(const std::wstring &str1, const std::wstring &str2, const size_t i, const size_t j)
+{
+    if (std::min(i, j) == 0)
+        return std::max(i, j);
+    int isEqual = str1[i - 1] == str2[j - 1] ? 0 : 1;
+    int tmp_res = std::min({_distanceRecur(str1, str2, i, j - 1) + 1,
+                            _distanceRecur(str1, str2, i - 1, j) + 1,
+                            _distanceRecur(str1, str2, i - 1, j - 1) + isEqual});
+    if (i > 1 && j > 1 &&
+        str1[i - 1] == str2[j - 2] &&
+        str1[i - 2] == str2[j - 1])
+        tmp_res = std::min(tmp_res, _distanceRecur(str1, str2, i - 2, j - 2) + 1);
+    return tmp_res;
+}
+
+int distanceRecur(const std::wstring &str1, const std::wstring &str2)
+{
+    size_t l1 = str1.length(), l2 = str2.length();
+    return _distanceRecur(str1, str2, l1, l2);
+}

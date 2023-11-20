@@ -1,0 +1,25 @@
+static int _distanceRecurWithCaching(const std::wstring &str1, const std::wstring &str2, const size_t i, const size_t j, int **cache)
+{
+    if (cache[i][j] != -1)
+        return cache[i][j];
+    if (std::min(i, j) == 0)
+        return std::max(i, j);
+    int isEqual = str1[i - 1] == str2[j - 1] ? 0 : 1;
+    cache[i][j] = std::min({_distanceRecurWithCaching(str1, str2, i, j - 1, cache) + 1,
+                            _distanceRecurWithCaching(str1, str2, i - 1, j, cache) + 1,
+                            _distanceRecurWithCaching(str1, str2, i - 1, j - 1, cache) + isEqual});
+    if (i > 1 && j > 1 &&
+        str1[i - 1] == str2[j - 2] &&
+        str1[i - 2] == str2[j - 1])
+        cache[i][j] = std::min(cache[i][j], _distanceRecurWithCaching(str1, str2, i - 2, j - 2, cache) + 1);
+    return cache[i][j];
+}
+
+int distanceRecurWithCaching(const std::wstring &str1, const std::wstring &str2)
+{
+    size_t l1 = str1.length(), l2 = str2.length();
+    int **cache = matrix_alloc(l1 + 1, l2 + 1, -1);
+    int res = _distanceRecurWithCaching(str1, str2, l1, l2, cache);
+    matrix_free(cache, l1 + 1);
+    return res;
+}

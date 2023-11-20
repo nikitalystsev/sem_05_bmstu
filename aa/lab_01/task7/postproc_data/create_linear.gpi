@@ -1,0 +1,18 @@
+#!/usr/bin/gnuplot -persist
+reset
+NO_ANIMATION = 1
+
+set terminal svg size 640, 440
+set output 'linear_graph.svg'
+
+set xlabel "Длина строки, символы"
+set ylabel "Время, нс"
+set grid 
+
+# Устанавливаем логарифмическую шкалу для оси Y
+set logscale y
+
+plot "./grap1/levNotRecur.txt" with linespoints pt 5 lt rgb "red" title "Нерекурсивный Левенштейн", \
+"./grap1/damLevNotRecur.txt" with linespoints title "Нерекурсивный Дамерау-Левенштейн", \
+"./grap1/damLevRecur.txt" with linespoints title "Рекурсивный Дамерау-Левенштейн", \
+"./grap1/damLevRecurCache.txt" with linespoints title "Рекурсивный Дамерау-Левенштейн с кешем"
