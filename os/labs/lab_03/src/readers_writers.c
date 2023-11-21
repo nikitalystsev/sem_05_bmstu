@@ -1,9 +1,11 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #define COUNT_READERS 5
@@ -12,86 +14,63 @@
 #define READER_SLEEP_TIME 2
 #define WRITER_SLEEP_TIME 2
 
-// семафоры
-#define ACTIVE_READERS 0 // Кол-во активных читателей;
-#define CAN_READ 1       // Читатель может читать? (есть ли активный писатель)
-#define CAN_WRITE 2      // писатель может записать?
-#define WAIT_WRITERS 3   // Кол-во ожидающий писателей, которые хотят записать.
+#define ACTIVE_WRITERS 0
+#define WAITING_WRITERS 1
+#define ACTIVE_READERS 2
+#define BIN 3
 
 // Операции над семафорами:
 #define P -1 // Пропустить;
 #define V 1  // Освободить.
 #define S 0  // sleep.
 
-struct sembuf StartRead[5] = {
-    {CAN_READ, V, 0},
-    {WAIT_WRITERS, S, 0},   // проверка, если ли ждущие писатели
-    {CAN_WRITE, S, 0},      // проверка, что писатель не пишет
-    {ACTIVE_READERS, V, 0}, // инкремент активных читателей
-    {CAN_READ, P, 0}
+int flag = 1; // флаг для обработчика сигнала
 
-};
-
-struct sembuf StopRead[1] = {
-    {ACTIVE_READERS, P, 0} // Декремент активных читателей
-};
-
-struct sembuf StartWrite[6] = {
-    {WAIT_WRITERS, V, 0},   // инкремент счётчика ждущих писателей
-    {ACTIVE_READERS, S, 0}, // проверка, есть ли активный читатель
-    {CAN_WRITE, S, 0},      // проверка, пишет ли другой писатель
-    {CAN_WRITE, V, 0},      // захват семафора активного писателя
-    {CAN_READ, V, 0},       // захват семафора может ли читать (то есть запрет чтения)
-    {WAIT_WRITERS, P, 0}    // декремент счётчика ждущих писателей
-};
-
-struct sembuf StopWrite[2] = {
-    {CAN_READ, P, 0}, // Разрешает читать
-    {CAN_WRITE, P, 0} // Разрешает писать. освобождение активного писателя
-};
-
-int start_read(int sem_id)
+void signal_handler(int sig_num)
 {
-    return semop(sem_id, StartRead, 5);
+    flag = 0;
+    printf("\nProcess (id = %d) перехватил сигнал %d\n", getpid(), sig_num);
 }
 
-int stop_read(int sem_id)
+struct sembuf _start_read[] = {
+    {ACTIVE_WRITERS, S, 0},
+    {WAITING_WRITERS, S, 0},
+    {ACTIVE_READERS, V, 0},
+};
+
+struct sembuf _stop_read[] = {
+    {ACTIVE_READERS, P, 0}};
+
+struct sembuf _start_write[] = {
+    {WAITING_WRITERS, V, 0},
+    {ACTIVE_READERS, S, 0},
+    {ACTIVE_WRITERS, S, 0},
+    {ACTIVE_WRITERS, V, 0},
+    {BIN, P, 0},
+    {WAITING_WRITERS, P, 0}};
+
+struct sembuf _stop_write[] = {
+    {ACTIVE_WRITERS, P, 0},
+    {BIN, V, 0}};
+
+int start_read(int semid)
 {
-    return semop(sem_id, StopRead, 1);
+    return semop(semid, _start_read, 3);
 }
 
-int start_write(int sem_id)
+int stop_read(int semid)
 {
-    return semop(sem_id, StartWrite, 6);
+    return semop(semid, _stop_read, 1);
 }
 
-int stop_write(int sem_id)
+int start_write(int semid)
 {
-    return semop(sem_id, StopWrite, 2);
+    return semop(semid, _start_write, 6);
 }
 
-void reader(const int semid, const int *addr)
+int stop_write(int semid)
 {
-    int sleep_time = rand() % READER_SLEEP_TIME + 1;
-    sleep(sleep_time);
-
-    int rc = start_read(semid);
-
-    if (rc == -1)
-    {
-        perror("Ошибка start_read\n");
-        exit(EXIT_FAILURE);
-    }
-
-    printf("Reader (id = %d) read: %d\n", getpid(), *addr);
-
-    rc = stop_read(semid);
-
-    if (rc == -1)
-    {
-        perror("Ошибка stop_read\n");
-        exit(EXIT_FAILURE);
-    }
+    return semop(semid, _stop_write, 2);
 }
 
 void writer(const int semid, int *addr)
@@ -118,17 +97,47 @@ void writer(const int semid, int *addr)
     }
 }
 
+void reader(const int semid, const int *addr)
+{
+    int sleep_time = rand() % READER_SLEEP_TIME + 1;
+    sleep(sleep_time);
+
+    int rc = start_read(semid);
+
+    if (rc == -1)
+    {
+        perror("Ошибка start_read\n");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Reader (id = %d) read: %d\n", getpid(), *addr);
+
+    rc = stop_read(semid);
+
+    if (rc == -1)
+    {
+        perror("Ошибка stop_read\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 int main(void)
 {
-    int status;
+    srand(time(NULL)); // абсолютно случайные задержки
+
+    if (signal(SIGINT, signal_handler) == SIG_ERR)
+    {
+        perror("Ошибка signal");
+        exit(EXIT_FAILURE);
+    }
 
     // флаги, определяющие права доступа к разделяемой
     // памяти (и семафорам) для всех категорий пользователей
     int perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
-    // создаем новый сегмент разделяемой памяти с ключом IPC_PRIVATE
+    // создаем новый сегмент разделяемой памяти с ключом 100 (c примера)
     // и получаем его идентификатор
-    int shmid = shmget(IPC_PRIVATE, sizeof(int), IPC_CREAT | perms);
+    int shmid = shmget(100, sizeof(int), IPC_CREAT | perms);
 
     if (shmid == -1)
     {
@@ -155,12 +164,12 @@ int main(void)
         return -1;
     }
 
-    int rc_can_write = semctl(semid, CAN_WRITE, SETVAL, 0);
-    int rc_can_read = semctl(semid, CAN_READ, SETVAL, 0);
     int rc_active_readers = semctl(semid, ACTIVE_READERS, SETVAL, 0);
-    int rc_wait_writers = semctl(semid, WAIT_WRITERS, SETVAL, 0);
+    int rc_active_writers = semctl(semid, ACTIVE_WRITERS, SETVAL, 0);
+    int rc_waiting_writers = semctl(semid, WAITING_WRITERS, SETVAL, 0);
+    int rc_access = semctl(semid, BIN, SETVAL, 1);
 
-    if (rc_can_write == -1 || rc_can_read == -1 || rc_active_readers == -1 || rc_wait_writers)
+    if (rc_active_readers == -1 || rc_active_writers == -1 || rc_waiting_writers == -1 || rc_access)
     {
         perror("Ошибка semctl.\n");
         exit(EXIT_FAILURE);
@@ -176,7 +185,7 @@ int main(void)
         }
         else if (childpid == 0)
         {
-            while (1)
+            while (flag)
                 reader(semid, addr);
             exit(0);
         }
@@ -192,21 +201,24 @@ int main(void)
         }
         else if (childpid == 0)
         {
-            while (1)
+            while (flag)
                 writer(semid, addr);
             exit(0);
         }
     }
 
-    for (size_t i = 0; i < COUNT_WRITERS + COUNT_WRITERS; ++i)
+    for (size_t i = 0; i < COUNT_READERS + COUNT_WRITERS; ++i)
     {
         pid_t w_pid;
         int status;
 
         w_pid = wait(&status);
 
-        if (wait(&status) == -1)
-            perror("Error with child process.\n");
+        if (w_pid == -1)
+        {
+            perror("Ошибка wait");
+            exit(EXIT_FAILURE);
+        }
 
         if (WIFEXITED(status))
         {
