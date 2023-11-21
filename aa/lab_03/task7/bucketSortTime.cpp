@@ -1,0 +1,17 @@
+#include "../inc/algorithms.h"
+#include "../inc/timeMeasurements.h"
+
+#ifndef NMAX
+#error where?
+
+#endif
+#define N_REPS 1000
+
+using namespace std;
+
+int main()
+{
+    cout << getArrSortTime(N_REPS, bucketSort::bucketSort, NMAX) << endl;
+
+    return 0;
+}

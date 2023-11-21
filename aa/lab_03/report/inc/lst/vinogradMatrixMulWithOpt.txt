@@ -1,0 +1,32 @@
+int **matrixMulVinogradWithOpt(const int *const *const mtr1,
+                               const int *const *mtr2,
+                               int cRow, int cCol, int cColRes)
+{
+    int **mtrRes = matrix_alloc(cRow, cColRes, 0);
+    int rowFactor[cRow], colFactor[cColRes];
+    int cCol_half = cCol / 2;
+
+    for (int i = 0; i < cRow; ++i)
+        for (int j = 0; j < cCol_half; ++j)
+            rowFactor[i] += mtr1[i][j << 1] * mtr1[i][(j << 1) + 1];
+
+    for (int j = 0; j < cColRes; ++j)
+        for (int i = 0; i < cCol_half; ++i)
+            colFactor[j] += mtr2[i << 1][j] * mtr2[(i << 1) + 1][j];
+
+    for (int i = 0; i < cRow; ++i)
+        for (int j = 0; j < cColRes; ++j)
+        {
+            mtrRes[i][j] = -rowFactor[i] - colFactor[j];
+            for (int k = 0; k < cCol_half; ++k)
+                mtrRes[i][j] += (mtr1[i][k << 1] + mtr2[(k << 1) + 1][j]) * (mtr1[i][(k << 1) + 1] + mtr2[k << 1][j]);
+        }
+
+    if (cCol % 2 != 0)
+        for (int i = 0; i < cCol; ++i)
+            for (int j = 0; j < cColRes; ++j)
+                mtrRes[i][j] += mtr1[i][cCol - 1] * mtr2[cCol - 1][j];
+
+    return mtrRes;
+}
+  

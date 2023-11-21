@@ -1,0 +1,16 @@
+#!/usr/bin/gnuplot -persist
+reset
+NO_ANIMATION = 1
+
+set terminal svg size 640, 440
+set output '../postproc_data/linear_graph_time2.svg'
+
+set xlabel "Линейный размер матрицы, штуки"
+set ylabel "Время, нс"
+set grid 
+
+set logscale y
+
+plot "../postproc_data/graph2/mtrMulClassicTime.txt" with linespoints pt 5 lt rgb "red" title "Классическое умножение матриц", \
+"../postproc_data/graph2/mtrMulVinogradTime.txt" with linespoints title "Стандартный Виноград", \
+"../postproc_data/graph2/mtrMulVinogradWithOptTime.txt" with linespoints title "Оптимизированный Виноград"

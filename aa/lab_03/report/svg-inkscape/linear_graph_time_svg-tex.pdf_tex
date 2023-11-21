@@ -1,0 +1,102 @@
+%% Creator: Inkscape 1.1.2 (0a00cf5339, 2022-02-04), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'linear_graph_time_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{480bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.6875)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.08390625){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}0\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.16525){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}500000\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.24657812){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}1x106\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.32792187){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}1.5x106\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.40925){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}2x106\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.49059375){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}2.5x106\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.57192188){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}3x106\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.15265625,0.65326562){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}3.5x106\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.16576563,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}10\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.25409375,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}20\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.34240625,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}30\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.43073438,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}40\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.51904688,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}50\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.607375,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}60\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.6956875,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}70\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.78401562,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}80\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.87232813,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}90\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.96065625,0.05578125){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}100\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.02996875,0.37467187){\rotatebox{90}{\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Время, нс\end{tabular}}}}}%
+    \put(0.56320313,0.01359375){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Линейный размер матрицы, штуки\end{tabular}}}}%
+    \put(0.85482813,0.62514063){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}Классическое умножение матриц\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.85482813,0.59701563){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}Стандартный Виноград\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{linear_graph_time_svg-tex.pdf}}%
+    \put(0.85482813,0.56889062){\makebox(0,0)[rt]{\lineheight{1.25}\smash{\begin{tabular}[t]{r}Оптимизированный Виноград\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{linear_graph_time_svg-tex.pdf}}%
+  \end{picture}%
+\endgroup%
