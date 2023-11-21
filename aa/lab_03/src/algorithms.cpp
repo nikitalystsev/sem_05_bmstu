@@ -1,6 +1,6 @@
 #include "algorithms.h"
 
-static int findMax(std::vector<int> &arr)
+static int findMax(vector<int> &arr)
 {
     int max = arr[0];
 
@@ -11,7 +11,7 @@ static int findMax(std::vector<int> &arr)
     return max;
 }
 
-static int findMin(std::vector<int> &arr)
+static int findMin(vector<int> &arr)
 {
     int max = arr[0];
 
@@ -24,14 +24,14 @@ static int findMin(std::vector<int> &arr)
 
 namespace bucketSort
 {
-void bucketSort(std::vector<int> &arr)
+void bucketSort(vector<int> &arr)
 {
     int n = arr.size();
     int minVal = findMin(arr), maxVal = findMax(arr);
     int bucketRange = (maxVal - minVal) / n + 1;
     int bucketIndex, i, j, index = 0;
 
-    std::vector<std::vector<int>> buckets(n);
+    vector<vector<int>> buckets(n);
 
     for (i = 0; i < n; i++)
     {
@@ -40,7 +40,7 @@ void bucketSort(std::vector<int> &arr)
     }
 
     for (i = 0; i < n; i++)
-        std::sort(buckets[i].begin(), buckets[i].end());
+        sort(buckets[i].begin(), buckets[i].end());
 
     for (i = 0; i < n; i++)
         for (j = 0; j < buckets[i].size(); j++)
@@ -52,12 +52,12 @@ void bucketSort(std::vector<int> &arr)
 namespace radixSort
 {
 
-static void countSort(std::vector<int> &arr, int exp)
+static void countSort(vector<int> &arr, int exp)
 {
     int n = arr.size();
     int i;
 
-    std::vector<int> output(n), count(10, 0);
+    vector<int> output(n), count(10, 0);
 
     for (i = 0; i < n; i++)
         count[(arr[i] / exp) % 10]++;
@@ -75,7 +75,7 @@ static void countSort(std::vector<int> &arr, int exp)
         arr[i] = output[i];
 }
 
-void radixSort(std::vector<int> &arr)
+void radixSort(vector<int> &arr)
 {
     int max = findMax(arr);
     int exp;
