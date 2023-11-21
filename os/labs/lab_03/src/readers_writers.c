@@ -75,50 +75,60 @@ int stop_write(int semid)
 
 void writer(const int semid, int *addr)
 {
-    int sleep_time = rand() % WRITER_SLEEP_TIME + 1;
-    sleep(sleep_time);
-
-    int rc = start_write(semid);
-    if (rc == -1)
+    while (flag)
     {
-        perror("Ошибка start_write\n");
-        exit(EXIT_FAILURE);
+        int sleep_time = rand() % WRITER_SLEEP_TIME + 1;
+        sleep(sleep_time);
+
+        int rc = start_write(semid);
+        if (rc == -1)
+        {
+            perror("Ошибка start_write\n");
+            exit(EXIT_FAILURE);
+        }
+
+        (*addr)++;
+        printf("Writer (id = %d) write: %d\n", getpid(), *addr);
+
+        rc = stop_write(semid);
+
+        if (rc == -1)
+        {
+            perror("Ошибка stop_write\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    (*addr)++;
-    printf("Writer (id = %d) write: %d\n", getpid(), *addr);
-
-    rc = stop_write(semid);
-
-    if (rc == -1)
-    {
-        perror("Ошибка stop_write\n");
-        exit(EXIT_FAILURE);
-    }
+    exit(EXIT_SUCCESS);
 }
 
 void reader(const int semid, const int *addr)
 {
-    int sleep_time = rand() % READER_SLEEP_TIME + 1;
-    sleep(sleep_time);
-
-    int rc = start_read(semid);
-
-    if (rc == -1)
+    while (flag)
     {
-        perror("Ошибка start_read\n");
-        exit(EXIT_FAILURE);
+        int sleep_time = rand() % READER_SLEEP_TIME + 1;
+        sleep(sleep_time);
+
+        int rc = start_read(semid);
+
+        if (rc == -1)
+        {
+            perror("Ошибка start_read\n");
+            exit(EXIT_FAILURE);
+        }
+
+        printf("Reader (id = %d) read: %d\n", getpid(), *addr);
+
+        rc = stop_read(semid);
+
+        if (rc == -1)
+        {
+            perror("Ошибка stop_read\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    printf("Reader (id = %d) read: %d\n", getpid(), *addr);
-
-    rc = stop_read(semid);
-
-    if (rc == -1)
-    {
-        perror("Ошибка stop_read\n");
-        exit(EXIT_FAILURE);
-    }
+    exit(EXIT_SUCCESS);
 }
 
 int main(void)
@@ -185,9 +195,7 @@ int main(void)
         }
         else if (childpid == 0)
         {
-            while (flag)
-                reader(semid, addr);
-            exit(0);
+            reader(semid, addr);
         }
     }
 
@@ -201,9 +209,7 @@ int main(void)
         }
         else if (childpid == 0)
         {
-            while (flag)
-                writer(semid, addr);
-            exit(0);
+            writer(semid, addr);
         }
     }
 

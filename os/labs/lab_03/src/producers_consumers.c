@@ -37,17 +37,20 @@ void signal_handler(int sig_num)
     printf("\nProcess (id = %d) перехватил сигнал %d\n", getpid(), sig_num);
 }
 
-struct sembuf producers_begin[2] = {
+// неделемые операции ...
+struct sembuf producers_begin[] = {
     {SE, P, 0},
     {SB, P, 0}};
-struct sembuf producers_end[2] = {
+
+struct sembuf producers_end[] = {
     {SB, V, 0},
     {SF, V, 0}};
 
-struct sembuf consumers_begin[2] = {
+struct sembuf consumers_begin[] = {
     {SF, P, 0},
     {SB, P, 0}};
-struct sembuf consumers_end[2] = {
+
+struct sembuf consumers_end[] = {
     {SB, V, 0},
     {SE, V, 0}};
 
@@ -56,6 +59,8 @@ void producer(const int semid, char **curraddr_prod, char *alfa)
 {
     while (flag)
     {
+        srand(time(NULL)); // абсолютно случайные задержки
+
         sleep(rand() % 4 + 1);
         // захватываем SE и SB семафоры
         int rc = semop(semid, producers_begin, 2);
@@ -66,10 +71,10 @@ void producer(const int semid, char **curraddr_prod, char *alfa)
             exit(EXIT_FAILURE);
         }
 
-        // помещаем букву в буфер
+        // кладем букву в буфер
         **curraddr_prod = *alfa;
 
-        printf("Producer (id = %d) write %c\n", getpid(), **curraddr_prod);
+        printf("Producer (id = %d) кладет %c\n", getpid(), **curraddr_prod);
 
         (*curraddr_prod)++;
         (*alfa)++; // следуюшая буква
@@ -96,6 +101,8 @@ void consumer(const int semid, char **curraddr_cons)
 {
     while (flag)
     {
+        srand(time(NULL)); // абсолютно случайные задержки
+
         sleep(rand() % 10 + 1);
         // захватываем SF и SB семафоры
         int rc = semop(semid, consumers_begin, 2);
@@ -106,8 +113,8 @@ void consumer(const int semid, char **curraddr_cons)
             exit(EXIT_FAILURE);
         }
 
-        // читаем букву из буфера
-        printf("Consumer (id = %d) read %c\n", getpid(), **curraddr_cons);
+        // выбираем букву из буфера
+        printf("Consumer (id = %d) выбирает %c\n", getpid(), **curraddr_cons);
 
         (*curraddr_cons)++;
 
@@ -126,8 +133,6 @@ void consumer(const int semid, char **curraddr_cons)
 
 int main(void)
 {
-    srand(time(NULL)); // абсолютно случайные задержки
-
     if (signal(SIGINT, signal_handler) == SIG_ERR)
     {
         perror("Ошибка signal");
@@ -140,7 +145,7 @@ int main(void)
 
     // создаем новый сегмент разделяемой памяти с ключом 100 (c примера)
     // и получаем его идентификатор
-    int shmid = shmget(100, BUFFER_SIZE * sizeof(char), IPC_CREAT | perms);
+    int shmid = shmget(100, BUFFER_SIZE, IPC_CREAT | perms);
 
     if (shmid == -1)
     {
@@ -168,11 +173,25 @@ int main(void)
     }
 
     // Создание семафоров (3 семафора)
-    int rc_sb = semctl(semid, SB, SETVAL, 1);
-    int rc_se = semctl(semid, SE, SETVAL, BUFFER_SIZE);
-    int rc_sf = semctl(semid, SF, SETVAL, 0);
+    int rc = semctl(semid, SB, SETVAL, 1);
 
-    if (rc_sb == -1 || rc_se == -1 || rc_sf == -1)
+    if (rc == -1)
+    {
+        perror("Ошибка semctl.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rc = semctl(semid, SE, SETVAL, BUFFER_SIZE);
+
+    if (rc == -1)
+    {
+        perror("Ошибка semctl.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rc = semctl(semid, SF, SETVAL, 0);
+
+    if (rc == -1)
     {
         perror("Ошибка semctl.\n");
         exit(EXIT_FAILURE);
