@@ -50,24 +50,24 @@ struct sembuf StopWrite[2] = {
     {CAN_WRITE, P, 0} // Разрешает писать. освобождение активного писателя
 };
 
-int start_read(int sem_id)
+int start_read(int semid)
 {
-    return semop(sem_id, StartRead, 5);
+    return semop(semid, StartRead, 5);
 }
 
-int stop_read(int sem_id)
+int stop_read(int semid)
 {
-    return semop(sem_id, StopRead, 1);
+    return semop(semid, StopRead, 1);
 }
 
-int start_write(int sem_id)
+int start_write(int semid)
 {
-    return semop(sem_id, StartWrite, 6);
+    return semop(semid, StartWrite, 6);
 }
 
-int stop_write(int sem_id)
+int stop_write(int semid)
 {
-    return semop(sem_id, StopWrite, 2);
+    return semop(semid, StopWrite, 2);
 }
 
 void reader(const int semid, const int *addr)

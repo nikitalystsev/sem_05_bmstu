@@ -54,66 +54,74 @@ struct sembuf consumers_end[2] = {
 // подпрограмма действий производителя
 void producer(const int semid, char **curraddr_prod, char *alfa)
 {
-    sleep(rand() % 4 + 1);
-
-    // захватываем SE и SB семафоры
-    int rc = semop(semid, producers_begin, 2);
-
-    if (rc == -1)
+    while (flag)
     {
-        perror("Ошибка semop\n");
-        exit(EXIT_FAILURE);
+        sleep(rand() % 4 + 1);
+        // захватываем SE и SB семафоры
+        int rc = semop(semid, producers_begin, 2);
+
+        if (rc == -1)
+        {
+            perror("Ошибка semop\n");
+            exit(EXIT_FAILURE);
+        }
+
+        // помещаем букву в буфер
+        **curraddr_prod = *alfa;
+
+        printf("Producer (id = %d) write %c\n", getpid(), **curraddr_prod);
+
+        (*curraddr_prod)++;
+        (*alfa)++; // следуюшая буква
+
+        // Проверяем, не выходит ли за пределы алфавита
+        if (*alfa > 'z')
+            *alfa = 'a'; // Вернуться в начало алфавита
+
+        // освобождаем SB и SE семафоры
+        rc = semop(semid, producers_end, 2);
+
+        if (rc == -1)
+        {
+            perror("Ошибка semop\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    // помещаем букву в буфер
-    **curraddr_prod = *alfa;
-
-    printf("Producer (id = %d) write %c\n", getpid(), **curraddr_prod);
-
-    (*curraddr_prod)++;
-    (*alfa)++; // следуюшая буква
-
-    // Проверяем, не выходит ли за пределы алфавита
-    if (*alfa > 'z')
-        *alfa = 'a'; // Вернуться в начало алфавита
-
-    // освобождаем SB и SE семафоры
-    rc = semop(semid, producers_end, 2);
-
-    if (rc == -1)
-    {
-        perror("Ошибка semop\n");
-        exit(EXIT_FAILURE);
-    }
+    exit(EXIT_SUCCESS);
 }
 
 // подпрограмма действий потребителя
 void consumer(const int semid, char **curraddr_cons)
 {
-    sleep(rand() % 10 + 1);
-
-    // захватываем SF и SB семафоры
-    int rc = semop(semid, consumers_begin, 2);
-
-    if (rc == -1)
+    while (flag)
     {
-        perror("Ошибка semop\n");
-        exit(EXIT_FAILURE);
+        sleep(rand() % 10 + 1);
+        // захватываем SF и SB семафоры
+        int rc = semop(semid, consumers_begin, 2);
+
+        if (rc == -1)
+        {
+            perror("Ошибка semop\n");
+            exit(EXIT_FAILURE);
+        }
+
+        // читаем букву из буфера
+        printf("Consumer (id = %d) read %c\n", getpid(), **curraddr_cons);
+
+        (*curraddr_cons)++;
+
+        // освобождаем SB и SF семафоры
+        rc = semop(semid, consumers_end, 2);
+
+        if (rc == -1)
+        {
+            perror("Ошибка semop\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    // читаем букву из буфера
-    printf("Consumer (id = %d) read %c\n", getpid(), **curraddr_cons);
-
-    (*curraddr_cons)++;
-
-    // освобождаем SB и SF семафоры
-    rc = semop(semid, consumers_end, 2);
-
-    if (rc == -1)
-    {
-        perror("Ошибка semop\n");
-        exit(EXIT_FAILURE);
-    }
+    exit(EXIT_SUCCESS);
 }
 
 int main(void)
@@ -171,7 +179,7 @@ int main(void)
     }
 
     char **curraddr_prod = (char **)addr;
-    char **curraddr_cons = (char **)addr + sizeof(char);
+    char **curraddr_cons = curraddr_prod + sizeof(char);
     char *alfa = (char *)(curraddr_cons + sizeof(char));
 
     *alfa = 'a';
@@ -188,9 +196,7 @@ int main(void)
         }
         else if (child_pid == 0) // код потомка
         {
-            while (flag)
-                producer(semid, curraddr_prod, alfa);
-            exit(EXIT_SUCCESS);
+            producer(semid, curraddr_prod, alfa);
         }
     }
 
@@ -204,9 +210,7 @@ int main(void)
         }
         else if (child_pid == 0) // код потомка
         {
-            while (flag)
-                consumer(semid, curraddr_cons);
-            exit(EXIT_SUCCESS);
+            consumer(semid, curraddr_cons);
         }
     }
 
@@ -216,6 +220,12 @@ int main(void)
         int status;
 
         w_pid = wait(&status);
+
+        if (w_pid == -1)
+        {
+            perror("Ошибка wait");
+            exit(EXIT_FAILURE);
+        }
 
         if (WIFEXITED(status))
         {
