@@ -1,73 +1,292 @@
 \chapter{Конструкторский раздел}
 
-В данном разделе будут разработаны алгоритмы поиска расстояния Левенштейна и Дамерау-Левенштейна и приведены схемы алгоритмов различных способов их реализации.
+\section{Оценка трудоемкости алгоритмов}
 
-\section{Разработка алгоритма поиска расстояния Левенштейна}
+\subsection{Модель вычислений для проведения оценки трудоемкости алгоритмов}
 
-На рисунках \ref{img:levNotRecur_part1} и \ref{img:levNotRecur_part2}
-приведена схема нерекурсивной реализации алгоритма нахождения расстояния Левенштейна.
+Была введена модель вычислений для определения трудоемкости каждого отдельного взятого алгоритма сортировки.
 
-%\includeimage
-%{levNotRecur_part1} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
-%{f} % Обтекание (без обтекания)
-%{h} % Положение рисунка (см. figure из пакета float)
-%{0.8\textwidth} % Ширина рисунка
-%{Схема нерекурсивного алгоритма нахождения расстояния Левенштейна, первая часть} % Подпись рисунка
-
-%\includeimage
-%{levNotRecur_part2} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
-%{f} % Обтекание (без обтекания)
-%{h} % Положение рисунка (см. figure из пакета float)
-%{0.3\textwidth} % Ширина рисунка
-%{Схема нерекурсивного алгоритма нахождения расстояния Левенштейна, вторая часть} % Подпись рисунка
-
-\clearpage
-
-\section{Разработка алгоритма поиска расстояния Дамерау- Левенштейна}
-
-На рисунках \ref{img:damlevNotRecurWithMatrix_part1} и \ref{img:damlevNotRecurWithMatrix_part2}
-приведена схема нерекурсивной реализации алгоритма нахождения расстояния Дамерау-Левенштейна.
-
-%\includeimage
-%{damlevNotRecurWithMatrix_part1} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
-%{f} % Обтекание (без обтекания)
-%{h} % Положение рисунка (см. figure из пакета float)
-%{0.65\textwidth} % Ширина рисунка
-%{Схема нерекурсивного алгоритма нахождения расстояния Дамерау-Левенштейна, первая часть} % Подпись рисунка
-
-
-%\includeimage
-%{damlevNotRecurWithMatrix_part2} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
-%{f} % Обтекание (без обтекания)
-%{h} % Положение рисунка (см. figure из пакета float)
-%{0.7\textwidth} % Ширина рисунка
-%{Схема нерекурсивного алгоритма нахождения расстояния Дамерау-Левенштейна, вторая часть} % Подпись рисунка
-
-\clearpage
-
-На рисунке \ref{img:damlevRecur} приведена схема рекурсивной реализации алгоритма нахождения расстояния Дамерау-Левенштейна.
-
-%\includeimage
-%{damlevRecur} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
-%{f} % Обтекание (без обтекания)
-%{h} % Положение рисунка (см. figure из пакета float)
-%{0.91\textwidth} % Ширина рисунка
-%{Схема рекурсивного алгоритма нахождения расстояния Дамерау-Левенштейна} % Подпись рисунка
+\begin{enumerate}[label={\arabic*)}]
+	\item Трудоемкость базовых операций имеет:
+	\begin{itemize}[label=---]
+		\item равную 1:
+		\begin{equation}
+			\label{for:operations_1}
+			\begin{gathered}
+				+, -, =, +=, -=, ==, !=, <, >, <=, >=, [], ++, {-}-,\\
+				\&\&, >>, <<, ||, \&, |
+			\end{gathered}
+		\end{equation}
+		\item равную 2:
+		\begin{equation}
+			\label{for:operations_2}
+			*, /, \%, *=, /=, \%=
+		\end{equation}
+	\end{itemize}
+	\item Трудоемкость условного оператора:
+	\begin{equation}
+		\label{for:if}
+		f_{if} = f_{\text{условия}} + 
+		\begin{cases}
+			min(f_1, f_2), & \text{лучший случай}\\
+			max(f_1, f_2), & \text{худший случай}
+		\end{cases}
+	\end{equation}
+	\item Трудоемкость цикла:
+	\begin{equation}
+		\label{for:for}
+		\begin{gathered}
+			f_{for} = f_{\text{инициализация}} + f_{\text{сравнения}} + M_{\text{итераций}} \cdot (f_{\text{тело}} +\\
+			+ f_{\text{инкремент}} + f_{\text{сравнения}})
+		\end{gathered}
+	\end{equation}
+	\item Трудоемкость передачи параметра в функции и возврат из функции равны 0.
+\end{enumerate}
 
 \clearpage
 
-На рисунке \ref{img:damLevRecurWithCaching} приведена схема рекурсивной реализации алгоритма нахождения расстояния Дамерау-Левенштейна с кешированием.
+\subsection{Трудоемкость алгоритма блочной сортировки}
 
-%\includeimage
-%{damLevRecurWithCaching} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
-%{f} % Обтекание (без обтекания)
-%{h} % Положение рисунка (см. figure из пакета float)
-%{0.8\textwidth} % Ширина рисунка
-%{Схема рекурсивного алгоритма нахождения расстояния Дамерау-Левенштейна с кешированием} % Подпись рисунка
+Трудоемкость алгоритма блочной сортировки будет слагаться из:
+
+\begin{itemize}[label=---]
+	\item инициализации пяти переменных, суммарная трудоемкость которых равна 5;
+	\item цикла по $j \in [1 \ldots P]$ , трудоёмкость которого: $f = 2 + 2 + P \cdot (2 + f_{body})$;
+	\item цикла по $k \in [1 \ldots M]$ , трудоёмкость которого: $f = 2 + 2 + 14M$;
+\end{itemize}
+
+Поскольку трудоемкость стандартного алгоритма равна трудоемкости внешнего цикла, то:
+\begin{equation}
+	\label{eq:classic}
+	\begin{gathered}
+		f_{standart} = 2 + N \cdot (2 + 2 + P \cdot (2 + 2 + M \cdot (2 + 8 + 1 + 1 + 2)))= \\
+		= 2 + 4N + 4NP + 14NMP \approx 14NMP = O(N^3)
+	\end{gathered}
+\end{equation}
+
+\subsection{Трудоемкость алгоритма Винограда для умножения двух матриц}
+
+При вычислении трудоемкости алгоритма Винограда учитывается следующее:
+
+\begin{itemize}[label=---]
+	\item создание и инициализация массивов $rowFactor$ и $colFactor$, трудоёмкость которых указана в формуле~(\ref{eq:v_init});
+	\begin{equation}
+		\label{eq:v_init}
+		f_{init} = N + M
+	\end{equation}
+	\item заполнение массива $rowFactor$, трудоёмкость которого указана в формуле~(\ref{eq:v_rowF});
+	\begin{equation}
+		\label{eq:v_rowF}
+		\begin{gathered}
+			f_{rowFactor} = 2 + N \cdot (4 + \frac{M}{2} \cdot (4 + 6 + 1 + 2 + 3 \cdot 2)) = \\
+			= 2 + 4N + \frac{19NM}{2} = 2 + 4N + 9,5NM
+		\end{gathered} 
+	\end{equation}
+	\item заполнение массива $colFactor$, трудоёмкость которого указана в формуле~(\ref{eq:v_colF});
+	\begin{equation}
+		\label{eq:v_colF}
+		\begin{gathered}
+			f_{colFactor} = 2 + P \cdot (4 + \frac{M}{2} \cdot (4 + 6 + 1 + 2 + 3 \cdot 2)) = \\
+			= 2 + 4P + \frac{19PM}{2} = 2 + 4P + 9,5PM
+		\end{gathered}  
+	\end{equation}
+	\item цикл заполнения для чётных размеров, трудоёмкость которого указана в формуле~(\ref{eq:v_cycle});
+	\begin{equation}
+		\label{eq:v_cycle}
+		\begin{gathered}
+			f_{cycle} = 2 + N \cdot (4 + P \cdot (2 + 7 + 4 + \frac{M}{2} \cdot (4 + 28))) = \\
+			= 2 + 4N + 13NP + \frac{32NPM}{2}  = 2 + 4N + 13NP + 16NPM 
+		\end{gathered}
+	\end{equation}
+	\item цикла, который дополнительно нужен для подсчёта значений при нечётном размере матрицы, трудоемкость которого указана в формуле~(\ref{eq:v_check});
+	\begin{equation}
+		\label{eq:v_check}
+		\begin{gathered}
+			f_{check} = 3 + 
+			\begin{cases}
+				0, & \text{чётная} \\
+				2 + M \cdot (4 + P \cdot (2 + 14)), & \text{иначе}
+			\end{cases}
+		\end{gathered}  
+	\end{equation}
+\end{itemize}
+
+Тогда для худшего случая (нечётный общий размер матриц) имеем:
+
+\begin{equation}
+	\label{eq:vinograd_worst}
+	\begin{gathered}
+		f_{worst} = f_{init} + f_{rowFactor} + f_{colFactor} + f_{cycle} + f_{check} \approx 16NMP = O(N^3)
+	\end{gathered}
+\end{equation}
+
+Для лучшего случая (чётный общий размер матриц) имеем:
+
+\begin{equation}
+	\label{eq:vinograd_best}
+	\begin{gathered}
+		f_{best} = f_{init} + f_{rowFactor} + f_{colFactor} + f_{cycle} + f_{check} \approx 16NMP = O(N^3)
+	\end{gathered}
+\end{equation}
 
 \clearpage
+
+\subsection{Трудоемкость оптимизированного алгоритма Винограда для умножения двух матриц}
+
+Трудоемкость оптимизированного алгоритма Винограда состоит из:
+
+\begin{itemize}[label=---]
+	\item кэширования значения $\frac{M}{2}$ в циклах, которое равно 3;
+	\item создания и инициализации массивов $rowFactor$ и $colFactor$ (\ref{eq:v_init});
+	\item заполнения массива $rowFactor$, трудоёмкость которого (\ref{eq:v_rowF});
+	\item заполнения массива $colFactor$, трудоёмкость которого (\ref{eq:v_colF});
+	\item цикла заполнения для чётных размеров, трудоёмкость которого указана в формуле (\ref{сomplexity:v_opt_cycle});
+	\begin{equation}
+		\label{сomplexity:v_opt_cycle}
+		\begin{aligned}
+			f_{cycle} = 2 + N \cdot (4 + P \cdot (4 + 7 + \frac{M}{2} \cdot (2 + 10 + 5 + 2 + 4))) = \\
+			= 2 + 4N + 11NP + \frac{23NPM}{2}  = 2 + 4N + 11NP + 11,5 \cdot NPM 
+		\end{aligned}
+	\end{equation}
+	\item условия, которое нужно для дополнительных вычислений при нечётном размере матрицы, трудоемкость которого указана в формуле~(\ref{сomplexity:v_opt_check});
+	\begin{equation}
+		\label{сomplexity:v_opt_check}
+		\begin{aligned}
+			f_{check} = 3 + 
+			\begin{cases}
+				0, & \text{чётная} \\
+				2 + N \cdot (4 + P \cdot (2 + 10)), & \text{иначе}
+			\end{cases}
+		\end{aligned}  
+	\end{equation}
+\end{itemize}
+
+Тогда для худшего случая (нечётный общий размер матриц) имеем:
+\begin{equation}
+	\label{сomplexity:vinograd_opt_worst}
+	\begin{aligned}
+		f_{worst} = 3 + f_{init} + f_{atmp} + f_{btmp} + f_{cycle} + f_{check} \approx 11NMP = O(N^3)
+	\end{aligned}
+\end{equation}
+
+Для лучшего случая (чётный общий размер матриц) имеем:
+\begin{equation}
+	\label{сomplexity:vinograd_opt_best}
+	\begin{aligned}
+		f_{best} = 3 + f_{init} + f_{rowFactor} + f_{colFactor} \\
+		+ f_{cycle} + f_{check} \approx 11NMP = O(N^3)
+	\end{aligned}
+\end{equation}
+
+\clearpage
+
+\subsection{Трудоемкость алгоритма Штрассена для умножения двух матриц}
+
+Пусть 
+\begin{itemize}[label=---]
+	\item $REC$ -- трудоемкость рекурсивного алгоритма;
+	\item $DIR$ -- трудоемкость прямого решения;
+	\item $DIV$ -- трудоемкость разбиения ввода ($N$) на несколько частей;
+	\item $COM$ -- трудоемкость объединения решений.
+\end{itemize}
+
+Тогда трудоемкость рекурсивного алгоритма считается по следующей формуле:
+
+\begin{equation}
+	\label{eq:rec}
+	REC(N) =
+	\begin{cases}
+		DIR(N), & N \leq N_0\\
+		DIV(N) + \displaystyle\sum_{i=1}^{n} REC(F[i]) + COM(N), & N > N_0
+	\end{cases}
+\end{equation}
+
+где $N$ -- число входных элементов, $N_0$ -- наибольшее число, определяющее тривиальный случай (прямое решение), $n$ -- число рекурсивных вызовов для данного $N$, $F[i]$ -- число входных элементов для данного $i$.
+
+Для расчета трудоемкости алгоритма Штрассена предположим, что размеры переданных матриц -- степени двойки.
+
+Тогда трудоемкость алгоритма Штрассена определяется следующим образом:
+
+\begin{itemize}[label=---]
+	\item Для матрицы, размером $N \leq 2$ трудоемкость определяется как и в случае классического алгоритма умножения матриц, то есть согласно формуле \ref{eq:classic}
+	\item Для матриц размером $N > 2$ определяется так:
+	\begin{enumerate}[label={\arabic*)}]
+		\item Трудоемкость разбиения ввода ($N$) на части. Каждый следующий вызов берется размерность матрицы в 2 раза меньше предыдущей, и происходит создание
+		соответствующих подматриц и заполнение их значениями.
+		\begin{equation}
+			\label{eq:div}
+			\begin{gathered}
+				DIV(N) = 1 + 8 \cdot (3 + \frac{N}{2} \cdot ((3 + \frac{N}{2} \cdot (5 + 2 + 1)) + 2 + 1) = \\ 16 \cdot N^2 + 24 \cdot N + 25
+			\end{gathered}
+		\end{equation}
+		\item Трудоемкость вычисления матриц $M_i, \hspace{0.25cm} i = \overline{1, 7}$ (обозначим ее буквой $G = G(N)$):
+		\begin{equation}
+			\label{eq:G}
+			\begin{gathered}
+				G(N) = 10 \cdot (2 + \frac{N}{2} \cdot (2 + \frac{N}{2} \cdot (8 + 1 + 1) + 1 + 1)) + \\
+				+ 7 \cdot REC(\frac{N}{2})
+			\end{gathered}
+		\end{equation}
+		
+		где, так как $N = 2^k$ и согласно с \ref{eq:recmul}
+		
+		\begin{equation}
+			\begin{gathered}
+				REC(\frac{N}{2}) = REC(2^{k-1}) = 7 \cdot M(2^{k-2}) = \ldots 7^{i-1} M(2^{k-i}) = \ldots \\
+				7^{k-1} M(2^{k-k}) = 7^{k-1}
+			\end{gathered}
+		\end{equation}
+		
+		подставляя $k = \log_2(N)$ получаем, что 
+		
+		\begin{equation}
+			\begin{gathered}
+				REC(\frac{N}{2}) = \frac{N^{\log_2(7)}}{7}
+			\end{gathered}
+		\end{equation}
+		
+		Таким образом, трудоемкость вычисления матриц $M_i, \hspace{0.25cm} i = \overline{1, 7}$ определяется следующей формулой:
+		
+		\begin{equation}
+			\label{eq:Gfinish}
+			\begin{gathered}
+				G(N) = 10 \cdot (10 \cdot (\frac{N}{2})^2 + 4 \cdot \frac{N}{2} + 2) + N^{\log_2(7)} = \\
+				25 \cdot N^2 + 20 \cdot N + 20 + N^{\log_2(7)}
+			\end{gathered}
+		\end{equation}
+		
+		\item Трудоемкость объединения решений, а именно формирование результирующей матрицы из вычисленных матриц $M_i, \hspace{0.25cm} i = \overline{1, 7}$
+		
+		\begin{equation}
+			\label{eq:com}
+			\begin{gathered}
+				COM(N) = 8 \cdot (2 + \frac{N}{2} \cdot (2 + \frac{N}{2} \cdot (8 + 1 + 1) + 1 + 1)) + \\
+				4 \cdot (3 + \frac{N}{2} \cdot ((3 + \frac{N}{2} \cdot (5 + 2 + 1)) + 2 + 1) = \\
+				28 \cdot N^2 + 28 \cdot N + 28
+			\end{gathered}
+		\end{equation}	
+	\end{enumerate}
+	
+	Таким образом, для матриц размером $N > 2$ трудоемкость алгоритма Штрассена согласно \ref{eq:rec} определяется так:
+	
+	\begin{equation}
+		\label{eq:com}
+		\begin{gathered}
+			f_{strassen}(N) = DIV(N) + G(N) + COM(N) = \\ 16 \cdot N^2 + 24 \cdot N + 25 + 25 \cdot N^2 + 20 \cdot N + 20 + N^{\log_2(7)} + \\
+			28 \cdot N^2 + 28 \cdot N + 28 = \\
+			N^{\log_2(7)} + 69 \cdot N^2 + 72 \cdot N + 73 \approx N^{\log_2(7)} = O(N^{\log_2(7)})
+		\end{gathered}
+	\end{equation}
+\end{itemize}
+
+\subsection{Трудоемкость оптимизированного алгоритма Штрассена для умножения двух матриц}
+
+При программной реализации алгоритма Штрассена не нашлось мест для применения предложенных по варианту оптимизаций, поэтому трудоемкость алгоритма Штрассена осталасть такой же, как и в предыдущем пункте.
 
 \section*{Вывод}
 
-В данном разделе были перечислены основные требования к программному обеспечению, а также, на основе  данных, полученных в аналитическом разделе, были построены схемы алгоритмов различных способов реализации алгоритмов поиска расстояний Левенштейна и Дамерау-Левенштейна.
+В данном разделе были построены схемы алгоритмов классического умножения матриц, умножения матриц с использованием алгоритма Винограда и алгоритма Штрассена. Также были приведены оценки трудоемкости этих алгоритмов.
+
+Согласно расчетам трудоемкости, наиболее эффективным оказался алгоритм Штрассена. Трудоемкость оптимизированной версии алгоритма Винограда в 1.5 раза меньше, чем у его неоптимизированной версии и в 1.27 раз маньше, чем у классического алгоритма. 
+
 

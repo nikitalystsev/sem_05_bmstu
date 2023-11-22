@@ -5,12 +5,13 @@ NO_ANIMATION = 1
 set terminal svg size 640, 440
 set output '../postproc_data/linear_graph_time2.svg'
 
-set xlabel "Линейный размер матрицы, штуки"
-set ylabel "Время, нс"
+set xlabel "Количество элементов в массиве, штуки"
+set ylabel "Время, мкс"
 set grid 
 
-set logscale y
+# set logscale x
+# set logscale y
 
-plot "../postproc_data/graph2/mtrMulClassicTime.txt" with linespoints pt 5 lt rgb "red" title "Классическое умножение матриц", \
-"../postproc_data/graph2/mtrMulVinogradTime.txt" with linespoints title "Стандартный Виноград", \
-"../postproc_data/graph2/mtrMulVinogradWithOptTime.txt" with linespoints title "Оптимизированный Виноград"
+plot "../postproc_data/graph2/mergeSortTime.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
+"../postproc_data/graph2/radixSortTime.txt" with linespoints title "Поразрядная сортировка", \
+"../postproc_data/graph2/bucketSortTime.txt" with linespoints title "Блочная сортировка"

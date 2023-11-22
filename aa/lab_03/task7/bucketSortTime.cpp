@@ -11,6 +11,7 @@ using namespace std;
 
 int main()
 {
+    srand(200);
     cout << getArrSortTime(N_REPS, bucketSort::bucketSort, NMAX) << endl;
 
     return 0;

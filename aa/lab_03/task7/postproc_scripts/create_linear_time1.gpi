@@ -3,11 +3,14 @@ reset
 NO_ANIMATION = 1
 
 set terminal svg size 640, 440
-set output '../postproc_data/linear_graph_time.svg'
+set output '../postproc_data/linear_graph_time1.svg'
 
 set xlabel "Количество элементов в массиве, штуки"
 set ylabel "Время, мкс"
 set grid 
+
+# set logscale x
+set logscale y
 
 plot "../postproc_data/graph1/mergeSortTime.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
 "../postproc_data/graph1/radixSortTime.txt" with linespoints title "Поразрядная сортировка", \

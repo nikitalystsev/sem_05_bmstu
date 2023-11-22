@@ -11,6 +11,7 @@ using namespace std;
 
 int main()
 {
+    srand(200);
     cout << getArrSortTime(N_REPS, mergeSort::mergeSort, NMAX) << endl;
 
     return 0;
