@@ -1,0 +1,30 @@
+    while (i < lengthLeft)
+    {
+        arr[k] = arrLeft[i];
+        k++;
+        i++;
+    }
+
+    while (j < lengthRight)
+    {
+        arr[k] = arrRight[j];
+        k++;
+        j++;
+    }
+}
+
+static void _mergeSort(vector<int> &arr, int low, int high)
+{
+    if (low < high)
+    {
+        _mergeSort(arr, low, (low + high) / 2);
+        _mergeSort(arr, (low + high) / 2 + 1, high);
+
+        _merge(arr, low, high, (low + high) / 2);
+    }
+}
+
+void mergeSort(vector<int> &arr)
+{
+    _mergeSort(arr, 0, arr.size() - 1);
+}

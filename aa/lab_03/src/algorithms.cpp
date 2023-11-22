@@ -1,33 +1,12 @@
 #include "algorithms.h"
 
-static int findMax(vector<int> &arr)
-{
-    int max = arr[0];
-
-    for (int num : arr)
-        if (num > max)
-            max = num;
-
-    return max;
-}
-
-static int findMin(vector<int> &arr)
-{
-    int max = arr[0];
-
-    for (int num : arr)
-        if (num < max)
-            max = num;
-
-    return max;
-}
-
 namespace bucketSort
 {
 void bucketSort(vector<int> &arr)
 {
     int n = arr.size();
-    int minVal = findMin(arr), maxVal = findMax(arr);
+    int minVal = *min_element(arr.begin(), arr.end());
+    int maxVal = *max_element(arr.begin(), arr.end());
     int bucketRange = (maxVal - minVal) / n + 1;
     int bucketIndex, i, j, index = 0;
 
@@ -51,7 +30,6 @@ void bucketSort(vector<int> &arr)
 
 namespace radixSort
 {
-
 static void countSort(vector<int> &arr, int exp)
 {
     int n = arr.size();
@@ -77,7 +55,7 @@ static void countSort(vector<int> &arr, int exp)
 
 void radixSort(vector<int> &arr)
 {
-    int max = findMax(arr);
+    int max = *max_element(arr.begin(), arr.end());
     int exp;
 
     for (exp = 1; max / exp > 0; exp *= 10)

@@ -16,13 +16,29 @@ void printArray(std::vector<int> &A, int size)
 int main()
 {
 
-    vector<int> myarray = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+    vector<int> myArray = {};
+    vector<int> tmpMyArray = myArray;
 
-    mergeSort::mergeSort(myarray);
+    cout << "arr.size() = " << myArray.size() << endl;
 
-    cout << "Sorted array\n";
-    for (int i = 0; i < 10; i++)
-    {
-        cout << myarray[i] << "\t";
-    }
+    bucketSort::bucketSort(myArray);
+
+    cout << "bucketSort myArray:\n";
+    printArray(myArray, myArray.size());
+
+    myArray = tmpMyArray;
+
+    mergeSort::mergeSort(myArray);
+
+    cout << "mergeSort myArray:\n";
+    printArray(myArray, myArray.size());
+
+    myArray = tmpMyArray;
+
+    radixSort::radixSort(myArray);
+
+    cout << "radixSort myArray:\n";
+    printArray(myArray, myArray.size());
+
+    return 0;
 }
