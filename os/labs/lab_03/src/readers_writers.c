@@ -14,15 +14,16 @@
 #define READER_SLEEP_TIME 2
 #define WRITER_SLEEP_TIME 2
 
-#define ACTIVE_WRITERS 0
+#define WAITING_READERS 0
 #define WAITING_WRITERS 1
 #define ACTIVE_READERS 2
-#define BIN 3
+#define ACTIVE_WRITER 3
+#define BIN 4
 
 // Операции над семафорами:
 #define P -1 // Пропустить;
 #define V 1  // Освободить.
-#define S 0  // sleep.
+#define S 0  // Ожидание освобождения без его захвата
 
 int flag = 1; // флаг для обработчика сигнала
 
@@ -33,29 +34,30 @@ void signal_handler(int sig_num)
 }
 
 struct sembuf _start_read[] = {
-    {ACTIVE_WRITERS, S, 0},
-    {WAITING_WRITERS, S, 0},
-    {ACTIVE_READERS, V, 0}, // инкремент читателей
-};
+    {WAITING_READERS, V, 0},
+    {ACTIVE_WRITER, S, 0},   // есть ли активный писатель
+    {WAITING_WRITERS, S, 0}, // есть ли ждущие писатели
+    {ACTIVE_READERS, V, 0},  // инкремент читателей
+    {WAITING_READERS, P, 0}};
 
 struct sembuf _stop_read[] = {
     {ACTIVE_READERS, P, 0}}; // декремент читателей
 
 struct sembuf _start_write[] = {
     {WAITING_WRITERS, V, 0},
-    {ACTIVE_READERS, S, 0},
-    {ACTIVE_WRITERS, S, 0},
-    {ACTIVE_WRITERS, V, 0},
+    {ACTIVE_READERS, S, 0}, // есть ли активные читатели
+    {ACTIVE_WRITER, S, 0},  // есть ли активный писатель
+    {ACTIVE_WRITER, V, 0},  // active_writer:= true;
     {BIN, P, 0},
     {WAITING_WRITERS, P, 0}};
 
 struct sembuf _stop_write[] = {
-    {ACTIVE_WRITERS, P, 0},
-    {BIN, V, 0}};
+    {BIN, V, 0},
+    {ACTIVE_WRITER, P, 0}}; // active_writer:= false;
 
 int start_read(int semid)
 {
-    return semop(semid, _start_read, 3);
+    return semop(semid, _start_read, 5);
 }
 
 int stop_read(int semid)
@@ -78,9 +80,7 @@ void writer(const int semid, int *addr)
     while (flag)
     {
         srand(time(NULL)); // абсолютно случайные задержки
-        int sleep_time = rand() % WRITER_SLEEP_TIME + 1;
-        sleep(sleep_time);
-        sleep(rand() % 4 + 1);
+        sleep(rand() % 5 + 1);
 
         int rc = start_write(semid);
         if (rc == -1)
@@ -110,7 +110,7 @@ void reader(const int semid, const int *addr)
     {
         srand(time(NULL)); // абсолютно случайные задержки
 
-        sleep(rand() % 10 + 1);
+        sleep(rand() % 5 + 1);
 
         int rc = start_read(semid);
 
@@ -169,7 +169,7 @@ int main(void)
 
     // создаем набор из 4-х семафоров с ключом 100 (c примера)
     // и получаем его идентификатор
-    int semid = semget(IPC_PRIVATE, 4, IPC_CREAT | perms);
+    int semid = semget(IPC_PRIVATE, 5, IPC_CREAT | perms);
 
     if (semid == -1)
     {
@@ -177,7 +177,7 @@ int main(void)
         return -1;
     }
 
-    int rc = semctl(semid, ACTIVE_READERS, SETVAL, 0);
+    int rc = semctl(semid, ACTIVE_WRITER, SETVAL, 0);
 
     if (rc == -1)
     {
@@ -185,7 +185,15 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    rc = semctl(semid, ACTIVE_WRITERS, SETVAL, 0);
+    rc = semctl(semid, ACTIVE_READERS, SETVAL, 0);
+
+    if (rc == -1)
+    {
+        perror("Ошибка semctl.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rc = semctl(semid, WAITING_READERS, SETVAL, 0);
 
     if (rc == -1)
     {
@@ -201,7 +209,7 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    int rc = semctl(semid, BIN, SETVAL, 1);
+    rc = semctl(semid, BIN, SETVAL, 1);
 
     if (rc == -1)
     {
