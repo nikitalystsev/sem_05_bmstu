@@ -35,11 +35,11 @@ void signal_handler(int sig_num)
 struct sembuf _start_read[] = {
     {ACTIVE_WRITERS, S, 0},
     {WAITING_WRITERS, S, 0},
-    {ACTIVE_READERS, V, 0},
+    {ACTIVE_READERS, V, 0}, // инкремент читателей
 };
 
 struct sembuf _stop_read[] = {
-    {ACTIVE_READERS, P, 0}};
+    {ACTIVE_READERS, P, 0}}; // декремент читателей
 
 struct sembuf _start_write[] = {
     {WAITING_WRITERS, V, 0},
@@ -77,8 +77,10 @@ void writer(const int semid, int *addr)
 {
     while (flag)
     {
+        srand(time(NULL)); // абсолютно случайные задержки
         int sleep_time = rand() % WRITER_SLEEP_TIME + 1;
         sleep(sleep_time);
+        sleep(rand() % 4 + 1);
 
         int rc = start_write(semid);
         if (rc == -1)
@@ -106,8 +108,9 @@ void reader(const int semid, const int *addr)
 {
     while (flag)
     {
-        int sleep_time = rand() % READER_SLEEP_TIME + 1;
-        sleep(sleep_time);
+        srand(time(NULL)); // абсолютно случайные задержки
+
+        sleep(rand() % 10 + 1);
 
         int rc = start_read(semid);
 
@@ -174,12 +177,33 @@ int main(void)
         return -1;
     }
 
-    int rc_active_readers = semctl(semid, ACTIVE_READERS, SETVAL, 0);
-    int rc_active_writers = semctl(semid, ACTIVE_WRITERS, SETVAL, 0);
-    int rc_waiting_writers = semctl(semid, WAITING_WRITERS, SETVAL, 0);
-    int rc_access = semctl(semid, BIN, SETVAL, 1);
+    int rc = semctl(semid, ACTIVE_READERS, SETVAL, 0);
 
-    if (rc_active_readers == -1 || rc_active_writers == -1 || rc_waiting_writers == -1 || rc_access)
+    if (rc == -1)
+    {
+        perror("Ошибка semctl.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rc = semctl(semid, ACTIVE_WRITERS, SETVAL, 0);
+
+    if (rc == -1)
+    {
+        perror("Ошибка semctl.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    rc = semctl(semid, WAITING_WRITERS, SETVAL, 0);
+
+    if (rc == -1)
+    {
+        perror("Ошибка semctl.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int rc = semctl(semid, BIN, SETVAL, 1);
+
+    if (rc == -1)
     {
         perror("Ошибка semctl.\n");
         exit(EXIT_FAILURE);
