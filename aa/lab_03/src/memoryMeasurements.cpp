@@ -11,9 +11,9 @@ int calcBucketSortMem(const int size)
     // переданный вектор
     resMem += sizeof(vector<int>);
     resMem += (size * sizeof(int));
-    // матрица блоков (максимум)
+    // матрица блоков (
     resMem += sizeof(vector<vector<int>>);
-    resMem += (size * size * sizeof(int));
+    resMem += (size * 1 * sizeof(int));
 
     return resMem;
 }
