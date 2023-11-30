@@ -39,7 +39,7 @@ static void countSort(vector<int> &arr, int exp)
     int count[10] = {0};
 
     for (i = 0; i < n; i++)
-        ;
+        count[(arr[i] / exp) % 10]++;
 
     for (i = 1; i < 10; i++)
         count[i] += count[i - 1];
