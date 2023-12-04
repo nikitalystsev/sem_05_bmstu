@@ -42,4 +42,5 @@ fi
 build sizes_time_rand comp_files_time_rand "time_rand_100_1000"
 build sizes_time_asc comp_files_time_asc "time_asc_100_1000"
 build sizes_time_desc comp_files_time_desc "time_desc_100_1000"
+build sizes_time_same comp_files_time_same "time_same_100_1000"
 build sizes_mem comp_files_mem "mem_100_1000"

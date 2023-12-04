@@ -13,6 +13,6 @@ set grid
 
 set key bottom right
 
-plot "../postproc_data/graph4/mergeSortMem.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
-"../postproc_data/graph4/radixSortMem.txt" with linespoints title "Поразрядная сортировка", \
-"../postproc_data/graph4/bucketSortMem.txt" with linespoints title "Блочная сортировка"
+plot "../postproc_data/graph5/mergeSortMem.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
+"../postproc_data/graph5/radixSortMem.txt" with linespoints title "Поразрядная сортировка", \
+"../postproc_data/graph5/bucketSortMem.txt" with linespoints title "Блочная сортировка"
