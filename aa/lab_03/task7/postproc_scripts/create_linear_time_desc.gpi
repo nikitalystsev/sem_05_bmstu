@@ -1,0 +1,17 @@
+#!/usr/bin/gnuplot -persist
+reset
+NO_ANIMATION = 1
+
+set terminal svg size 640, 440
+set output '../postproc_data/timeSortDesc.svg'
+
+set xlabel "Количество элементов в массиве, штуки"
+set ylabel "Время, мкс"
+set grid 
+
+# set logscale x
+set logscale y
+
+plot "../postproc_data/graph3/mergeSortDescTime.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
+"../postproc_data/graph3/radixSortDescTime.txt" with linespoints title "Поразрядная сортировка", \
+"../postproc_data/graph3/bucketSortDescTime.txt" with linespoints title "Блочная сортировка"

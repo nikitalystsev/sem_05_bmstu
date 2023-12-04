@@ -17,10 +17,11 @@ build()
 
     for param in "${params[@]}"; do
         for comp_file in "${comp_files[@]}"; do
+            filename=$(basename "${comp_file}")
             g++ -std=c++20 -Wall -Werror -Wpedantic -DNMAX="${param}"\
             -Wextra -Wfloat-conversion -Wfloat-equal -O0 \
             $list_obj_files \
-            -o ./apps/"${comp_file}"_"${param}".exe "${comp_file}.cpp"
+            -o ./apps/"${filename}"_"${param}".exe "${comp_file}.cpp"
 
             count=$((count + 1))
             echo -n -e "was compiling $count/$all_count files\r"
@@ -38,6 +39,7 @@ if ! [ -d ./apps ]; then
     mkdir apps
 fi
 
-# build sizes_time1 comp_files_time "time_100_200"
-# build sizes_time2 comp_files_time "time_100_1000"
-build sizes_mem comp_files_mem "memory"
+build sizes_time_rand comp_files_time_rand "time_rand_100_1000"
+build sizes_time_asc comp_files_time_asc "time_asc_100_1000"
+build sizes_time_desc comp_files_time_desc "time_desc_100_1000"
+build sizes_mem comp_files_mem "mem_100_1000"

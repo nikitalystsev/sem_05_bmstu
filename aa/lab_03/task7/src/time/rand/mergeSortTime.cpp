@@ -1,5 +1,5 @@
-#include "../inc/algorithms.h"
-#include "../inc/timeMeasurements.h"
+#include "../../../../inc/algorithms.h"
+#include "../../../../inc/timeMeasurements.h"
 
 #ifndef NMAX
 #error where?
@@ -12,7 +12,7 @@ using namespace std;
 int main()
 {
     srand(200);
-    cout << getArrSortTime(N_REPS, mergeSort::mergeSort, NMAX) << endl;
+    cout << getArrSortTime(N_REPS, mergeSort::mergeSort, genRandomArr, NMAX) << endl;
 
     return 0;
 }

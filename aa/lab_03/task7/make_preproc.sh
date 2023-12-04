@@ -19,8 +19,9 @@ get_data()
 
     for param in "${params[@]}"; do
         for comp_file in "${comp_files[@]}"; do
+            filename=$(basename "${comp_file}")
             for c in $(seq "$count"); do
-                ./apps/"${comp_file}"_"${param}".exe >> ./data/"${comp_file}"_"${param}".txt
+                ./apps/"${filename}"_"${param}".exe >> ./data/"${filename}"_"${param}".txt
 
                 counter=$((counter + 1))
                 echo -n -e "was collecting $counter/$all_count;  $c/$count, size = ${param} \r"
@@ -48,8 +49,9 @@ analysis_data()
 
     for param in "${params[@]}"; do
         for comp_file in "${comp_files[@]}"; do
-            ar_time=$(preproc_scripts/ar_mean.exe < ./data/"${comp_file}"_"${param}".txt)
-            echo "${param} ${ar_time}" >> ./postproc_data/"${3}"/"${comp_file}".txt
+            filename=$(basename "${comp_file}")
+            ar_time=$(preproc_scripts/ar_mean.exe < ./data/"${filename}"_"${param}".txt)
+            echo "${param} ${ar_time}" >> ./postproc_data/"${3}"/"${filename}".txt
 
             counter=$((counter + 1))
             echo -n -e "$counter/$all_count records were received\r"
@@ -77,9 +79,10 @@ fi
 
 # сборка основного датасета
 
-# get_data sizes_time1 comp_files_time 5 "time_100_200"
-# get_data sizes_time2 comp_files_time 5 "time_100_1000"
-get_data sizes_mem comp_files_mem 1 "memory"
+get_data sizes_time_rand comp_files_time_rand 5 "time_rand_100_1000"
+get_data sizes_time_asc comp_files_time_asc 5 "time_asc_100_1000"
+get_data sizes_time_desc comp_files_time_desc 5 "time_desc_100_1000"
+get_data sizes_mem comp_files_mem 1 "mem_100_1000"
 
 # ##########################################################################
 
@@ -93,7 +96,7 @@ if ! [ -d ./postproc_data/graph1 ]; then
     mkdir postproc_data/graph1
 fi
 
-# analysis_data sizes_time1 comp_files_time "graph1"
+analysis_data sizes_time_rand comp_files_time_rand "graph1_rand_100_1000"
 
 # # #########################################################################
 
@@ -103,7 +106,7 @@ if ! [ -d ./postproc_data/graph2 ]; then
     mkdir postproc_data/graph2
 fi
 
-# analysis_data sizes_time2 comp_files_time "graph2"
+analysis_data sizes_time_asc comp_files_time_asc "graph1_asc_100_1000"
 
 # ########################################################################
 
@@ -113,4 +116,14 @@ if ! [ -d ./postproc_data/graph3 ]; then
     mkdir postproc_data/graph3
 fi
 
-analysis_data sizes_mem comp_files_mem "graph3"
+analysis_data sizes_time_desc comp_files_time_desc "graph1_desc_100_1000"
+
+# ########################################################################
+
+# # первичный анализ и подготовка данных для построения третьего графика
+
+if ! [ -d ./postproc_data/graph3 ]; then
+    mkdir postproc_data/graph4
+fi
+
+analysis_data sizes_mem comp_files_mem "graph1_mem_100_1000"
