@@ -80,10 +80,10 @@ fi
 # сборка основного датасета
 
 get_data sizes_time_rand comp_files_time_rand 5 "time_rand_100_1000"
-get_data sizes_time_asc comp_files_time_asc 5 "time_asc_100_1000"
-get_data sizes_time_desc comp_files_time_desc 5 "time_desc_100_1000"
-get_data sizes_time_same comp_files_time_same 5 "time_same_100_1000"
-get_data sizes_mem comp_files_mem 1 "mem_100_1000"
+# get_data sizes_time_asc comp_files_time_asc 5 "time_asc_100_1000"
+# get_data sizes_time_desc comp_files_time_desc 5 "time_desc_100_1000"
+# get_data sizes_time_same comp_files_time_same 5 "time_same_100_1000"
+# get_data sizes_mem comp_files_mem 1 "mem_100_1000"
 
 # ##########################################################################
 
@@ -107,7 +107,7 @@ if ! [ -d ./postproc_data/graph2 ]; then
     mkdir postproc_data/graph2
 fi
 
-analysis_data sizes_time_asc comp_files_time_asc "graph2"
+# analysis_data sizes_time_asc comp_files_time_asc "graph2"
 
 # ########################################################################
 
@@ -117,7 +117,7 @@ if ! [ -d ./postproc_data/graph3 ]; then
     mkdir postproc_data/graph3
 fi
 
-analysis_data sizes_time_desc comp_files_time_desc "graph3"
+# analysis_data sizes_time_desc comp_files_time_desc "graph3"
 
 # ########################################################################
 
@@ -127,7 +127,7 @@ if ! [ -d ./postproc_data/graph4 ]; then
     mkdir postproc_data/graph4
 fi
 
-analysis_data sizes_time_same comp_files_time_same "graph4"
+# analysis_data sizes_time_same comp_files_time_same "graph4"
 
 # ########################################################################
 
@@ -137,4 +137,4 @@ if ! [ -d ./postproc_data/graph5 ]; then
     mkdir postproc_data/graph5
 fi
 
-analysis_data sizes_mem comp_files_mem "graph5"
+# analysis_data sizes_mem comp_files_mem "graph5"
