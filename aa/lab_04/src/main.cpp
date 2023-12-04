@@ -1,46 +1,73 @@
-#include "algorithms.h"
-
+#include <algorithm>
+#include <fstream>
 #include <iostream>
+#include <map>
 #include <vector>
 
-using namespace std;
+std::vector<std::wstring> generateNgrams(const std::wstring &word, int n)
+{
+    std::vector<std::wstring> ngrams;
+    for (size_t i = 0; i <= word.length() - n; ++i)
+    {
+        ngrams.push_back(word.substr(i, n));
+    }
+    return ngrams;
+}
 
-// void printArray(std::vector<int> &A, int size)
-// {
-//     for (auto i = 0; i < size; i++)
-//         cout << A[i] << " ";
-//     cout << endl;
-// }
-
-// read input array and call mergesort
 int main()
 {
-    srand(100);
-    cout << "rand() = " << rand() << endl;
-    cout << "rand() = " << rand() << endl;
-    // vector<int> myArray = {12, 34, 5, 0, 22, 8, 12, 9};
-    // vector<int> tmpMyArray = myArray;
+    // Установка локали для корректной работы с символами Юникода
+    std::locale::global(std::locale(""));
 
-    // cout << "arr.size() = " << myArray.size() << endl;
+    // Открываем файл с текстом на русском языке
+    std::wifstream inputFile("/home/nikita/bmstu/sem_05/aa/lab_04/src/test.txt");
 
-    // bucketSort::bucketSort(myArray);
+    if (!inputFile.is_open())
+    {
+        std::wcerr << L"Unable to open the file" << std::endl;
+        return 1;
+    }
 
-    // cout << "bucketSort myArray:\n";
-    // printArray(myArray, myArray.size());
+    // Создаем словарь для хранения употреблений N-грамм
+    std::map<std::wstring, int> ngramCounts;
 
-    // myArray = tmpMyArray;
+    // N, который вы хотите использовать (3, 4, 5 и так далее)
+    int n = 3;
 
-    // mergeSort::mergeSort(myArray);
+    // Обрабатываем каждое слово в файле
+    std::wstring word;
+    while (inputFile >> word)
+    {
+        if (static_cast<int>(word.size()) < n)
+            continue;
 
-    // cout << "mergeSort myArray:\n";
-    // printArray(myArray, myArray.size());
+        // Приводим слово к нижнему регистру, если необходимо
+        std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 
-    // myArray = tmpMyArray;
+        // Генерируем N-граммы для текущего слова
+        std::vector<std::wstring> ngrams = generateNgrams(word, n);
 
-    // radixSort::radixSort(myArray);
+        // Обновляем счетчики употреблений в словаре
+        for (const auto &ngram : ngrams)
+        {
+            ngramCounts[ngram]++;
+        }
+    }
 
-    // cout << "radixSort myArray:\n";
-    // printArray(myArray, myArray.size());
+    // Закрываем файл
+    inputFile.close();
+
+    // Создаем и открываем файл для записи словаря
+    std::wofstream outputFile("ngram_counts.txt");
+
+    // Записываем употребления N-грамм в файл
+    for (const auto &entry : ngramCounts)
+    {
+        outputFile << entry.first << ": " << entry.second << std::endl;
+    }
+
+    // Закрываем файл
+    outputFile.close();
 
     return 0;
 }
