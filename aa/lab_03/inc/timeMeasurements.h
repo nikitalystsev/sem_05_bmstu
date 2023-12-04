@@ -19,6 +19,8 @@ vector<int> genAscArr(const int size);
 
 vector<int> genDescArr(const int size);
 
+vector<int> genSameArr(const int size);
+
 double getArrSortTime(
     const int nreps,
     ArrSort_t func,

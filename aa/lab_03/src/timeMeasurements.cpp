@@ -37,6 +37,18 @@ vector<int> genDescArr(const int size)
     return arr;
 }
 
+vector<int> genSameArr(const int size)
+{
+    vector<int> arr(size);
+
+    int num = rand(); // Генерируем случайное целое число
+
+    for (int i = 0; i < size; ++i)
+        arr[i] = num;
+
+    return arr;
+}
+
 double getArrSortTime(
     const int nreps,
     ArrSort_t func,
