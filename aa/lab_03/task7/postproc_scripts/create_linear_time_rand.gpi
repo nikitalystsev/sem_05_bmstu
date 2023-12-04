@@ -3,7 +3,7 @@ reset
 NO_ANIMATION = 1
 
 set terminal svg size 640, 440
-set output '../postproc_data/timeSortRand.svg'
+set output '../../report/inc/img/timeSortRand.svg'
 
 set xlabel "Количество элементов в массиве, штуки"
 set ylabel "Время, мкс"
