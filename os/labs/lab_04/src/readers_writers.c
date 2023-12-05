@@ -3,22 +3,19 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdbool.h>
-
-#define MINIMUM_READER_DELAY 100
-#define MINIMUM_WRITER_DELAY 100
-#define MAXIMUM_READER_DELAY 200
-#define MAXIMUM_WRITER_DELAY 400
-
+#include <signal.h>
+#include <unistd.h>
 // определяем количество читателей и писателей
 #define COUNT_READERS 5
 #define COUNT_WRITERS 3
 
-#define COUNT_ITERATIONS 100
-
 // HANDLE -- тип дескриптора объекта
 HANDLE canRead;  // переменная - событие, пропускающая читателей
 HANDLE canWrite; // переменная - событие, пропускающая писателей
-HANDLE mutex;    // Переменная mutex -- гарантия монопольного доступа к ресурсу (?)
+HANDLE mutex;    // Переменная mutex -- гарантия монопольного доступа к ресурсу
+
+// собственно, ресурс
+int value = 0;
 
 LONG waitingWritersCount = 0; // количество ждущих писателей
 LONG waitingReadersCount = 0; // количество ждущих читателей
@@ -30,10 +27,14 @@ bool activeWriter = false;    // есть ли активный писатель
 HANDLE readerThreads[COUNT_READERS];
 HANDLE writerThreads[COUNT_WRITERS];
 
-int value = 0;
+// сигналы работают благодаря <unistd.h>
+int flag = 1;
 
-int flag = 0;
-HANDLE exitEvent;
+void signal_handler(int signal)
+{
+    printf("Catch signal: %d PID: %d; _PID: %d Thread: %d\n", signal, getpid(), GetCurrentProcessId(), GetCurrentThreadId());
+    flag = 0;
+}
 
 void startRead()
 {
@@ -45,7 +46,7 @@ void startRead()
         WaitForSingleObject(canRead, INFINITE);
     }
 
-    // захват мьютекса
+    // захват мьютекса (делает операцию неделимой)
     WaitForSingleObject(mutex, INFINITE);
     // декремент ждущих читателей
     InterlockedDecrement(&waitingReadersCount);
@@ -78,7 +79,7 @@ void startWrite()
         WaitForSingleObject(canWrite, INFINITE);
     }
 
-    // декремент ждущих писателей--
+    // декремент ждущих писателей
     InterlockedDecrement(&waitingWritersCount);
 
     activeWriter = true;
@@ -102,22 +103,24 @@ void stopWrite()
 
 DWORD WINAPI reader()
 {
-    for (int i = 0; i < COUNT_ITERATIONS; i++)
+    while (flag)
     {
-        int sleepTime = rand() % MAXIMUM_READER_DELAY + MINIMUM_READER_DELAY;
+        int sleepTime = rand() % 100;
         Sleep(sleepTime);
 
         startRead();
         printf("Reader (id = %lu) read:  %d\n", GetCurrentThreadId(), value);
         stopRead();
     }
+
+    exit(EXIT_SUCCESS);
 }
 
 DWORD WINAPI writer()
 {
-    for (int i = 0; i < COUNT_ITERATIONS; i++)
+    while (flag)
     {
-        int sleepTime = rand() % MAXIMUM_WRITER_DELAY + MINIMUM_WRITER_DELAY;
+        int sleepTime = rand() % 100;
         Sleep(sleepTime);
 
         startWrite();
@@ -125,17 +128,22 @@ DWORD WINAPI writer()
         printf("Writer (id = %lu) write: %d\n", GetCurrentThreadId(), value);
         stopWrite();
     }
+
+    exit(EXIT_SUCCESS);
 }
 
 int main(void)
 {
-    exitEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-    if (exitEvent == NULL)
+    if (signal(SIGINT, signal_handler) == SIG_ERR)
     {
-        perror("Ошибка CreateEvent (exitEvent)");
+        perror("Ошибка signal\n");
         exit(EXIT_FAILURE);
     }
+
+    printf("Process Id = %lu\n", GetCurrentProcessId());
+    printf("getpid: Process Id = %lu\n", getpid());
+
+    srand(time(NULL));
     // для реализации монитора достаточно  таких средств взаимоисключения
     // как события: с автосбросом и со сбросом вручную
     // Мьютекс включается в приложение искусственно
