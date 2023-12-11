@@ -4,6 +4,9 @@
 #include <sys/resource.h>
 #include <syslog.h>
 
+#define LOCKFILE "/var/run/daemon.pid"
+#define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+
 void daemonize(const char *cmd)
 {
     int i, fd0, fd1, fd2;
@@ -39,10 +42,6 @@ void daemonize(const char *cmd)
     sa.sa_flags = 0;
     if (sigaction(SIGHUP, &sa, NULL) < 0)
         err_quit("%s: can't ignore SIGHUP", cmd);
-    if ((pid = fork()) < 0)
-        err_quit("%s: can't fork", cmd);
-    else if (pid != 0) /* parent */
-        exit(0);
 
     /*
      * Change the current working directory to the root so
@@ -76,6 +75,85 @@ void daemonize(const char *cmd)
                fd0, fd1, fd2);
         exit(1);
     }
+}
+
+int lockfile(int fd)
+{
+    struct flock fl;
+
+    fl.l_type = F_WRLCK;
+    fl.l_start = 0;
+    fl.l_whence = SEEK_SET;
+    fl.l_len = 0;
+    return (fcntl(fd, F_SETLK, &fl));
+}
+
+int already_running(void)
+{
+    int fd;
+    char buf[16];
+
+    fd = open(LOCKFILE, O_RDWR | O_CREAT, LOCKMODE);
+    if (fd < 0)
+    {
+        syslog(LOG_ERR, "can't open %s: %s", LOCKFILE, strerror(errno));
+        exit(1);
+    }
+    if (lockfile(fd) < 0)
+    {
+        if (errno == EACCES || errno == EAGAIN)
+        {
+            close(fd);
+            return (1);
+        }
+        syslog(LOG_ERR, "can't lock %s: %s", LOCKFILE, strerror(errno));
+        exit(1);
+    }
+    ftruncate(fd, 0);
+    sprintf(buf, "%ld", (long)getpid());
+    write(fd, buf, strlen(buf) + 1);
+    return (0);
+}
+
+sigset_t mask;
+
+extern int already_running(void);
+
+void reread(void)
+{
+    /* ... */
+}
+
+void *
+thr_fn(void *arg)
+{
+    int err, signo;
+
+    for (;;)
+    {
+        err = sigwait(&mask, &signo);
+        if (err != 0)
+        {
+            syslog(LOG_ERR, "sigwait failed");
+            exit(1);
+        }
+
+        switch (signo)
+        {
+        case SIGHUP:
+            syslog(LOG_INFO, "Re-reading configuration file");
+            reread();
+            break;
+
+        case SIGTERM:
+            syslog(LOG_INFO, "got SIGTERM; exiting");
+            exit(0);
+
+        default:
+            syslog(LOG_INFO, "unexpected signal %d\n", signo);
+        }
+    }
+    return (0);
 }
 
 int main(void)

@@ -2,7 +2,7 @@ $(shell mkdir -p out)
 
 CC := gcc
 
-CFLAGS := -Iexamples/include/ -Iexamples/lib
+CFLAGS := -Iexamples/include/
 
 PREF_SRC := ./src/
 PREF_INC := ./inc/
