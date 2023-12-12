@@ -1,11 +1,14 @@
 
 #include "apue.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/resource.h>
 #include <syslog.h>
 
 #define LOCKFILE "/var/run/daemon.pid"
 #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+
+sigset_t mask;
 
 void daemonize(const char *cmd)
 {
@@ -15,43 +18,46 @@ void daemonize(const char *cmd)
     struct sigaction sa;
 
     /*
-     * Clear file creation mask.
+     * Сброс маски создания файлов в значение 0
      */
     umask(0);
 
     /*
-     * Get maximum number of file descriptors.
+     * Получить максимально возможный номер дескриптора файла.
      */
     if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
-        err_quit("%s: can't get file limit", cmd);
+        err_quit("%s: невозможно получить максимальный номер дескриптора ", cmd);
 
     /*
-     * Become a session leader to lose controlling TTY.
+     * Стать лидером нового сеанса, чтобы утратить управляющий терминал.
      */
     if ((pid = fork()) < 0)
-        err_quit("%s: can't fork", cmd);
+        err_quit("%s: ошибка вызова функции fork", cmd);
     else if (pid != 0) /* parent */
         exit(0);
+    /*
+     * Создаем новый сеанс
+     */
     setsid();
 
     /*
-     * Ensure future opens won't allocate controlling TTYs.
+     * Обеспечить невозможность обретения управляющего терминала в будущем.
      */
     sa.sa_handler = SIG_IGN;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     if (sigaction(SIGHUP, &sa, NULL) < 0)
-        err_quit("%s: can't ignore SIGHUP", cmd);
+        err_quit("%s:  невозможно игнорировать сигнал SIGHUP", cmd);
 
     /*
-     * Change the current working directory to the root so
-     * we won't prevent file systems from being unmounted.
+     * Назначить корневой каталог текущим рабочим каталогом,
+     * чтобы впоследствии можно было отмонтировать файловую систему.
      */
     if (chdir("/") < 0)
-        err_quit("%s: can't change directory to /", cmd);
+        err_quit("%s:  невозможно сделать текущим рабочим каталогом  /", cmd);
 
     /*
-     * Close all open file descriptors.
+     * Закрыть все открытые файловые дескрипторы.
      */
     if (rl.rlim_max == RLIM_INFINITY)
         rl.rlim_max = 1024;
@@ -59,19 +65,19 @@ void daemonize(const char *cmd)
         close(i);
 
     /*
-     * Attach file descriptors 0, 1, and 2 to /dev/null.
+     * Присоединить файловые дескрипторы 0, 1 и 2 к /dev/null.
      */
     fd0 = open("/dev/null", O_RDWR);
     fd1 = dup(0);
     fd2 = dup(0);
 
     /*
-     * Initialize the log file.
+     * Инициализировать файл журнала.
      */
     openlog(cmd, LOG_CONS, LOG_DAEMON);
     if (fd0 != 0 || fd1 != 1 || fd2 != 2)
     {
-        syslog(LOG_ERR, "unexpected file descriptors %d %d %d",
+        syslog(LOG_ERR, "ошибочные файловые дескрипторы %d %d %d",
                fd0, fd1, fd2);
         exit(1);
     }
@@ -94,11 +100,13 @@ int already_running(void)
     char buf[16];
 
     fd = open(LOCKFILE, O_RDWR | O_CREAT, LOCKMODE);
+
     if (fd < 0)
     {
         syslog(LOG_ERR, "can't open %s: %s", LOCKFILE, strerror(errno));
         exit(1);
     }
+
     if (lockfile(fd) < 0)
     {
         if (errno == EACCES || errno == EAGAIN)
@@ -106,26 +114,24 @@ int already_running(void)
             close(fd);
             return (1);
         }
+
         syslog(LOG_ERR, "can't lock %s: %s", LOCKFILE, strerror(errno));
         exit(1);
     }
+
     ftruncate(fd, 0);
     sprintf(buf, "%ld", (long)getpid());
     write(fd, buf, strlen(buf) + 1);
+
     return (0);
 }
-
-sigset_t mask;
-
-extern int already_running(void);
 
 void reread(void)
 {
     /* ... */
 }
 
-void *
-thr_fn(void *arg)
+void *thr_fn(void *arg)
 {
     int err, signo;
 
@@ -158,6 +164,53 @@ thr_fn(void *arg)
 
 int main(void)
 {
-    /* code */
-    return 0;
+    int err;
+    pthread_t tid;
+    char *cmd;
+    struct sigaction sa;
+
+    if ((cmd = strrchr(argv[0], '/')) == NULL)
+        cmd = argv[0];
+    else
+        cmd++;
+
+    /*
+     * Перейти в режим демона.
+     */
+    daemonize(cmd);
+
+    /*
+     * Убедиться, что ранее не была запущена другая копия демона.
+     */
+    if (already_running())
+    {
+        syslog(LOG_ERR, "демон уже запущен");
+        exit(1);
+    }
+
+    /*
+     * Восстановить действие по умолчанию для сигнала SIGHUP
+     * и заблокировать все сигналы.
+     */
+    sa.sa_handler = SIG_DFL;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    if (sigaction(SIGHUP, &sa, NULL) < 0)
+        err_quit("%s:  невозможно восстановить действие SIG_DFL для SIGHUP");
+    sigfillset(&mask);
+    if ((err = pthread_sigmask(SIG_BLOCK, &mask, NULL)) != 0)
+        err_exit(err, "ошибка выполнения операции SIG_BLOCK");
+
+    /*
+     * Создать поток для обработки SIGHUP и SIGTERM.
+     */
+    err = pthread_create(&tid, NULL, thr_fn, 0);
+    if (err != 0)
+        err_exit(err, "can't create thread");
+
+    /*
+     * Proceed with the rest of the daemon.
+     */
+    /* ... */
+    exit(0);
 }
