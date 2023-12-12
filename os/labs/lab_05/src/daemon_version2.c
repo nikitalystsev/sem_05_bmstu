@@ -151,7 +151,7 @@ void *thr_fn_aaa(void *arg)
         syslog(LOG_INFO, "aaa");
         sleep(1);
     }
-    return 0;
+    pthread_exit(0);
 }
 
 void *thr_fn_bbb(void *arg)
@@ -161,7 +161,7 @@ void *thr_fn_bbb(void *arg)
         syslog(LOG_INFO, "bbb");
         sleep(1);
     }
-    return 0;
+    pthread_exit(0);
 }
 
 int main(int argc, char *argv[])
