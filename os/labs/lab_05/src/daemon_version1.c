@@ -35,10 +35,7 @@ void daemonize(const char *cmd)
     if ((pid = fork()) < 0)
         err_quit("%s: ошибка вызова функции fork", cmd);
     else if (pid != 0) /* parent */
-    {
-        printf("pid = %d", pid);
         exit(0);
-    }
 
     /*
      * Создаем новый сеанс

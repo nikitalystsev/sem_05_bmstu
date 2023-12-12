@@ -22,8 +22,14 @@ void daemonize(const char *cmd)
     struct rlimit rl;
     struct sigaction sa;
 
+    /*
+     * Сброс маски создания файлов в значение 0
+     */
     umask(0);
 
+    /*
+     * Получить максимально возможный номер дескриптора файла.
+     */
     if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
     {
         fprintf(stderr, "%s: невозможно получить максимальный номер дескриптора", cmd);
@@ -31,16 +37,18 @@ void daemonize(const char *cmd)
     }
 
     if ((pid = fork()) < 0)
-    {
         fprintf(stderr, "%s: ошибка вызова функции fork", cmd);
-        exit(1);
-    }
     else if (pid != 0)
-    {
         exit(0);
-    }
 
+    /*
+     * Создаем новый сеанс
+     */
     setsid();
+
+    /*
+     * Обеспечить невозможность обретения управляющего терминала в будущем.
+     */
     sa.sa_handler = SIG_IGN;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
@@ -50,29 +58,39 @@ void daemonize(const char *cmd)
         exit(1);
     }
 
+    /*
+     * Назначить корневой каталог текущим рабочим каталогом,
+     * чтобы впоследствии можно было отмонтировать файловую систему.
+     */
     if (chdir("/") < 0)
     {
         fprintf(stderr, "Невозможно сделать текущим рабочим каталогом /");
         exit(1);
     }
 
+    /*
+     * Закрыть все открытые файловые дескрипторы.
+     */
     if (rl.rlim_max == RLIM_INFINITY)
-    {
         rl.rlim_max = 1024;
-    }
     for (i = 0; i < rl.rlim_max; i++)
-    {
         close(i);
-    }
 
+    /*
+     * Присоединить файловые дескрипторы 0, 1 и 2 к /dev/null.
+     */
     fd0 = open("/dev/null", O_RDWR);
     fd1 = dup(0);
     fd2 = dup(0);
 
+    /*
+     * Инициализировать файл журнала.
+     */
     openlog(cmd, LOG_CONS, LOG_DAEMON);
     if (fd0 != 0 || fd1 != 1 || fd2 != 2)
     {
-        syslog(LOG_ERR, "Ошибочные файловые дескрипторы %d %d %d", fd0, fd1, fd2);
+        syslog(LOG_ERR, "ошибочные файловые дескрипторы %d %d %d",
+               fd0, fd1, fd2);
         exit(1);
     }
 }
@@ -89,15 +107,16 @@ int lockfile(int fd)
     return fcntl(fd, F_SETLK, &fl);
 }
 
-int already_running()
+int already_running(void)
 {
     int fd;
     char buf[16];
 
     fd = open(LOCKFILE, O_RDWR | O_CREAT, LOCKMODE);
+
     if (fd < 0)
     {
-        syslog(LOG_ERR, "Невозможно открыть %s: %s", LOCKFILE, strerror(errno));
+        syslog(LOG_ERR, "can't open %s: %s", LOCKFILE, strerror(errno));
         exit(1);
     }
 
@@ -106,9 +125,10 @@ int already_running()
         if (errno == EACCES || errno == EAGAIN)
         {
             close(fd);
-            return 1;
+            return (1);
         }
-        syslog(LOG_ERR, "Невозможно установить блокировку на %s: %s", LOCKFILE, strerror(errno));
+
+        syslog(LOG_ERR, "can't lock %s: %s", LOCKFILE, strerror(errno));
         exit(1);
     }
 
@@ -116,36 +136,43 @@ int already_running()
     sprintf(buf, "%ld", (long)getpid());
     write(fd, buf, strlen(buf) + 1);
 
-    return 0;
+    return (0);
 }
 
-/* void reread() {} */
+void reread(void)
+{
+    /* ... */
+}
 
 void *thr_fn(void *arg)
 {
     int err, signo;
+
     for (;;)
     {
         err = sigwait(&mask, &signo);
         if (err != 0)
         {
-            syslog(LOG_ERR, "Ошибка вызова функции sigwait");
+            syslog(LOG_ERR, "sigwait failed");
             exit(1);
         }
+
         switch (signo)
         {
         case SIGHUP:
-            syslog(LOG_INFO, "Чтение конфигурационного файла");
-            /* reread(); */
+            syslog(LOG_INFO, "Re-reading configuration file");
+            reread();
             break;
+
         case SIGTERM:
-            syslog(LOG_INFO, "Получен сигнал SIGTERM; выход");
+            syslog(LOG_INFO, "got SIGTERM; exiting");
             exit(0);
+
         default:
-            syslog(LOG_INFO, "Получен непредвиденный сигнал %d\n", signo);
+            syslog(LOG_INFO, "unexpected signal %d\n", signo);
         }
     }
-    return 0;
+    return (0);
 }
 
 void *thr_fn_aaa(void *arg)
