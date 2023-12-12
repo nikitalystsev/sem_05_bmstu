@@ -6,6 +6,10 @@
 #include <sys/resource.h>
 #include <syslog.h>
 
+#define _GNU_SOURCE
+#include <sys/types.h>
+#include <unistd.h>
+
 #define LOCKFILE "/var/run/daemon.pid"
 #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 
@@ -148,9 +152,10 @@ void *thr_fn_aaa(void *arg)
 {
     for (;;)
     {
-        syslog(LOG_INFO, "aaa");
+        syslog(LOG_INFO, "Thread (id = %d) send 'aaa'", gettid());
         sleep(1);
     }
+
     pthread_exit(0);
 }
 
@@ -158,7 +163,7 @@ void *thr_fn_bbb(void *arg)
 {
     for (;;)
     {
-        syslog(LOG_INFO, "bbb");
+        syslog(LOG_INFO, "Thread (id = %d) send 'bbb'", gettid());
         sleep(1);
     }
     pthread_exit(0);
@@ -175,8 +180,6 @@ int main(int argc, char *argv[])
         cmd = argv[0];
     else
         cmd++;
-
-    printf("Логин до daemonize: %s\n", getlogin());
 
     daemonize(cmd);
 
@@ -206,8 +209,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Невозможно создать поток");
         exit(1);
     }
-
-    syslog(LOG_INFO, "Логин после daemonize: %s\n", getlogin());
 
     pthread_t tid_msg[2];
 

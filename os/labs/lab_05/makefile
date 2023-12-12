@@ -5,7 +5,7 @@ CC := gcc
 CFLAGS := -Iexamples/include/
 
 
-LINKFLAGS := -lpthread 
+LINKFLAGS := -lpthread -lc
 
 PREF_SRC := ./src/
 PREF_INC := ./inc/
