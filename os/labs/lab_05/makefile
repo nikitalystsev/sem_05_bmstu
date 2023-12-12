@@ -16,6 +16,7 @@ PREF_LIB := ./examples/lib/
 
 all: d1 d2
 
+
 d1: $(PREF_OUT)daemon_version1.o $(PREF_OUT)error.o
 	$(CC) $(PREF_OUT)daemon_version1.o $(PREF_OUT)error.o $(LINKFLAGS) -o daemon_version1.exe
 
