@@ -4,25 +4,28 @@ CC := gcc
 
 CFLAGS := -Iexamples/include/
 
+
+LINKFLAGS := -lpthread 
+
 PREF_SRC := ./src/
 PREF_INC := ./inc/
 PREF_OUT := ./out/
 PREF_LIB := ./examples/lib/
 
-# получаем список си файлов в подпапке ./examples_code/lib/
-LIB := $(wildcard $(PREF_LIB)*.c)
+.PHONY: d1 d2 clean 
 
-# получаем заменой список объектных файлов для файлов из подпапки ./examples_code/lib/
-LIB_OBJ := $(patsubst $(PREF_LIB)%.c, $(PREF_OUT)%.o, $(LIB))
+all: d1 d2
 
-.PHONY: d clean 
+d1: $(PREF_OUT)daemon_version1.o $(PREF_OUT)error.o
+	$(CC) $(PREF_OUT)daemon_version1.o $(PREF_OUT)error.o $(LINKFLAGS) -o daemon_version1.exe
 
-all: d 
+$(PREF_OUT)daemon_version1.o: $(PREF_SRC)daemon_version1.c
+	$(CC) $(CFLAGS) -c -MD $< -o $@
 
-d: $(PREF_OUT)myDaemon.o $(PREF_OUT)error.o
-	$(CC) $(PREF_OUT)myDaemon.o $(PREF_OUT)error.o -o myDaemon.exe
+d2: $(PREF_OUT)daemon_version2.o $(PREF_OUT)error.o
+	$(CC) $(PREF_OUT)daemon_version2.o $(PREF_OUT)error.o $(LINKFLAGS) -o daemon_version2.exe
 
-$(PREF_OUT)myDaemon.o: $(PREF_SRC)myDaemon.c
+$(PREF_OUT)daemon_version2.o: $(PREF_SRC)daemon_version2.c
 	$(CC) $(CFLAGS) -c -MD $< -o $@
 
 $(PREF_OUT)error.o: $(PREF_LIB)error.c

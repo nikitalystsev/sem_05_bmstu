@@ -2,6 +2,7 @@
 #include "apue.h"
 #include <errno.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <sys/resource.h>
 #include <syslog.h>
 
@@ -34,7 +35,11 @@ void daemonize(const char *cmd)
     if ((pid = fork()) < 0)
         err_quit("%s: ошибка вызова функции fork", cmd);
     else if (pid != 0) /* parent */
+    {
+        printf("pid = %d", pid);
         exit(0);
+    }
+
     /*
      * Создаем новый сеанс
      */
@@ -91,6 +96,7 @@ int lockfile(int fd)
     fl.l_start = 0;
     fl.l_whence = SEEK_SET;
     fl.l_len = 0;
+
     return (fcntl(fd, F_SETLK, &fl));
 }
 
@@ -162,7 +168,7 @@ void *thr_fn(void *arg)
     return (0);
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     int err;
     pthread_t tid;
@@ -211,6 +217,12 @@ int main(void)
     /*
      * Proceed with the rest of the daemon.
      */
-    /* ... */
-    exit(0);
+    while (1)
+    {
+        time_t cur_time = time(NULL);
+        syslog(LOG_NOTICE, "Time: %s", ctime(&cur_time));
+        sleep(10);
+    }
+
+    return 0;
 }
