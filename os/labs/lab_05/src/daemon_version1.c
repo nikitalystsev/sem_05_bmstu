@@ -144,7 +144,7 @@ void *thr_fn(void *arg)
         if (err != 0)
         {
             syslog(LOG_ERR, "sigwait failed");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         switch (signo)
@@ -162,7 +162,7 @@ void *thr_fn(void *arg)
             syslog(LOG_INFO, "unexpected signal %d\n", signo);
         }
     }
-    return (0);
+    pthread_exit(0);
 }
 
 int main(int argc, char *argv[])
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
     if (already_running())
     {
         syslog(LOG_ERR, "демон уже запущен");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     /*
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
      * Создать поток для обработки SIGHUP и SIGTERM.
      */
     err = pthread_create(&tid, NULL, thr_fn, 0);
-    if (err != 0)
+    if (err == -1)
         err_exit(err, "can't create thread");
 
     /*

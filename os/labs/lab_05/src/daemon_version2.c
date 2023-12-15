@@ -15,6 +15,8 @@
 
 sigset_t mask;
 
+volatile int flag = 1;
+
 void daemonize(const char *cmd)
 {
     int i, fd0, fd1, fd2;
@@ -154,7 +156,7 @@ void *thr_fn(void *arg)
         if (err != 0)
         {
             syslog(LOG_ERR, "sigwait failed");
-            exit(1);
+            pthread_exit(EXIT_FAILURE);
         }
 
         switch (signo)
@@ -165,34 +167,26 @@ void *thr_fn(void *arg)
             break;
 
         case SIGTERM:
-            syslog(LOG_INFO, "got SIGTERM; exiting");
-            exit(0);
+            syslog(LOG_INFO, "got SIGTERM;");
+            flag = 0;
+            pthread_exit(EXIT_SUCCESS);
 
         default:
             syslog(LOG_INFO, "unexpected signal %d\n", signo);
         }
     }
-    return (0);
-}
-
-void *thr_fn_aaa(void *arg)
-{
-    for (;;)
-    {
-        syslog(LOG_INFO, "Thread (id = %d) send 'aaa'", gettid());
-        sleep(1);
-    }
 
     pthread_exit(0);
 }
 
-void *thr_fn_bbb(void *arg)
+void *thr_fn_for_send_str(void *arg)
 {
-    for (;;)
+    while (flag)
     {
-        syslog(LOG_INFO, "Thread (id = %d) send 'bbb'", gettid());
+        syslog(LOG_INFO, "Thread (id = %d) send '%s'", gettid(), (char *)arg);
         sleep(1);
     }
+
     pthread_exit(0);
 }
 
@@ -202,6 +196,8 @@ int main(int argc, char *argv[])
     pthread_t tid;
     char *cmd;
     struct sigaction sa;
+    pthread_t tid_msg[2];
+    int status_addr, status;
 
     if ((cmd = strrchr(argv[0], '/')) == NULL)
         cmd = argv[0];
@@ -213,7 +209,7 @@ int main(int argc, char *argv[])
     if (already_running())
     {
         syslog(LOG_ERR, "Демон уже запущен");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     sa.sa_handler = SIG_DFL;
@@ -221,48 +217,42 @@ int main(int argc, char *argv[])
     sa.sa_flags = 0;
     if (sigaction(SIGHUP, &sa, NULL) < 0)
     {
-        fprintf(stderr, "Невозможно восстаносить действие SIG_DFL для SIGHUP");
-        exit(1);
+        syslog(LOG_INFO, "Невозможно восстаносить действие SIG_DFL для SIGHUP");
+        exit(EXIT_FAILURE);
     }
     sigfillset(&mask);
     if ((err = pthread_sigmask(SIG_BLOCK, &mask, NULL)) != 0)
     {
-        fprintf(stderr, "Ошибка выполнения операции SIG_BLOCK");
-        exit(1);
+        syslog(LOG_INFO, "Ошибка выполнения операции SIG_BLOCK");
+        exit(EXIT_FAILURE);
     }
+
     err = pthread_create(&tid, NULL, thr_fn, 0);
-    if (err != 0)
+    if (err == -1)
     {
-        fprintf(stderr, "Невозможно создать поток");
-        exit(1);
+        syslog(LOG_INFO, "Невозможно создать поток");
+        exit(EXIT_FAILURE);
     }
 
-    pthread_t tid_msg[2];
-
-    err = pthread_create(&tid_msg[0], NULL, thr_fn_aaa, 0);
-    if (err != 0)
+    for (int i = 0; i < 2; ++i)
     {
-        fprintf(stderr, "Невозможно создать поток AAA");
-        exit(1);
+        char *msg = (i == 0) ? "aaa" : "bbb";
+        err = pthread_create(&tid_msg[i], NULL, thr_fn_for_send_str, msg);
+        if (err == -1)
+        {
+            syslog(LOG_INFO, "Невозможно создать поток");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    err = pthread_create(&tid_msg[1], NULL, thr_fn_bbb, 0);
-    if (err != 0)
-    {
-        fprintf(stderr, "Невозможно создать поток BBB");
-        exit(1);
-    }
-
-    int status_addr, status;
     for (int i = 0; i < 2; i++)
     {
         status = pthread_join(tid_msg[i], (void **)&status_addr);
         if (status != 0)
         {
-            printf("main error: can't join thread, status = %d\n", status);
+            syslog("main error: can't join thread, status = %d\n", status);
             exit(EXIT_FAILURE);
         }
-        printf("joined with address %d\n", status_addr);
     }
 
     /*
@@ -272,7 +262,7 @@ int main(int argc, char *argv[])
     {
         time_t cur_time = time(NULL);
         syslog(LOG_NOTICE, "Time: %s", ctime(&cur_time));
-        sleep(10);
+        sleep(1);
     }
 
     return 0;
