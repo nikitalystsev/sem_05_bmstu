@@ -34,6 +34,7 @@ class HospitalDB:
     def scalar_query(self):
         """
         Метод реализует скалярный запрос
+        Получить среднюю зарплату неврологов
         """
         try:
             with self.__connection.cursor() as cursor:
@@ -49,3 +50,32 @@ class HospitalDB:
 
         except Exception as _ex:
             print("[INFO] Ошибка выполнения скалярного запроса", _ex)
+
+    def with_several_join_query(self):
+        """
+        Метод реализует запрос с несколькими join
+        Найти всех врачей, у которых есть хотя бы один пациент с хроническим диагнозом
+        """
+        try:
+            with self.__connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    select *
+                    from doctors as doc
+                    where exists
+                    (
+                        select *
+                        from admissions as adm
+                        join patients as pat
+                        on adm.id_pat = pat.id
+                        join diagnoses as dia
+                        on adm.id_dia = dia.id
+                        where dia.is_chronic = true and doc.id = adm.id_doc
+                    );
+                    """
+                )
+
+                print(cursor.fetchone())
+
+        except Exception as _ex:
+            print("[INFO] Ошибка выполнения запроса с несколькими join", _ex)
