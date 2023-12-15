@@ -13,6 +13,8 @@ def main() -> None:
         db_name=db_name
     )
 
+    hospital_db.scalar_query()
+
 
 if __name__ == "__main__":
     main()
