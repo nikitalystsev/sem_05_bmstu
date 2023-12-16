@@ -20,6 +20,8 @@ class HospitalDB:
                 database=db_name
             )
             self.__connection.autocommit = True  # автоматическая фиксация транзакций
+            self.__drop_table_query()
+
         except Exception as _ex:
             print("[INFO] Ошибка соединения с Postgresql", _ex)
 
@@ -30,6 +32,22 @@ class HospitalDB:
         if self.__connection:
             self.__connection.close()
             print("[INFO] Соединение с Postgresql закрыто")
+
+    def __drop_table_query(self):
+        """
+        Метод реализует запрос к метаданным
+        Вывести данные об типах и атрибутах таблицы patients
+        """
+        try:
+            with self.__connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    drop table if exists medicines;
+                    """
+                )
+
+        except Exception as _ex:
+            print("[INFO] Ошибка выполнения запроса удаления", _ex)
 
     def scalar_query(self):
         """
@@ -231,7 +249,7 @@ class HospitalDB:
             with self.__connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    create table if not exists medicines (
+                    create table medicines (
                         id uuid,
                         name varchar(20),
                         price integer
