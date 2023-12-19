@@ -1,0 +1,4 @@
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{\numberline {1}Функции обработчика прерывания в системах разделения времени}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Функции системного таймера в семействе ОС Windows}{3}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Пересчет динамических приоритетов}{4}{chapter.2}%

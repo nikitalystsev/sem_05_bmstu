@@ -204,14 +204,24 @@ int main(int argc, char *argv[])
     else
         cmd++;
 
+    /*
+     * Перейти в режим демона.
+     */
     daemonize(cmd);
 
+    /*
+     * Убедиться, что ранее не была запущена другая копия демона.
+     */
     if (already_running())
     {
         syslog(LOG_ERR, "Демон уже запущен");
         exit(EXIT_FAILURE);
     }
 
+    /*
+     * Восстановить действие по умолчанию для сигнала SIGHUP
+     * и заблокировать все сигналы.
+     */
     sa.sa_handler = SIG_DFL;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
