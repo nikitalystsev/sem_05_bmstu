@@ -11,11 +11,10 @@
 #include <unistd.h>
 
 #define LOCKFILE "/var/run/daemon.pid"
+#define CONFFILE "/etc/daemon.conf"
 #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 
 sigset_t mask;
-
-volatile int flag = 1;
 
 void daemonize(const char *cmd)
 {
@@ -46,7 +45,11 @@ void daemonize(const char *cmd)
     /*
      * Создаем новый сеанс
      */
-    setsid();
+    if (setsid() == -1)
+    {
+        perror("Ошибка setsid");
+        exit(EXIT_FAILURE);
+    }
 
     /*
      * Обеспечить невозможность обретения управляющего терминала в будущем.
@@ -143,12 +146,25 @@ int already_running(void)
 
 void reread(void)
 {
-    /* ... */
+    FILE *fd;
+
+    if ((fd = fopen(CONFFILE, "r")) == NULL)
+    {
+        syslog(LOG_INFO, "Ошибка fopen " CONFFILE "");
+        exit(EXIT_FAILURE);
+    }
+    fclose(fd);
 }
 
 void *thr_fn(void *arg)
 {
     int err, signo;
+
+    while (1)
+    {
+        syslog(LOG_INFO, "Thread (id = %d) send '%s'", gettid(), (char *)arg);
+        sleep(1);
+    }
 
     for (;;)
     {
@@ -168,23 +184,11 @@ void *thr_fn(void *arg)
 
         case SIGTERM:
             syslog(LOG_INFO, "got SIGTERM;");
-            flag = 0;
-            pthread_exit(EXIT_SUCCESS);
+            exit(EXIT_SUCCESS);
 
         default:
             syslog(LOG_INFO, "unexpected signal %d\n", signo);
         }
-    }
-
-    pthread_exit(0);
-}
-
-void *thr_fn_for_send_str(void *arg)
-{
-    while (flag)
-    {
-        syslog(LOG_INFO, "Thread (id = %d) send '%s'", gettid(), (char *)arg);
-        sleep(1);
     }
 
     pthread_exit(0);
@@ -237,17 +241,10 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    err = pthread_create(&tid, NULL, thr_fn, 0);
-    if (err == -1)
-    {
-        syslog(LOG_INFO, "Невозможно создать поток");
-        exit(EXIT_FAILURE);
-    }
-
     for (int i = 0; i < 2; ++i)
     {
         char *msg = (i == 0) ? "aaa" : "bbb";
-        err = pthread_create(&tid_msg[i], NULL, thr_fn_for_send_str, msg);
+        err = pthread_create(&tid_msg[i], NULL, thr_fn, msg);
         if (err == -1)
         {
             syslog(LOG_INFO, "Невозможно создать поток");

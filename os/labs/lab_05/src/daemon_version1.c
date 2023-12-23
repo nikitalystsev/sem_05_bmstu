@@ -7,6 +7,7 @@
 #include <syslog.h>
 
 #define LOCKFILE "/var/run/daemon.pid"
+#define CONFFILE "/etc/daemon.conf"
 #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 
 sigset_t mask;
@@ -40,7 +41,11 @@ void daemonize(const char *cmd)
     /*
      * Создаем новый сеанс
      */
-    setsid();
+    if (setsid() == -1)
+    {
+        perror("Ошибка setsid");
+        exit(EXIT_FAILURE);
+    }
 
     /*
      * Обеспечить невозможность обретения управляющего терминала в будущем.
@@ -131,7 +136,14 @@ int already_running(void)
 
 void reread(void)
 {
-    /* ... */
+    FILE *fd;
+
+    if ((fd = fopen(CONFFILE, "r")) == NULL)
+    {
+        syslog(LOG_INFO, "Ошибка fopen " CONFFILE "");
+        exit(EXIT_FAILURE);
+    }
+    fclose(fd);
 }
 
 void *thr_fn(void *arg)
