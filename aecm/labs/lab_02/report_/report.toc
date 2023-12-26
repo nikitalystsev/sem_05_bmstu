@@ -1,0 +1,6 @@
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{Цель работы}{3}{chapter*.3}%
+\contentsline {chapter}{\numberline {1}Основные теоретические сведения}{4}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Практическая часть}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Эксперимент №1: Исследования расслоения динамической памяти}{5}{section.2.1}%
+\contentsline {chapter}{Заключение}{8}{chapter*.4}%
