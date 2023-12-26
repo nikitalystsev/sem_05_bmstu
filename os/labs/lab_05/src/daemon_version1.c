@@ -143,6 +143,7 @@ void reread(void)
         syslog(LOG_INFO, "Ошибка fopen " CONFFILE "");
         exit(EXIT_FAILURE);
     }
+
     fclose(fd);
 }
 

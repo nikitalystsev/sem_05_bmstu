@@ -159,38 +159,31 @@ void reread(void)
 void *thr_fn(void *arg)
 {
     int err, signo;
-
-    while (1)
-    {
-        syslog(LOG_INFO, "Thread (id = %d) send '%s'", gettid(), (char *)arg);
-        sleep(1);
-    }
-
     for (;;)
     {
+        syslog(LOG_INFO, "Thread (id = %d) send '%s'", gettid(), (char *)arg);
         err = sigwait(&mask, &signo);
         if (err != 0)
         {
-            syslog(LOG_ERR, "sigwait failed");
-            pthread_exit(EXIT_FAILURE);
+            syslog(LOG_ERR, "ошибка вызова функции sigwait");
+            pthread_exit(1);
         }
-
         switch (signo)
         {
         case SIGHUP:
-            syslog(LOG_INFO, "Re-reading configuration file");
+            syslog(LOG_INFO, "read CONFIGFILE");
             reread();
             break;
-
         case SIGTERM:
             syslog(LOG_INFO, "got SIGTERM;");
-            exit(EXIT_SUCCESS);
-
+            exit(0);
+        case SIGINT:
+            syslog(LOG_INFO, "got SIGINT");
+            pthread_exit(0);
         default:
-            syslog(LOG_INFO, "unexpected signal %d\n", signo);
+            syslog(LOG_INFO, "получен сигнал %d\n", signo);
         }
     }
-
     pthread_exit(0);
 }
 
@@ -234,6 +227,7 @@ int main(int argc, char *argv[])
         syslog(LOG_INFO, "Невозможно восстаносить действие SIG_DFL для SIGHUP");
         exit(EXIT_FAILURE);
     }
+    процессы
     sigfillset(&mask);
     if ((err = pthread_sigmask(SIG_BLOCK, &mask, NULL)) != 0)
     {
@@ -243,7 +237,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 2; ++i)
     {
-        char *msg = (i == 0) ? "aaa" : "bbb";
+        char *msgпроцессы = (i == 0) ? "aaa" : "bbb";
         err = pthread_create(&tid_msg[i], NULL, thr_fn, msg);
         if (err == -1)
         {
