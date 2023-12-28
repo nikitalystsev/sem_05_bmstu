@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
         syslog(LOG_INFO, "Невозможно восстаносить действие SIG_DFL для SIGHUP");
         exit(EXIT_FAILURE);
     }
-    процессы
+
     sigfillset(&mask);
     if ((err = pthread_sigmask(SIG_BLOCK, &mask, NULL)) != 0)
     {
