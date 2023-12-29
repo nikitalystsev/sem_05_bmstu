@@ -36,7 +36,7 @@ void bakery_prog_1(char *host)
         clnt_perror(clnt, "call failed");
     }
 
-    printf("Клиент %d получил номер %d\n", get_number_1_arg.pid, result_1->number);
+    printf("Клиент (pid = %d) получил номер %d\n", get_number_1_arg.pid, result_1->number);
 
     srand(time(NULL));
     sleep(rand() % 7 + 1);
@@ -63,7 +63,7 @@ void bakery_prog_1(char *host)
         clnt_perror(clnt, "call failed");
     }
 
-    printf("Клиент %d получил ответ %c\n", get_number_1_arg.pid, result_3->result);
+    printf("Клиент (pid = %d) получил ответ %c\n", get_number_1_arg.pid, result_3->result);
 
 #ifndef DEBUG
     clnt_destroy(clnt);
