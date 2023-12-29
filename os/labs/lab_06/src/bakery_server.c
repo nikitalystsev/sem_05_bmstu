@@ -41,7 +41,7 @@ void *bakery(void *arg)
     time(&raw_time);
     timeinfo = localtime(&raw_time);
     struct bakery_t *targ = arg;
-    printf("Thread id = '%ld' started, client's number = %d, time = %s", gettid(), number[targ->idx], asctime(timeinfo));
+    printf("Thread id = '%ld' started, номер клиента = %d, time = %s", gettid(), number[targ->idx], asctime(timeinfo));
 
     int i = targ->id;
     for (int j = 0; j < 26; j++)
@@ -58,7 +58,7 @@ void *bakery(void *arg)
     sleep(5);
     time(&raw_time);
     timeinfo = localtime(&raw_time);
-    printf("Thread id = '%ld' stopped, client's number = %d, time = %s", gettid(), number[i], asctime(timeinfo));
+    printf("Thread id = '%ld' stopped, номер клиента = %d, time = %s", gettid(), number[i], asctime(timeinfo));
     number[i] = 0;
 
     return 0;
@@ -69,7 +69,7 @@ get_number_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
 {
     static struct bakery_t result;
 
-    printf("Client (pid: %d) logged to server\n", argp->pid);
+    printf("Клиент (pid: %d) залогинился на сервере\n", argp->pid);
 
     choosing[idx] = true;
     numbers[idx] = getMaxNumber() + 1;
