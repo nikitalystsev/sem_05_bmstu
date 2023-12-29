@@ -29,21 +29,20 @@ int getMaxNumber()
     int currMax = number[0];
 
     for (int i = 1; i < 26; i++)
-        if (numbers[i] > currMax)
-            currMax = numbers[i];
+        if (number[i] > currMax)
+            currMax = number[i];
 
     return currMax;
 }
 
 void *bakery(void *arg)
 {
-    setbuf(stdout, NULL);
     time(&raw_time);
     timeinfo = localtime(&raw_time);
     struct bakery_t *targ = arg;
-    printf("Thread id = '%ld' started, номер клиента = %d, time = %s", gettid(), number[targ->idx], asctime(timeinfo));
+    printf("Thread id = '%d' started, номер клиента = %d, time = %s", gettid(), number[targ->idx], asctime(timeinfo));
 
-    int i = targ->id;
+    int i = targ->idx;
     for (int j = 0; j < 26; j++)
     {
         while (choosing[j])
@@ -52,13 +51,13 @@ void *bakery(void *arg)
             ;
     }
 
-    targ->res = symbol;
+    targ->result = symbol;
     symbol++;
 
     sleep(5);
     time(&raw_time);
     timeinfo = localtime(&raw_time);
-    printf("Thread id = '%ld' stopped, номер клиента = %d, time = %s", gettid(), number[i], asctime(timeinfo));
+    printf("Thread id = '%d' stopped, номер клиента = %d, time = %s", gettid(), number[i], asctime(timeinfo));
     number[i] = 0;
 
     return 0;
@@ -72,10 +71,10 @@ get_number_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
     printf("Клиент (pid: %d) залогинился на сервере\n", argp->pid);
 
     choosing[idx] = true;
-    numbers[idx] = getMaxNumber() + 1;
+    number[idx] = getMaxNumber() + 1;
     choosing[idx] = false;
 
-    result.number = numbers[idx];
+    result.number = number[idx];
     result.pid = argp->pid;
     result.idx = idx;
 
@@ -89,8 +88,12 @@ wait_queue_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
 {
     static struct bakery_t result;
 
-    threads_results[idxThreadCreate].id = argp->pid;
-    pthread_create(&workers[idxThreadCreate], NULL, bakery, &threads_results[idxThreadCreate]);
+    threadsResults[idxThreadCreate].number = argp->number;
+    threadsResults[idxThreadCreate].pid = argp->pid;
+    threadsResults[idxThreadCreate].idx = argp->idx;
+
+    pthread_create(&workers[idxThreadCreate], NULL, bakery, &threadsResults[idxThreadCreate]);
+
     idxThreadCreate++;
 
     return &result;
@@ -106,8 +109,7 @@ bakery_res_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
     result.number = argp->number;
     result.pid = argp->pid;
     result.idx = argp->idx;
-
-    result.result = threads_results[idxThreadJoin].res;
+    result.result = threadsResults[idxThreadJoin].result;
 
     idxThreadJoin++;
 
