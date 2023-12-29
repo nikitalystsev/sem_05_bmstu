@@ -72,7 +72,7 @@ get_number_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
     printf("Client (pid: %d) logged to server\n", argp->pid);
 
     choosing[idx] = true;
-    numbers[idx] = max_number() + 1;
+    numbers[idx] = getMaxNumber() + 1;
     choosing[idx] = false;
 
     result.number = numbers[idx];
