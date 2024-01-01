@@ -8,11 +8,8 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <sys/syscall.h>
+#define _GNU_SOURCE
 #include <unistd.h>
-
-time_t raw_time;
-struct tm *timeinfo;
 
 int choosing[26] = {0};
 int number[26] = {0};
@@ -37,12 +34,9 @@ int getMaxNumber()
 
 void *bakery(void *arg)
 {
-    time(&raw_time);
-    timeinfo = localtime(&raw_time);
-
     struct bakery_t *targ = arg;
 
-    printf("Thread (id = %d) started, номер клиента = %d, time = %s", gettid(), number[targ->idx], asctime(timeinfo));
+    printf("Thread (id = %d) started, номер клиента = %d", gettid(), number[targ->idx]);
 
     int i = targ->idx;
     for (int j = 0; j < 26; j++)
@@ -56,10 +50,7 @@ void *bakery(void *arg)
     targ->result = symbol;
     symbol++;
 
-    sleep(5);
-    time(&raw_time);
-    timeinfo = localtime(&raw_time);
-    printf("Thread (id = %d) stopped, номер клиента = %d, time = %s", gettid(), number[i], asctime(timeinfo));
+    printf("Thread (id = %d) stopped, номер клиента = %d", gettid(), number[i]);
 
     number[i] = 0;
 
@@ -70,8 +61,6 @@ struct bakery_t *
 get_number_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
 {
     static struct bakery_t result;
-
-    printf("Клиент (pid = %d) залогинился на сервере\n", argp->pid);
 
     choosing[idx] = true;
     number[idx] = getMaxNumber() + 1;

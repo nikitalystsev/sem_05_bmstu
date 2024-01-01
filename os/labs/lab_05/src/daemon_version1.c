@@ -1,4 +1,3 @@
-
 #include "apue.h"
 #include <errno.h>
 #include <fcntl.h>
@@ -138,11 +137,15 @@ void reread(void)
 {
     FILE *fd;
 
+    char buffer[256];
+
     if ((fd = fopen(CONFFILE, "r")) == NULL)
     {
         syslog(LOG_INFO, "Ошибка fopen " CONFFILE "");
         exit(EXIT_FAILURE);
     }
+
+    fgets(buffer, 256, fd);
 
     fclose(fd);
 }
@@ -175,7 +178,6 @@ void *thr_fn(void *arg)
             syslog(LOG_INFO, "unexpected signal %d\n", signo);
         }
     }
-    pthread_exit(0);
 }
 
 int main(int argc, char *argv[])

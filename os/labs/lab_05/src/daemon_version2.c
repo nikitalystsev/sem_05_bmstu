@@ -148,11 +148,16 @@ void reread(void)
 {
     FILE *fd;
 
+    char buffer[256];
+
     if ((fd = fopen(CONFFILE, "r")) == NULL)
     {
         syslog(LOG_INFO, "Ошибка fopen " CONFFILE "");
         exit(EXIT_FAILURE);
     }
+
+    fgets(buffer, 256, fd);
+
     fclose(fd);
 }
 
@@ -184,7 +189,6 @@ void *thr_fn(void *arg)
             syslog(LOG_INFO, "получен сигнал %d\n", signo);
         }
     }
-    pthread_exit(0);
 }
 
 int main(int argc, char *argv[])
@@ -237,7 +241,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 2; ++i)
     {
-        char *msgпроцессы = (i == 0) ? "aaa" : "bbb";
+        char *msg = (i == 0) ? "aaa" : "bbb";
         err = pthread_create(&tid_msg[i], NULL, thr_fn, msg);
         if (err == -1)
         {
