@@ -1,0 +1,1 @@
+https://docs.arenadata.io/ru/ADB/current/concept/data-model/tables/partitioning.html -- хорошо про партиции
