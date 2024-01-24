@@ -5,6 +5,10 @@
 #include <sys/resource.h>
 #include <syslog.h>
 
+/*
+signal и sigcation -- сравние
+*/
+
 #define LOCKFILE "/var/run/daemon.pid"
 #define CONFFILE "/etc/daemon.conf"
 #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
