@@ -10,50 +10,7 @@ xdr_bakery_t (XDR *xdrs, bakery_t *objp)
 {
 	register int32_t *buf;
 
-
-	if (xdrs->x_op == XDR_ENCODE) {
-		buf = XDR_INLINE (xdrs, 4 * BYTES_PER_XDR_UNIT);
-		if (buf == NULL) {
-			 if (!xdr_int (xdrs, &objp->number))
-				 return FALSE;
-			 if (!xdr_int (xdrs, &objp->idx))
-				 return FALSE;
-			 if (!xdr_int (xdrs, &objp->pid))
-				 return FALSE;
-			 if (!xdr_int (xdrs, &objp->result))
-				 return FALSE;
-		} else {
-			IXDR_PUT_LONG(buf, objp->number);
-			IXDR_PUT_LONG(buf, objp->idx);
-			IXDR_PUT_LONG(buf, objp->pid);
-			IXDR_PUT_LONG(buf, objp->result);
-		}
-		return TRUE;
-	} else if (xdrs->x_op == XDR_DECODE) {
-		buf = XDR_INLINE (xdrs, 4 * BYTES_PER_XDR_UNIT);
-		if (buf == NULL) {
-			 if (!xdr_int (xdrs, &objp->number))
-				 return FALSE;
-			 if (!xdr_int (xdrs, &objp->idx))
-				 return FALSE;
-			 if (!xdr_int (xdrs, &objp->pid))
-				 return FALSE;
-			 if (!xdr_int (xdrs, &objp->result))
-				 return FALSE;
-		} else {
-			objp->number = IXDR_GET_LONG(buf);
-			objp->idx = IXDR_GET_LONG(buf);
-			objp->pid = IXDR_GET_LONG(buf);
-			objp->result = IXDR_GET_LONG(buf);
-		}
-	 return TRUE;
-	}
-
 	 if (!xdr_int (xdrs, &objp->number))
-		 return FALSE;
-	 if (!xdr_int (xdrs, &objp->idx))
-		 return FALSE;
-	 if (!xdr_int (xdrs, &objp->pid))
 		 return FALSE;
 	 if (!xdr_int (xdrs, &objp->result))
 		 return FALSE;

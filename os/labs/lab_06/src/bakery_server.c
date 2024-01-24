@@ -5,6 +5,7 @@
  */
 
 #include "bakery.h"
+
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -36,9 +37,9 @@ void *bakery(void *arg)
 {
     struct bakery_t *targ = arg;
 
-    printf("Thread (id = %d) started, номер клиента = %d", gettid(), number[targ->idx]);
+    printf("Thread (id = %d) started, номер клиента = %d", gettid(), number[targ->number - 1]);
 
-    int i = targ->idx;
+    int i = targ->number - 1;
     for (int j = 0; j < 26; j++)
     {
         while (choosing[j])
@@ -58,7 +59,7 @@ void *bakery(void *arg)
 }
 
 struct bakery_t *
-get_number_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
+get_number_2_svc(struct bakery_t *argp, struct svc_req *rqstp)
 {
     static struct bakery_t result;
 
@@ -67,22 +68,9 @@ get_number_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
     choosing[idx] = false;
 
     result.number = number[idx];
-    result.pid = argp->pid;
-    result.idx = idx;
-
     idx++;
 
-    return &result;
-}
-
-struct bakery_t *
-wait_queue_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
-{
-    static struct bakery_t result;
-
     threadsResults[idxThreadCreate].number = argp->number;
-    threadsResults[idxThreadCreate].pid = argp->pid;
-    threadsResults[idxThreadCreate].idx = argp->idx;
 
     pthread_create(&workers[idxThreadCreate], NULL, bakery, &threadsResults[idxThreadCreate]);
 
@@ -92,15 +80,13 @@ wait_queue_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
 }
 
 struct bakery_t *
-bakery_res_1_svc(struct bakery_t *argp, struct svc_req *rqstp)
+get_result_2_svc(struct bakery_t *argp, struct svc_req *rqstp)
 {
     static struct bakery_t result;
 
     pthread_join(workers[idxThreadJoin], NULL);
 
     result.number = argp->number;
-    result.pid = argp->pid;
-    result.idx = argp->idx;
     result.result = threadsResults[idxThreadJoin].result;
 
     idxThreadJoin++;

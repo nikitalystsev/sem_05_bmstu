@@ -7,15 +7,13 @@
 #include "bakery.h"
 #include <time.h>
 
-void bakery_prog_1(char *host)
+void bakery_prog_2(char *host)
 {
     CLIENT *clnt;
     struct bakery_t *result_1;
     struct bakery_t get_number_1_arg;
     struct bakery_t *result_2;
-    struct bakery_t wait_queue_1_arg;
-    struct bakery_t *result_3;
-    struct bakery_t bakery_res_1_arg;
+    struct bakery_t get_result_1_arg;
 
 #ifndef DEBUG
     clnt = clnt_create(host, BAKERY_PROG, BAKERY_VER, "udp");
@@ -29,9 +27,7 @@ void bakery_prog_1(char *host)
     srand(time(NULL));
     sleep(rand() % 5 + 1);
 
-    get_number_1_arg.pid = getpid();
-
-    result_1 = get_number_1(&get_number_1_arg, clnt);
+    result_1 = get_number_2(&get_number_1_arg, clnt);
     if (result_1 == (struct bakery_t *)NULL)
     {
         clnt_perror(clnt, "call failed");
@@ -48,30 +44,15 @@ void bakery_prog_1(char *host)
     gettimeofday(&current_time, NULL);
     strftime(time_buf, 80, "%H:%M:%S", timeinfo);
 
-    printf("Клиент (pid = %d) получил номер %d, time = %s:%ld\n", get_number_1_arg.pid, result_1->number, time_buf, current_time.tv_usec);
+    printf("Клиент (pid = %d) получил номер %d, time = %s:%ld\n", getpid(), result_1->number, time_buf, current_time.tv_usec);
 
     srand(time(NULL));
     sleep(rand() % 7 + 1);
 
-    wait_queue_1_arg.number = result_1->number;
-    wait_queue_1_arg.pid = result_1->pid;
-    wait_queue_1_arg.idx = result_1->idx;
+    get_result_1_arg.number = result_1->number;
 
-    result_2 = wait_queue_1(&wait_queue_1_arg, clnt);
+    result_2 = get_result_2(&get_result_1_arg, clnt);
     if (result_2 == (struct bakery_t *)NULL)
-    {
-        clnt_perror(clnt, "call failed");
-    }
-
-    srand(time(NULL));
-    sleep(rand() % 7 + 1);
-
-    bakery_res_1_arg.number = wait_queue_1_arg.number;
-    bakery_res_1_arg.pid = wait_queue_1_arg.pid;
-    bakery_res_1_arg.idx = wait_queue_1_arg.idx;
-
-    result_3 = bakery_res_1(&bakery_res_1_arg, clnt);
-    if (result_3 == (struct bakery_t *)NULL)
     {
         clnt_perror(clnt, "call failed");
     }
@@ -81,7 +62,7 @@ void bakery_prog_1(char *host)
     gettimeofday(&current_time, NULL);
     strftime(time_buf, 80, "%H:%M:%S", timeinfo);
 
-    printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", get_number_1_arg.pid, result_3->result, time_buf, current_time.tv_usec);
+    printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", getpid(), result_2->result, time_buf, current_time.tv_usec);
 
 #ifndef DEBUG
     clnt_destroy(clnt);
@@ -98,6 +79,6 @@ int main(int argc, char *argv[])
         exit(1);
     }
     host = argv[1];
-    bakery_prog_1(host);
+    bakery_prog_2(host);
     exit(0);
 }

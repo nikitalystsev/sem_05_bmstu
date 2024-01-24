@@ -16,38 +16,30 @@ extern "C" {
 
 struct bakery_t {
 	int number;
-	int idx;
-	int pid;
 	int result;
 };
 typedef struct bakery_t bakery_t;
 
 #define BAKERY_PROG 0x20000001
-#define BAKERY_VER 1
+#define BAKERY_VER 2
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define get_number 1
-extern  struct bakery_t * get_number_1(struct bakery_t *, CLIENT *);
-extern  struct bakery_t * get_number_1_svc(struct bakery_t *, struct svc_req *);
-#define wait_queue 2
-extern  struct bakery_t * wait_queue_1(struct bakery_t *, CLIENT *);
-extern  struct bakery_t * wait_queue_1_svc(struct bakery_t *, struct svc_req *);
-#define bakery_res 3
-extern  struct bakery_t * bakery_res_1(struct bakery_t *, CLIENT *);
-extern  struct bakery_t * bakery_res_1_svc(struct bakery_t *, struct svc_req *);
-extern int bakery_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+extern  struct bakery_t * get_number_2(struct bakery_t *, CLIENT *);
+extern  struct bakery_t * get_number_2_svc(struct bakery_t *, struct svc_req *);
+#define get_result 2
+extern  struct bakery_t * get_result_2(struct bakery_t *, CLIENT *);
+extern  struct bakery_t * get_result_2_svc(struct bakery_t *, struct svc_req *);
+extern int bakery_prog_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define get_number 1
-extern  struct bakery_t * get_number_1();
-extern  struct bakery_t * get_number_1_svc();
-#define wait_queue 2
-extern  struct bakery_t * wait_queue_1();
-extern  struct bakery_t * wait_queue_1_svc();
-#define bakery_res 3
-extern  struct bakery_t * bakery_res_1();
-extern  struct bakery_t * bakery_res_1_svc();
-extern int bakery_prog_1_freeresult ();
+extern  struct bakery_t * get_number_2();
+extern  struct bakery_t * get_number_2_svc();
+#define get_result 2
+extern  struct bakery_t * get_result_2();
+extern  struct bakery_t * get_result_2_svc();
+extern int bakery_prog_2_freeresult ();
 #endif /* K&R C */
 
 /* the xdr functions */
