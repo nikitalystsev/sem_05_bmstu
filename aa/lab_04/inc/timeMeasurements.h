@@ -6,17 +6,19 @@
 #include "algorithms.h"
 #include "processTime.h"
 
-using namespace std;
-
-#define N_REPS 1000
-
-using ArrSort_t = void (*)(vector<int> &);
-
-vector<int> genRandomArr(const int size);
-
-double getArrSortTime(
+double getSerialVersionTime(
     const int nreps,
-    ArrSort_t func,
-    int size);
+    const std::string &filename,
+    const std::string &outputFilename,
+    const int ngram,
+    int numStr);
+
+double getParallelVersionTime(
+    const int nreps,
+    const std::string &filename,
+    const std::string &outputFilename,
+    const int ngram,
+    const int numThreads,
+    int numStr);
 
 #endif

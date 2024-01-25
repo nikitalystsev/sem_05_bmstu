@@ -1,33 +1,43 @@
 #include "timeMeasurements.h"
 
-vector<int> genRandomArr(const int size)
-{
-
-    vector<int> arr(size);
-
-    for (int i = 0; i < size; ++i)
-        arr[i] = rand(); // Генерируем случайное целое число
-
-    return arr;
-}
-
-double getArrSortTime(
+double getSerialVersionTime(
     const int nreps,
-    ArrSort_t func,
-    int size)
+    const std::string &filename,
+    const std::string &outputFilename,
+    const int ngram,
+    int numStr)
 {
-    vector<int> tmpArr = genRandomArr(size);
-    vector<int> arr = tmpArr;
+    getRandomText(filename, numStr);
 
     unsigned long long time, resTime = 0;
 
     for (int i = 0; i < nreps; ++i)
     {
         time = getMicrosecondsCpuTime();
-        func(arr);
+        serialVersion::solution(filename, outputFilename, ngram);
         resTime += getMicrosecondsCpuTime() - time;
+    }
 
-        arr = tmpArr;
+    return (double)resTime / nreps;
+}
+
+double getParallelVersionTime(
+    const int nreps,
+    const std::string &filename,
+    const std::string &outputFilename,
+    const int ngram,
+    const int numThreads,
+    int numStr)
+{
+    getRandomText(filename, numStr);
+
+    unsigned long long time, resTime = 0;
+
+    for (int i = 0; i < nreps; ++i)
+    {
+        time = getMicrosecondsCpuTime();
+        parallelVersion::solution(filename, outputFilename, ngram, numThreads);
+        resTime += getMicrosecondsCpuTime() - time;
     }
 
     return (double)resTime / nreps;

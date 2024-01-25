@@ -177,3 +177,22 @@ int solution(const std::string &filename, const std::string &outputFilename, con
 }
 
 } // namespace parallelVersion
+
+void getRandomText(const std::string &filename, const int numStr)
+{
+    std::wstring rusAlph = L"абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+
+    std::wstring currStr(81, L' ');
+
+    std::wofstream data(filename);
+
+    for (int i = 0; i < numStr; ++i)
+    {
+        for (int j = 0; j < 80; ++j)
+            currStr[j] = (rand() % 5) ? rusAlph[rand() % 32] : L' ';
+
+        data << currStr << std::endl;
+    }
+
+    data.close();
+}
