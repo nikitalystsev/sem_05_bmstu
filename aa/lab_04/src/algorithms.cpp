@@ -108,6 +108,7 @@ static void processStr(std::wstring &currStr, const int ngram)
 {
     size_t startPos = 0;
     size_t endPos = 0;
+
     while (endPos != std::wstring::npos)
     {
         endPos = currStr.find(L' ', startPos);
