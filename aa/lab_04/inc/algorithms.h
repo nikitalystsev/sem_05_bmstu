@@ -5,6 +5,9 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <mutex>
+#include <thread>
+#include <unordered_map>
 #include <vector>
 
 namespace serialVersion
@@ -14,7 +17,7 @@ int solution(const std::string &filename, const std::string &outputFilename, con
 
 namespace parallelVersion
 {
-
+int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads);
 }
 
 #endif
