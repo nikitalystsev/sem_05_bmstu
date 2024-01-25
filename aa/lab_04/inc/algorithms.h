@@ -2,24 +2,19 @@
 #define __ALGORITHMS_H__
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
+#include <map>
 #include <vector>
 
-using namespace std;
-
-namespace bucketSort
+namespace serialVersion
 {
-void bucketSort(vector<int> &arr);
-}
+int solution(const std::string &filename, const std::string &outputFilename, const int ngram);
+} // namespace serialVersion
 
-namespace radixSort
+namespace parallelVersion
 {
-void radixSort(vector<int> &arr);
-}
 
-namespace mergeSort
-{
-void mergeSort(vector<int> &arr);
 }
 
 #endif

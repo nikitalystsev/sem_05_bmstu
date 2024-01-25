@@ -1,139 +1,77 @@
 #include "algorithms.h"
 
-namespace bucketSort
+namespace serialVersion
 {
-void bucketSort(vector<int> &arr)
+
+static std::vector<std::wstring> getNgramsByWord(const std::wstring &word, int ngram)
 {
-    int n = arr.size();
-    int minVal = *min_element(arr.begin(), arr.end());
-    int maxVal = *max_element(arr.begin(), arr.end());
-    int bucketRange = (maxVal - minVal) / n + 1;
-    int bucketIndex, i, j, index = 0;
+    std::vector<std::wstring> ngrams;
 
-    vector<vector<int>> buckets(n);
+    for (size_t i = 0; i <= word.length() - ngram; ++i)
+        ngrams.push_back(word.substr(i, ngram));
 
-    for (i = 0; i < n; i++)
-    {
-        bucketIndex = (arr[i] - minVal) / bucketRange;
-        buckets[bucketIndex].push_back(arr[i]);
-    }
-
-    for (i = 0; i < n; i++)
-        sort(buckets[i].begin(), buckets[i].end());
-
-    for (i = 0; i < n; i++)
-        for (j = 0; j < buckets[i].size(); j++)
-            arr[index++] = buckets[i][j];
+    return ngrams;
 }
 
-} // namespace bucketSort
-
-namespace radixSort
+static std::map<std::wstring, int> generateNgrams(std::wifstream &inputFile, int ngram)
 {
-static void countSort(vector<int> &arr, int exp)
-{
-    int n = arr.size();
-    int i;
+    // Создаем словарь для хранения употреблений N-грамм
+    std::map<std::wstring, int> ngramCounts;
 
-    vector<int> output(n);
-    int count[10] = {0};
-
-    for (i = 0; i < n; i++)
-        count[(arr[i] / exp) % 10]++;
-
-    for (i = 1; i < 10; i++)
-        count[i] += count[i - 1];
-
-    for (i = n - 1; i >= 0; i--)
+    std::wstring word;
+    // Обрабатываем каждое слово в файле
+    while (inputFile >> word)
     {
-        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
-        count[(arr[i] / exp) % 10]--;
+        // Удаляем знаки препинания и приводим слово к нижнему регистру
+        word.erase(std::remove_if(word.begin(), word.end(), ::iswpunct), word.end());
+        std::transform(word.begin(), word.end(), word.begin(), ::towlower);
+
+        if (static_cast<int>(word.size()) < ngram)
+            continue;
+
+        // Генерируем N-граммы для текущего слова
+        std::vector<std::wstring> ngrams = getNgramsByWord(word, ngram);
+
+        // Обновляем счетчики употреблений в словаре
+        for (const auto &ngram : ngrams)
+            ngramCounts[ngram]++;
     }
 
-    for (i = 0; i < n; i++)
-        arr[i] = output[i];
+    return ngramCounts;
 }
 
-void radixSort(vector<int> &arr)
+int solution(const std::string &filename, const std::string &outputFilename, const int ngram)
 {
-    int max = *max_element(arr.begin(), arr.end());
-    int exp;
+    std::wifstream inputFile(filename);
 
-    for (exp = 1; max / exp > 0; exp *= 10)
-        countSort(arr, exp);
-}
-} // namespace radixSort
-
-namespace mergeSort
-{
-static void _merge(vector<int> &arr, int low, int high, int mid)
-{
-    int i, j, k, a;
-    int lengthLeft = mid - low + 1;
-    int lengthRight = high - mid;
-
-    // Creating two temp arrays to store left and right sub-arrays.
-    vector<int> arrLeft(lengthLeft), arrRight(lengthRight);
-
-    // Copying the data from the actual array to left and right temp arrays.
-    for (a = 0; a < lengthLeft; a++)
-        arrLeft[a] = arr[low + a];
-
-    for (a = 0; a < lengthRight; a++)
-        arrRight[a] = arr[mid + 1 + a];
-
-    // Merging the temp arrays back into the actual array.
-    i = 0;   // Starting index of arrLeft[].
-    j = 0;   // Staring index of arrRight[].
-    k = low; // Starting index of merged subarray.
-
-    while (i < lengthLeft && j < lengthRight)
+    if (!inputFile.is_open())
     {
-        // Checking and placing the smaller number of both temp arrays into the main array.
-        if (arrLeft[i] <= arrRight[j])
-        {
-            arr[k] = arrLeft[i];
-            i++;
-        }
-        else
-        {
-            arr[k] = arrRight[j];
-            j++;
-        }
-        k++;
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return 1;
     }
 
-    // After the successful execution of the above loop
-    // copying the remaining elements of the left subarray (if remaining).
-    while (i < lengthLeft)
+    std::map<std::wstring, int> ngramCounts = generateNgrams(inputFile, ngram);
+
+    inputFile.close();
+
+    std::wofstream outputFile(outputFilename);
+
+    if (!outputFile.is_open())
     {
-        arr[k] = arrLeft[i];
-        k++;
-        i++;
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return 2;
     }
 
-    // Copying the remaining elements of the right sub array (if remaining).
-    while (j < lengthRight)
-    {
-        arr[k] = arrRight[j];
-        k++;
-        j++;
-    }
+    for (const auto &entry : ngramCounts)
+        outputFile << entry.first << ": " << entry.second << std::endl;
+
+    outputFile.close();
+
+    return 0;
 }
+} // namespace serialVersion
 
-static void _mergeSort(vector<int> &arr, int low, int high)
+namespace parallelVersion
 {
-    if (low < high)
-    {
-        _mergeSort(arr, low, (low + high) / 2);
-        _mergeSort(arr, (low + high) / 2 + 1, high);
 
-        _merge(arr, low, high, (low + high) / 2);
-    }
 }
-
-void mergeSort(vector<int> &arr)
-{
-    _mergeSort(arr, 0, arr.size() - 1);
-}
-} // namespace mergeSort
