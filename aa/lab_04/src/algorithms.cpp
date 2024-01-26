@@ -182,9 +182,15 @@ void getRandomText(const std::string &filename, const int numStr)
 {
     std::wstring rusAlph = L"абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
-    std::wstring currStr(81, L' ');
+    std::wstring currStr(80, L' ');
 
     std::wofstream data(filename);
+
+    if (!data.is_open())
+    {
+        std::wcout << L"Ошибка открытия файла" << std::endl;
+        return;
+    }
 
     for (int i = 0; i < numStr; ++i)
     {

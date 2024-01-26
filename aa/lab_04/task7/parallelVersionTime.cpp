@@ -7,13 +7,20 @@
 #endif
 #define N_REPS 1000
 
-using namespace std;
-
 int main()
 {
+    std::locale::global(std::locale(""));
+
     srand(200);
 
-        cout << getArrSortTime(N_REPS, mergeSort::mergeSort, NMAX) << endl;
+    std::cout << getParallelVersionTime(
+                     N_REPS,
+                     "../data/text1.txt",
+                     "../data/output_text1.txt",
+                     3,
+                     1,
+                     NMAX)
+              << std::endl;
 
     return 0;
 }

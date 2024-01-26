@@ -38,6 +38,4 @@ if ! [ -d ./apps ]; then
     mkdir apps
 fi
 
-# build sizes_time1 comp_files_time "time_100_200"
-# build sizes_time2 comp_files_time "time_100_1000"
-build sizes_mem comp_files_mem "memory"
+build num_str1 comp_files_time1 "time_100-1000_str"

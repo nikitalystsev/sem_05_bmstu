@@ -29,6 +29,7 @@ double getParallelVersionTime(
     const int numThreads,
     int numStr)
 {
+
     getRandomText(filename, numStr);
 
     unsigned long long time, resTime = 0;
