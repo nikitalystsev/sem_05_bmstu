@@ -3,15 +3,13 @@ reset
 NO_ANIMATION = 1
 
 set terminal svg size 640, 440
-set output '../postproc_data/timeSort.svg'
+set output '../postproc_data/research2.svg'
 
-set xlabel "Количество элементов в массиве, штуки"
+set xlabel "Число потоков, штуки"
 set ylabel "Время, мкс"
 set grid 
 
 # set logscale x
-set logscale y
+# set logscale y
 
-plot "../postproc_data/graph2/mergeSortTime.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
-"../postproc_data/graph2/radixSortTime.txt" with linespoints title "Поразрядная сортировка", \
-"../postproc_data/graph2/bucketSortTime.txt" with linespoints title "Блочная сортировка"
+plot "../postproc_data/graph2/parallelVersionTime2.txt" with linespoints pt 5 lt rgb "red" title "Параллельная версия"

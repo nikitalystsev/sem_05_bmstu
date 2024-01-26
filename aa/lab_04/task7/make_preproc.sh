@@ -77,7 +77,8 @@ fi
 
 # сборка основного датасета
 
-get_data num_str1 comp_files_time1 10 "time_100-1000_str"
+# get_data num_str1 comp_files_time1 10 "time_10-100_str"
+get_data cnt_threads2 comp_files_time2 10 "time_100_str"
 
 # ##########################################################################
 
@@ -91,7 +92,7 @@ if ! [ -d ./postproc_data/graph1 ]; then
     mkdir postproc_data/graph1
 fi
 
-analysis_data num_str1 comp_files_time1 "graph1"
+# analysis_data num_str1 comp_files_time1 "graph1"
 
 # # #########################################################################
 
@@ -101,7 +102,7 @@ if ! [ -d ./postproc_data/graph2 ]; then
     mkdir postproc_data/graph2
 fi
 
-# analysis_data sizes_time2 comp_files_time "graph2"
+analysis_data cnt_threads2 comp_files_time2 "graph2"
 
 # ########################################################################
 
