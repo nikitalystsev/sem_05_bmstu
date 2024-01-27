@@ -5,12 +5,13 @@ NO_ANIMATION = 1
 set terminal svg size 640, 440
 set output '../postproc_data/research1.svg'
 
-set xlabel "Число строк в тексте, штуки"
+set xlabel "Число строк в тексте, единицы"
 set ylabel "Время, мкс"
 set grid 
 
 # set logscale x
 set logscale y
+set key right bottom
 
 plot "../postproc_data/graph1/serialVersionTime.txt" with linespoints pt 5 lt rgb "red" title "Последовательная версия", \
 "../postproc_data/graph1/parallelVersionTime.txt" with linespoints title "Параллельная версия с 1-м рабочим потоком"

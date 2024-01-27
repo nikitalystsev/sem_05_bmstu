@@ -76,18 +76,18 @@ int solution(const std::string &filename, const std::string &outputFilename, con
     for (int i = 0; i < (int)vecStrText.size(); ++i)
         processStr(vecStrText[i], ngram, ngramCounts);
 
-    std::wofstream outputFile(outputFilename);
+    // std::wofstream outputFile(outputFilename);
 
-    if (!outputFile.is_open())
-    {
-        std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return 2;
-    }
+    // if (!outputFile.is_open())
+    // {
+    //     std::wcerr << L"Ошибка открытия файла" << std::endl;
+    //     return 2;
+    // }
 
-    for (const auto &entry : ngramCounts)
-        outputFile << entry.first << ": " << entry.second << std::endl;
+    // for (const auto &entry : ngramCounts)
+    //     outputFile << entry.first << ": " << entry.second << std::endl;
 
-    outputFile.close();
+    // outputFile.close();
 
     return 0;
 }
@@ -155,7 +155,7 @@ void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram,
 int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads)
 {
     std::wifstream inputFile(filename);
-    std::wofstream outputFile(outputFilename);
+    // std::wofstream outputFile(outputFilename);
 
     if (!inputFile.is_open())
     {
@@ -163,11 +163,11 @@ int solution(const std::string &filename, const std::string &outputFilename, con
         return 1;
     }
 
-    if (!outputFile.is_open())
-    {
-        std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return 2;
-    }
+    // if (!outputFile.is_open())
+    // {
+    //     std::wcerr << L"Ошибка открытия файла" << std::endl;
+    //     return 2;
+    // }
 
     std::vector<std::wstring> vecStrText = getVectorText(inputFile);
     std::map<std::wstring, int> ngramCounts;
@@ -184,11 +184,11 @@ int solution(const std::string &filename, const std::string &outputFilename, con
         for (const auto &entry : localCount)
             ngramCounts[entry.first] += entry.second;
 
-    for (const auto &entry : ngramCounts)
-        outputFile << entry.first << ": " << entry.second << std::endl;
+    // for (const auto &entry : ngramCounts)
+    //     outputFile << entry.first << ": " << entry.second << std::endl;
 
     inputFile.close();
-    outputFile.close();
+    // outputFile.close();
 
     return 0;
 }
