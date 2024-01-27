@@ -32,7 +32,6 @@ double getParallelVersionTime(
 
     getRandomText(filename, numStr);
 
-    // auto start = std::chrono::high_resolution_clock::now();
     unsigned long long time, resTime = 0;
 
     for (int i = 0; i < nreps; ++i)
@@ -41,10 +40,6 @@ double getParallelVersionTime(
         parallelVersion::solution(filename, outputFilename, ngram, numThreads);
         resTime += getMicrosecondsCpuTime() - time;
     }
-
-    // auto end = std::chrono::high_resolution_clock::now();
-
-    // return std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() / nreps;
 
     return (double)resTime / nreps;
 }
