@@ -1,0 +1,25 @@
+static std::vector<std::wstring> getNgramsByWord(const std::wstring &word, int ngram)
+{
+    std::vector<std::wstring> ngrams;
+
+    for (size_t i = 0; i <= word.length() - ngram; ++i)
+        ngrams.push_back(word.substr(i, ngram));
+
+    return ngrams;
+}
+
+static std::vector<std::wstring> getVectorText(std::wifstream &inputFile)
+{
+    std::vector<std::wstring> vecStrText;
+    std::wstring currStr;
+
+    while (std::getline(inputFile, currStr))
+    {
+        currStr.erase(std::remove_if(currStr.begin(), currStr.end(), ::iswpunct), currStr.end());
+        std::transform(currStr.begin(), currStr.end(), currStr.begin(), ::towlower);
+
+        vecStrText.push_back(currStr);
+    }
+
+    return vecStrText;
+}

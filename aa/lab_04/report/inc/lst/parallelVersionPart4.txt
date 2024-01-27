@@ -1,0 +1,8 @@
+    for (const auto &entry : ngramCounts)
+        outputFile << entry.first << ": " << entry.second << std::endl;
+
+    inputFile.close();
+    outputFile.close();
+
+    return 0;
+}

@@ -1,0 +1,31 @@
+int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads)
+{
+    std::wifstream inputFile(filename);
+    std::wofstream outputFile(outputFilename);
+
+    if (!inputFile.is_open())
+    {
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return 1;
+    }
+
+    if (!outputFile.is_open())
+    {
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return 2;
+    }
+
+    std::vector<std::wstring> vecStrText = getVectorText(inputFile);
+    std::map<std::wstring, int> ngramCounts;
+    std::vector<std::thread> threads(numThreads);
+    std::vector<std::map<std::wstring, int>> localNgramCounts(numThreads);
+
+    for (int i = 0; i < numThreads; ++i)
+        threads[i] = std::thread(parallelProcessStr, i, std::ref(vecStrText), ngram, numThreads, std::ref(localNgramCounts[i]));
+
+    for (auto &thread : threads)
+        thread.join();
+
+    for (const auto &localCount : localNgramCounts)
+        for (const auto &entry : localCount)
+            ngramCounts[entry.first] += entry.second;

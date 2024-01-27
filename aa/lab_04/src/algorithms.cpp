@@ -13,33 +13,6 @@ static std::vector<std::wstring> getNgramsByWord(const std::wstring &word, int n
     return ngrams;
 }
 
-// static std::map<std::wstring, int> generateNgrams(std::wifstream &inputFile, int ngram)
-// {
-//     // Создаем словарь для хранения употреблений N-грамм
-//     std::map<std::wstring, int> ngramCounts;
-
-//     std::wstring word;
-//     // Обрабатываем каждое слово в файле
-//     while (inputFile >> word)
-//     {
-//         // Удаляем знаки препинания и приводим слово к нижнему регистру
-//         word.erase(std::remove_if(word.begin(), word.end(), ::iswpunct), word.end());
-//         std::transform(word.begin(), word.end(), word.begin(), ::towlower);
-
-//         if (static_cast<int>(word.size()) < ngram)
-//             continue;
-
-//         // Генерируем N-граммы для текущего слова
-//         std::vector<std::wstring> ngrams = getNgramsByWord(word, ngram);
-
-//         // Обновляем счетчики употреблений в словаре
-//         for (const auto &ngram : ngrams)
-//             ngramCounts[ngram]++;
-//     }
-
-//     return ngramCounts;
-// }
-
 static std::vector<std::wstring> getVectorText(std::wifstream &inputFile)
 {
     std::vector<std::wstring> vecStrText;
@@ -197,16 +170,12 @@ int solution(const std::string &filename, const std::string &outputFilename, con
     }
 
     std::vector<std::wstring> vecStrText = getVectorText(inputFile);
-
     std::map<std::wstring, int> ngramCounts;
-
     std::vector<std::thread> threads(numThreads);
     std::vector<std::map<std::wstring, int>> localNgramCounts(numThreads);
 
     for (int i = 0; i < numThreads; ++i)
-    {
         threads[i] = std::thread(parallelProcessStr, i, std::ref(vecStrText), ngram, numThreads, std::ref(localNgramCounts[i]));
-    }
 
     for (auto &thread : threads)
         thread.join();

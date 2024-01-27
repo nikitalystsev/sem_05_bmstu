@@ -1,0 +1,34 @@
+int solution(const std::string &filename, const std::string &outputFilename, const int ngram)
+{
+    std::wifstream inputFile(filename);
+
+    if (!inputFile.is_open())
+    {
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return 1;
+    }
+
+    std::vector<std::wstring> vecStrText = getVectorText(inputFile);
+
+    inputFile.close();
+
+    std::map<std::wstring, int> ngramCounts;
+
+    for (int i = 0; i < (int)vecStrText.size(); ++i)
+        processStr(vecStrText[i], ngram, ngramCounts);
+
+    std::wofstream outputFile(outputFilename);
+
+    if (!outputFile.is_open())
+    {
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return 2;
+    }
+
+    for (const auto &entry : ngramCounts)
+        outputFile << entry.first << ": " << entry.second << std::endl;
+
+    outputFile.close();
+
+    return 0;
+}

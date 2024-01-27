@@ -1,0 +1,28 @@
+void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram, int numThreads, std::map<std::wstring, int> &localNgramCounts)
+{
+    for (int j = i; j < (int)vecStrText.size(); j += numThreads)
+    {
+        size_t startPos = 0;
+        size_t endPos = 0;
+
+        while (endPos != std::wstring::npos)
+        {
+            endPos = vecStrText[j].find(L' ', startPos);
+
+            std::wstring word = vecStrText[j].substr(startPos, endPos - startPos);
+
+            if (static_cast<int>(word.size()) < ngram)
+            {
+                startPos = endPos + 1;
+                continue;
+            }
+
+            std::vector<std::wstring> ngrams = getNgramsByWord(word, ngram);
+
+            for (const auto &ngram : ngrams)
+                localNgramCounts[ngram]++;
+
+            startPos = endPos + 1;
+        }
+    }
+}
