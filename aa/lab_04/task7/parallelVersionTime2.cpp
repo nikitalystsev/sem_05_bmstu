@@ -15,11 +15,11 @@ int main()
 
     std::cout << getParallelVersionTime(
                      N_REPS,
-                     "../text.txt",
-                     "../data/output_text2_.txt",
+                     "../text1.txt",
+                     "../data/output_text1_.txt",
                      3,
                      NMAX,
-                     19)
+                     100)
               << std::endl;
 
     return 0;

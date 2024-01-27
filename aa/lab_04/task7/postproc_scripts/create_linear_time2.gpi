@@ -10,6 +10,6 @@ set ylabel "Время, мкс"
 set grid 
 
 # set logscale x
-# set logscale y
+set logscale y
 
 plot "../postproc_data/graph2/parallelVersionTime2.txt" with linespoints pt 5 lt rgb "red" title "Параллельная версия"

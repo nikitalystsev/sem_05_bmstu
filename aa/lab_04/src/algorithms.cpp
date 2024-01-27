@@ -124,9 +124,6 @@ namespace parallelVersion
 {
 // пытаюсь распараллелить по строкам
 
-std::mutex mutex;
-std::map<std::wstring, int> ngramCounts;
-
 static std::vector<std::wstring> getNgramsByWord(const std::wstring &word, int ngram)
 {
     std::vector<std::wstring> ngrams;
@@ -153,7 +150,7 @@ static std::vector<std::wstring> getVectorText(std::wifstream &inputFile)
     return vecStrText;
 }
 
-void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram, int numThreads)
+void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram, int numThreads, std::map<std::wstring, int> &localNgramCounts)
 {
     for (int j = i; j < (int)vecStrText.size(); j += numThreads)
     {
@@ -174,10 +171,8 @@ void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram,
 
             std::vector<std::wstring> ngrams = getNgramsByWord(word, ngram);
 
-            mutex.lock();
             for (const auto &ngram : ngrams)
-                ngramCounts[ngram]++;
-            mutex.unlock();
+                localNgramCounts[ngram]++;
 
             startPos = endPos + 1;
         }
@@ -187,6 +182,7 @@ void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram,
 int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads)
 {
     std::wifstream inputFile(filename);
+    std::wofstream outputFile(outputFilename);
 
     if (!inputFile.is_open())
     {
@@ -194,32 +190,35 @@ int solution(const std::string &filename, const std::string &outputFilename, con
         return 1;
     }
 
-    std::vector<std::wstring> vecStrText = getVectorText(inputFile);
-
-    inputFile.close();
-
-    std::vector<std::thread> threads(numThreads);
-
-    for (int i = 0; i < numThreads; ++i)
-    {
-        threads[i] = std::thread(parallelProcessStr, i, std::ref(vecStrText), ngram, numThreads);
-    }
-
-    // Ожидание завершения всех потоков
-    for (auto &thread : threads)
-        thread.join();
-
-    std::wofstream outputFile(outputFilename);
-
     if (!outputFile.is_open())
     {
         std::wcerr << L"Ошибка открытия файла" << std::endl;
         return 2;
     }
 
+    std::vector<std::wstring> vecStrText = getVectorText(inputFile);
+
+    std::map<std::wstring, int> ngramCounts;
+
+    std::vector<std::thread> threads(numThreads);
+    std::vector<std::map<std::wstring, int>> localNgramCounts(numThreads);
+
+    for (int i = 0; i < numThreads; ++i)
+    {
+        threads[i] = std::thread(parallelProcessStr, i, std::ref(vecStrText), ngram, numThreads, std::ref(localNgramCounts[i]));
+    }
+
+    for (auto &thread : threads)
+        thread.join();
+
+    for (const auto &localCount : localNgramCounts)
+        for (const auto &entry : localCount)
+            ngramCounts[entry.first] += entry.second;
+
     for (const auto &entry : ngramCounts)
         outputFile << entry.first << ": " << entry.second << std::endl;
 
+    inputFile.close();
     outputFile.close();
 
     return 0;
