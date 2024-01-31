@@ -1,0 +1,16 @@
+#!/usr/bin/gnuplot -persist
+reset
+NO_ANIMATION = 1
+
+set terminal svg size 640, 440
+set output '../postproc_data/research2.svg'
+
+set xlabel "Число потоков, единицы"
+set ylabel "Время, мкс"
+set grid 
+
+# set logscale x
+# set logscale y
+set key right bottom
+
+plot "../postproc_data/graph2/parallelVersionTime2.txt" with linespoints pt 5 lt rgb "red" title "Параллельная версия"
