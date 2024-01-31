@@ -16,6 +16,6 @@ namespace parallelVersion
 int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads);
 }
 
-void getRandomText(const std::string &filename, const int numStr);
+void getRandomText(const std::string &filename, const int numStr, const int strLength);
 
 #endif

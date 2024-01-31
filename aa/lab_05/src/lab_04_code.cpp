@@ -1,4 +1,4 @@
-#include "algorithms.h"
+#include "lab_04_code.h"
 
 namespace parallelVersion
 {
@@ -104,11 +104,11 @@ int solution(const std::string &filename, const std::string &outputFilename, con
 
 } // namespace parallelVersion
 
-void getRandomText(const std::string &filename, const int numStr)
+void getRandomText(const std::string &filename, const int numStr, const int strLength)
 {
     std::wstring rusAlph = L"абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
-    std::wstring currStr(80, L' ');
+    std::wstring currStr(strLength, L' ');
 
     std::wofstream data(filename);
 
@@ -120,7 +120,7 @@ void getRandomText(const std::string &filename, const int numStr)
 
     for (int i = 0; i < numStr; ++i)
     {
-        for (int j = 0; j < 80; ++j)
+        for (int j = 0; j < strLength; ++j)
             currStr[j] = (rand() % 5) ? rusAlph[rand() % 32] : L' ';
 
         data << currStr << std::endl;
