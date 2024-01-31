@@ -54,21 +54,21 @@ void thrProcessFunc(const int numAppl, const int N, std::queue<conveyorAppl_t> &
 {
     for (int i = 0; i < numAppl; ++i)
     {
-        if (!q1.empty())
-        {
-            mq1.lock();
-            conveyorAppl_t appl = q1.front();
-            q1.pop();
-            mq1.unlock();
+        while (q1.empty())
+            ;
 
-            clock_gettime(CLOCK_REALTIME, &appl.timeStartProcess);
-            parallelVersion::solution(appl.vecTextStr, appl.outputFilename, N, 2);
-            clock_gettime(CLOCK_REALTIME, &appl.timeEndProcess);
+        mq1.lock();
+        conveyorAppl_t appl = q1.front();
+        q1.pop();
+        mq1.unlock();
 
-            mq2.lock();
-            q2.push(appl);
-            mq2.unlock();
-        }
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartProcess);
+        parallelVersion::solution(appl.vecTextStr, appl.outputFilename, N, 2);
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndProcess);
+
+        mq2.lock();
+        q2.push(appl);
+        mq2.unlock();
     }
 }
 
@@ -84,19 +84,19 @@ void thrLogFunc(const int numAppl, std::queue<conveyorAppl_t> &q2, std::vector<c
 
     for (int i = 0; i < numAppl; ++i)
     {
-        if (!q2.empty())
-        {
-            mq2.lock();
-            conveyorAppl_t appl = q2.front();
-            q2.pop();
-            mq2.unlock();
+        while (q2.empty())
+            ;
 
-            clock_gettime(CLOCK_REALTIME, &appl.timeStartLog);
-            logFile << appl.inputFilename << ": " << appl.outputFilename << std::endl;
-            clock_gettime(CLOCK_REALTIME, &appl.timeEndLog);
+        mq2.lock();
+        conveyorAppl_t appl = q2.front();
+        q2.pop();
+        mq2.unlock();
 
-            vec.push_back(appl);
-        }
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartLog);
+        logFile << appl.inputFilename << ": " << appl.outputFilename << std::endl;
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndLog);
+
+        vec.push_back(appl);
     }
 
     logFile.close();
