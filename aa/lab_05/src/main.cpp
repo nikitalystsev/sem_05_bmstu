@@ -1,3 +1,4 @@
+#include "serial.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -11,14 +12,9 @@
 
 int main()
 {
-    // Число, которое вы хотите преобразовать в строку
-    int number = 42;
+    std::locale::global(std::locale(""));
 
-    // Преобразование числа в строку с использованием std::to_string()
-    std::string strNumber = std::to_string(number);
-
-    // Вывод результата
-    std::cout << "Число как строка: " << strNumber << std::endl;
+    serialSolution(10, 100, 100, 4);
 
     return 0;
 }

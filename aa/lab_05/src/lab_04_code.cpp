@@ -59,7 +59,7 @@ void parallelProcessStr(int i, std::vector<std::wstring> &vecStrText, int ngram,
     }
 }
 
-int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads)
+int readFile(std::string &filename, std::vector<std::wstring> &vecStrText)
 {
     std::wifstream inputFile(filename);
     if (!inputFile.is_open())
@@ -68,10 +68,15 @@ int solution(const std::string &filename, const std::string &outputFilename, con
         return 1;
     }
 
-    std::vector<std::wstring> vecStrText = getVectorText(inputFile);
+    vecStrText = getVectorText(inputFile);
 
     inputFile.close();
 
+    return 0;
+}
+
+int solution(std::vector<std::wstring> &vecStrText, const std::string &outputFilename, const int ngram, const int numThreads)
+{
     std::map<std::wstring, int> ngramCounts;
 
     std::vector<std::thread> threads(numThreads);

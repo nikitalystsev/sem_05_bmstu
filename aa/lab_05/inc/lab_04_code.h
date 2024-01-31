@@ -13,8 +13,10 @@
 
 namespace parallelVersion
 {
-int solution(const std::string &filename, const std::string &outputFilename, const int ngram, const int numThreads);
-}
+int readFile(std::string &filename, std::vector<std::wstring> &vecStrText);
+
+int solution(std::vector<std::wstring> &vecStrText, const std::string &outputFilename, const int ngram, const int numThreads);
+} // namespace parallelVersion
 
 void getRandomText(const std::string &filename, const int numStr, const int strLength);
 

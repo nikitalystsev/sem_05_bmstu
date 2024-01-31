@@ -3,6 +3,7 @@
 
 #include "lab_04_code.h"
 #include <algorithm>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -11,6 +12,7 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+
 // структура заявки (в конвейере такая же будет)
 struct serialAppl_t
 {
@@ -26,5 +28,28 @@ struct serialAppl_t
     timespec timeStartLog;
     timespec timeEndLog;
 };
+
+struct PoolResultT
+{
+
+    PoolResultT() = default;
+    bool operator<(const PoolResultT &other) const
+    {
+        return this->nanosec < other.nanosec;
+    }
+
+    PoolResultT &operator=(const PoolResultT &other)
+    {
+        this->message = other.message;
+        this->nanosec = other.nanosec;
+        return *this;
+    }
+
+    long long nanosec;
+    std::string message;
+};
+
+void serialSolution(const int numAppl, const int numLines, const int strLenght, const int N);
+void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename);
 
 #endif
