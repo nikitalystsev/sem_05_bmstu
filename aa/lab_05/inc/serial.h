@@ -29,26 +29,6 @@ struct serialAppl_t
     timespec timeEndLog;
 };
 
-struct PoolResultT
-{
-
-    PoolResultT() = default;
-    bool operator<(const PoolResultT &other) const
-    {
-        return this->nanosec < other.nanosec;
-    }
-
-    PoolResultT &operator=(const PoolResultT &other)
-    {
-        this->message = other.message;
-        this->nanosec = other.nanosec;
-        return *this;
-    }
-
-    long long nanosec;
-    std::string message;
-};
-
 void serialSolution(const int numAppl, const int numLines, const int strLenght, const int N);
 void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename);
 

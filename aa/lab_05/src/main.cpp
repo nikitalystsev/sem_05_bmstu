@@ -1,3 +1,4 @@
+#include "conveyor.h"
 #include "serial.h"
 #include <algorithm>
 #include <fstream>
@@ -14,7 +15,8 @@ int main()
 {
     std::locale::global(std::locale(""));
 
-    serialSolution(10, 100, 100, 4);
+    // serialSolution(10, 100, 100, 4);
+    conveyorSolution(10, 100, 100, 4);
 
     return 0;
 }

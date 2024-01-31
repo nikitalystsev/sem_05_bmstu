@@ -16,6 +16,7 @@ void serialSolution(const int numAppl, const int numLines, const int strLenght, 
         std::wcerr << L"Ошибка открытия файла" << std::endl;
         return;
     }
+
     std::vector<serialAppl_t> vecAppl;
 
     for (int i = 0; i < numAppl; ++i)
