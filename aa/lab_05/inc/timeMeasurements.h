@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "algorithms.h"
+#include "lab_04_code.h"
 #include "processTime.h"
 
 double getSerialVersionTime(
