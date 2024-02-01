@@ -1,0 +1,18 @@
+#!/usr/bin/gnuplot -persist
+reset
+NO_ANIMATION = 1
+
+set terminal svg size 640, 440
+set output '../postproc_data/memSort.svg'
+
+set xlabel "Количество элементов в массиве, штуки"
+set ylabel "Память, байты"
+set grid
+
+# set logscale y
+
+set key bottom right
+
+plot "../postproc_data/graph3/mergeSortMem.txt" with linespoints pt 5 lt rgb "red" title "cортировка Слиянием", \
+"../postproc_data/graph3/radixSortMem.txt" with linespoints title "Поразрядная сортировка", \
+"../postproc_data/graph3/bucketSortMem.txt" with linespoints title "Блочная сортировка"
