@@ -1,0 +1,22 @@
+
+        std::vector<std::wstring> vecTextStr;
+
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartRead);
+        parallelVersion::readFile(appl.inputFilename, vecTextStr);
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndRead);
+
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartProcess);
+        parallelVersion::solution(vecTextStr, appl.outputFilename, N, 2);
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndProcess);
+
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartLog);
+        logFile << appl.inputFilename << ": " << appl.outputFilename << std::endl;
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndLog);
+
+        vecAppl.push_back(appl);
+    }
+
+    logFile.close();
+
+    printVec(vecAppl, "data/serial.txt");
+}
