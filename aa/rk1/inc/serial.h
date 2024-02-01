@@ -21,6 +21,7 @@ struct serialAppl_t
     int N;
     int numLines;
     int strLenght;
+    std::vector<std::wstring> vecTextStr;
     timespec timeStartRead;
     timespec timeEndRead;
     timespec timeStartProcess;

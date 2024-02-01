@@ -33,7 +33,7 @@ include $(wildcard $(PREF_OUT)*.d)
 
 clean : 
 	rm -rf $(PREF_OUT) ./*.exe ./preproc_scripts/*.exe
-	rm -rf ./apps ./data 
+	rm -rf ./apps ./_data 
 
 clean_all: clean
 	rm -f ./*.o ./*.exe ./*.txt ./*.gcov ./*.gcda ./*.gcno ./*.out ./*.svg

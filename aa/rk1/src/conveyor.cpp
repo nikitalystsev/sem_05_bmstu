@@ -28,7 +28,7 @@ void conveyorSolution(const int numAppl, const int numLines, const int strLenght
     thr2.join();
     thr3.join();
 
-    printVec(vec, "data/conveyor.txt");
+    // printVec(vec, "data/conveyor.txt");
 }
 
 void thrReadFileFunc(const int numAppl, std::queue<conveyorAppl_t> &q1)
