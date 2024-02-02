@@ -9,18 +9,15 @@ double getSerialVersionTime(
 {
 
     unsigned long long time, resTime = 0;
-    unsigned long long workTime = 0;
 
     for (int i = 0; i < nreps; ++i)
     {
         time = getMicrosecondsCpuTime();
-        workTime += serialSolution(numAppl, numLines, strLenght, N);
+        serialSolution(numAppl, numLines, strLenght, N);
         resTime += getMicrosecondsCpuTime() - time;
     }
 
-    workTime /= 1000;
-
-    return (double)workTime / nreps;
+    return (double)resTime / nreps;
 }
 
 double getParallelVersionTime(
@@ -32,16 +29,13 @@ double getParallelVersionTime(
 {
 
     unsigned long long time, resTime = 0;
-    unsigned long long workTime = 0;
 
     for (int i = 0; i < nreps; ++i)
     {
         time = getMicrosecondsCpuTime();
-        workTime += conveyorSolution(numAppl, numLines, strLenght, N);
+        conveyorSolution(numAppl, numLines, strLenght, N);
         resTime += getMicrosecondsCpuTime() - time;
     }
 
-    workTime /= 1000;
-
-    return (double)workTime / nreps;
+    return (double)resTime / nreps;
 }
