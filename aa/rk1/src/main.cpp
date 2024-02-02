@@ -10,6 +10,7 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include "timeMeasurements.h"
 
 void printMenu(void)
 {
@@ -91,11 +92,13 @@ int main()
     std::locale::global(std::locale(""));
 
     int menuItem;
-    int rc;
+    int rc = 0;
     int N, numLines, strLenght, numAppl;
 
     while (1)
     {
+        srand(time(NULL));
+
         printMenu();
         if ((rc = choiceMenuItem(menuItem)) != 0)
             goto _exit;

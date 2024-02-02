@@ -39,3 +39,4 @@ if ! [ -d ./apps ]; then
 fi
 
 build num_appl comp_files_time "time_100-1000_str"
+# build num_appl2 comp_files_time "time_100-130_str"

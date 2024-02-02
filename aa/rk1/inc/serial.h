@@ -30,7 +30,7 @@ struct serialAppl_t
     timespec timeEndLog;
 };
 
-void serialSolution(const int numAppl, const int numLines, const int strLenght, const int N);
-void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename);
+long long int serialSolution(const int numAppl, const int numLines, const int strLenght, const int N);
+long long int printVec(std::vector<serialAppl_t> &vecAppl, std::string filename);
 
 #endif

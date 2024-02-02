@@ -30,7 +30,7 @@ struct conveyorAppl_t
     timespec timeEndLog;
 };
 
-void conveyorSolution(const int numAppl, const int numLines, const int strLenght, const int N);
-void printVec(std::vector<conveyorAppl_t> &vecAppl, std::string filename);
+long long int conveyorSolution(const int numAppl, const int numLines, const int strLenght, const int N);
+long long int printVec(std::vector<conveyorAppl_t> &vecAppl, std::string filename);
 
 #endif

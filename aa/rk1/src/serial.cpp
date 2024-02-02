@@ -1,6 +1,6 @@
 #include "serial.h"
 
-void serialSolution(const int numAppl, const int numLines, const int strLenght, const int N)
+long long int serialSolution(const int numAppl, const int numLines, const int strLenght, const int N)
 {
     // генерирую файлы с текстами
     for (int i = 0; i < numAppl; ++i)
@@ -14,7 +14,7 @@ void serialSolution(const int numAppl, const int numLines, const int strLenght, 
     if (!logFile.is_open())
     {
         std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return;
+        return -1;
     }
 
     std::queue<serialAppl_t> q1;
@@ -54,17 +54,19 @@ void serialSolution(const int numAppl, const int numLines, const int strLenght, 
 
     logFile.close();
 
-    printVec(vecAppl, "data/serial.txt");
+    long long workTime = printVec(vecAppl, "data/serial.txt");
+
+    return workTime;
 }
 
-void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename)
+long long int printVec(std::vector<serialAppl_t> &vecAppl, std::string filename)
 {
     std::ofstream serialLog(filename);
 
     if (!serialLog.is_open())
     {
         std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return;
+        return -1;
     }
 
     timespec min = vecAppl[0].timeStartRead;
@@ -99,4 +101,8 @@ void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename)
         nanosec -= min_nano;
         serialLog << "Заявка " << i << ": end log       " << nanosec << " ns" << std::endl;
     }
+
+    serialLog.close();
+
+    return nanosec;
 }

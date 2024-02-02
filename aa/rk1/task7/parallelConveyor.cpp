@@ -10,7 +10,7 @@ int main()
 {
     std::locale::global(std::locale(""));
 
-    srand(200);
+    srand(time(NULL));
 
     std::cout << getParallelVersionTime(NMAX, 100, 100, 3, N_REPS) << std::endl;
 

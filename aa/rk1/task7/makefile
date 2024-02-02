@@ -37,4 +37,4 @@ clean :
 
 clean_all: clean
 	rm -f ./*.o ./*.exe ./*.txt ./*.gcov ./*.gcda ./*.gcno ./*.out ./*.svg
-	rm -rf ./postproc_data/ 
+	rm -rf ./postproc_data/ ./data/*
