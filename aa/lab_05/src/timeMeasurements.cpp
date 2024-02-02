@@ -1,24 +1,41 @@
 #include "timeMeasurements.h"
 
-double getParallelVersionTime(
-    const int nreps,
-    const std::string &filename,
-    const std::string &outputFilename,
-    const int ngram,
-    const int numThreads,
-    int numStr)
+double getSerialVersionTime(
+    const int numAppl,
+    const int numLines,
+    const int strLenght,
+    const int N,
+    const int nreps)
 {
-
-    // getRandomText(filename, numStr);
 
     unsigned long long time, resTime = 0;
 
-    // for (int i = 0; i < nreps; ++i)
-    // {
-    //     time = getMicrosecondsCpuTime();
-    //     parallelVersion::solution(filename, outputFilename, ngram, numThreads);
-    //     resTime += getMicrosecondsCpuTime() - time;
-    // }
+    for (int i = 0; i < nreps; ++i)
+    {
+        time = getMicrosecondsCpuTime();
+        serialSolution(numAppl, numLines, strLenght, N);
+        resTime += getMicrosecondsCpuTime() - time;
+    }
+
+    return (double)resTime / nreps;
+}
+
+double getParallelVersionTime(
+    const int numAppl,
+    const int numLines,
+    const int strLenght,
+    const int N,
+    const int nreps)
+{
+
+    unsigned long long time, resTime = 0;
+
+    for (int i = 0; i < nreps; ++i)
+    {
+        time = getMicrosecondsCpuTime();
+        conveyorSolution(numAppl, numLines, strLenght, N);
+        resTime += getMicrosecondsCpuTime() - time;
+    }
 
     return (double)resTime / nreps;
 }

@@ -13,4 +13,5 @@ set grid
 # set logscale y
 set key right bottom
 
-plot "../postproc_data/graph2/parallelVersionTime2.txt" with linespoints pt 5 lt rgb "red" title "Параллельная версия"
+plot "../postproc_data/graph2/serialConveyor.txt" with linespoints pt 5 lt rgb "red" title "Последовательный конвейер", \
+"../postproc_data/graph2/parallelConveyor.txt" with linespoints title "Параллельный конвейер"

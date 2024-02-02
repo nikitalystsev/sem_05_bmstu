@@ -1,0 +1,14 @@
+void thrLogFunc(const int numAppl, std::queue<conveyorAppl_t> &q2, std::vector<conveyorAppl_t> &vec)
+{
+    std::ofstream logFile("data/log.txt");
+
+    if (!logFile.is_open())
+    {
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return;
+    }
+
+    for (int i = 0; i < numAppl; ++i)
+    {
+        while (q2.empty())
+            ;

@@ -20,7 +20,7 @@ get_data()
     for param in "${params[@]}"; do
         for comp_file in "${comp_files[@]}"; do
             for c in $(seq "$count"); do
-                ./apps/"${comp_file}"_"${param}".exe >> ./data/"${comp_file}"_"${param}".txt
+                ./apps/"${comp_file}"_"${param}".exe >> ./_data/"${comp_file}"_"${param}".txt
 
                 counter=$((counter + 1))
                 echo -n -e "was collecting $counter/$all_count;  $c/$count, size = ${param} \r"
@@ -48,7 +48,7 @@ analysis_data()
 
     for param in "${params[@]}"; do
         for comp_file in "${comp_files[@]}"; do
-            ar_time=$(preproc_scripts/ar_mean.exe < ./data/"${comp_file}"_"${param}".txt)
+            ar_time=$(preproc_scripts/ar_mean.exe < ./_data/"${comp_file}"_"${param}".txt)
             echo "${param} ${ar_time}" >> ./postproc_data/"${3}"/"${comp_file}".txt
 
             counter=$((counter + 1))
@@ -69,16 +69,16 @@ cd preproc_scripts/ || exit
 bash build_scripts.sh
 cd ../
 
-if ! [ -d ./data ]; then
-    mkdir data
+if ! [ -d ./_data ]; then
+    mkdir _data
 fi
 
 ############################################################################
 
 # сборка основного датасета
 
-# get_data num_str1 comp_files_time1 10 "time_10-100_str"
-get_data cnt_threads2 comp_files_time2 10 "time_100_str"
+get_data num_appl comp_files_time 10 "time_10-100_str"
+# get_data num_appl2 comp_files_time 10 "time_100-130_str"
 
 # ##########################################################################
 
@@ -92,7 +92,7 @@ if ! [ -d ./postproc_data/graph1 ]; then
     mkdir postproc_data/graph1
 fi
 
-# analysis_data num_str1 comp_files_time1 "graph1"
+# analysis_data num_appl comp_files_time "graph1"
 
 # # #########################################################################
 
@@ -102,7 +102,7 @@ if ! [ -d ./postproc_data/graph2 ]; then
     mkdir postproc_data/graph2
 fi
 
-analysis_data cnt_threads2 comp_files_time2 "graph2"
+# analysis_data num_appl2 comp_files_time "graph2"
 
 # ########################################################################
 

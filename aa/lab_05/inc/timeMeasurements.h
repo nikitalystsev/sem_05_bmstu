@@ -3,22 +3,22 @@
 
 #include <iostream>
 
-#include "lab_04_code.h"
 #include "processTime.h"
+#include "serial.h"
+#include "conveyor.h"
 
 double getSerialVersionTime(
-    const int nreps,
-    const std::string &filename,
-    const std::string &outputFilename,
-    const int ngram,
-    int numStr);
+    const int numAppl,
+    const int numLines,
+    const int strLenght,
+    const int N,
+    const int nreps);
 
 double getParallelVersionTime(
-    const int nreps,
-    const std::string &filename,
-    const std::string &outputFilename,
-    const int ngram,
-    const int numThreads,
-    int numStr);
+    const int numAppl,
+    const int numLines,
+    const int strLenght,
+    const int N,
+    const int nreps);
 
 #endif

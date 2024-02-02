@@ -7,7 +7,7 @@ void thrReadFileFunc(const int numAppl, std::queue<conveyorAppl_t> &q1);
 void thrProcessFunc(const int numAppl, const int N, std::queue<conveyorAppl_t> &q1, std::queue<conveyorAppl_t> &q2);
 void thrLogFunc(const int numAppl, std::queue<conveyorAppl_t> &q2, std::vector<conveyorAppl_t> &vec);
 
-void conveyorSolution(const int numAppl, const int numLines, const int strLenght, const int N)
+long long int conveyorSolution(const int numAppl, const int numLines, const int strLenght, const int N)
 {
     // генерирую файлы с текстами
     for (int i = 0; i < numAppl; ++i)
@@ -28,7 +28,9 @@ void conveyorSolution(const int numAppl, const int numLines, const int strLenght
     thr2.join();
     thr3.join();
 
-    printVec(vec, "data/conveyor.txt");
+    long long workTime = printVec(vec, "data/conveyor.txt");
+
+    return workTime;
 }
 
 void thrReadFileFunc(const int numAppl, std::queue<conveyorAppl_t> &q1)
@@ -102,14 +104,14 @@ void thrLogFunc(const int numAppl, std::queue<conveyorAppl_t> &q2, std::vector<c
     logFile.close();
 }
 
-void printVec(std::vector<conveyorAppl_t> &vecAppl, std::string filename)
+long long int printVec(std::vector<conveyorAppl_t> &vecAppl, std::string filename)
 {
     std::ofstream serialLog(filename);
 
     if (!serialLog.is_open())
     {
         std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return;
+        return -1;
     }
 
     timespec min = vecAppl[0].timeStartRead;
@@ -144,4 +146,6 @@ void printVec(std::vector<conveyorAppl_t> &vecAppl, std::string filename)
         nanosec -= min_nano;
         serialLog << "Заявка " << i << ": end log       " << nanosec << " ns" << std::endl;
     }
+
+    return nanosec;
 }

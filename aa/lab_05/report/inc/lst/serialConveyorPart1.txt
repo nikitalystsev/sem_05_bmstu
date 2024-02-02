@@ -1,0 +1,27 @@
+void serialSolution(const int numAppl, const int numLines, const int strLenght, const int N)
+{
+    for (int i = 0; i < numAppl; ++i)
+    {
+        std::string inputFilename = "data/text" + std::to_string(i) + ".txt";
+        getRandomText(inputFilename, numLines, strLenght);
+    }
+
+    std::ofstream logFile("data/log.txt");
+
+    if (!logFile.is_open())
+    {
+        std::wcerr << L"Ошибка открытия файла" << std::endl;
+        return;
+    }
+
+    std::vector<serialAppl_t> vecAppl;
+
+    for (int i = 0; i < numAppl; ++i)
+    {
+        serialAppl_t appl;
+
+        appl.inputFilename = "data/text" + std::to_string(i) + ".txt";
+        appl.outputFilename = "data/outputText" + std::to_string(i) + ".txt";
+        appl.N = N;
+        appl.numLines = numLines;
+        appl.strLenght = strLenght;

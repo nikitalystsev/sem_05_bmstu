@@ -1,6 +1,6 @@
 #include "serial.h"
 
-void serialSolution(const int numAppl, const int numLines, const int strLenght, const int N)
+long long int serialSolution(const int numAppl, const int numLines, const int strLenght, const int N)
 {
     // генерирую файлы с текстами
     for (int i = 0; i < numAppl; ++i)
@@ -14,9 +14,11 @@ void serialSolution(const int numAppl, const int numLines, const int strLenght, 
     if (!logFile.is_open())
     {
         std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return;
+        return -1;
     }
 
+    std::queue<serialAppl_t> q1;
+    std::queue<serialAppl_t> q2;
     std::vector<serialAppl_t> vecAppl;
 
     for (int i = 0; i < numAppl; ++i)
@@ -29,16 +31,20 @@ void serialSolution(const int numAppl, const int numLines, const int strLenght, 
         appl.numLines = numLines;
         appl.strLenght = strLenght;
 
-        std::vector<std::wstring> vecTextStr;
-
         clock_gettime(CLOCK_REALTIME, &appl.timeStartRead);
-        parallelVersion::readFile(appl.inputFilename, vecTextStr);
+        parallelVersion::readFile(appl.inputFilename, appl.vecTextStr);
         clock_gettime(CLOCK_REALTIME, &appl.timeEndRead);
+        q1.push(appl);
 
+        appl = q1.front();
+        q1.pop();
         clock_gettime(CLOCK_REALTIME, &appl.timeStartProcess);
-        parallelVersion::solution(vecTextStr, appl.outputFilename, N, 2);
+        parallelVersion::solution(appl.vecTextStr, appl.outputFilename, N, 2);
         clock_gettime(CLOCK_REALTIME, &appl.timeEndProcess);
+        q2.push(appl);
 
+        appl = q2.front();
+        q2.pop();
         clock_gettime(CLOCK_REALTIME, &appl.timeStartLog);
         logFile << appl.inputFilename << ": " << appl.outputFilename << std::endl;
         clock_gettime(CLOCK_REALTIME, &appl.timeEndLog);
@@ -48,17 +54,19 @@ void serialSolution(const int numAppl, const int numLines, const int strLenght, 
 
     logFile.close();
 
-    printVec(vecAppl, "data/serial.txt");
+    long long workTime = printVec(vecAppl, "data/serial.txt");
+
+    return workTime;
 }
 
-void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename)
+long long int printVec(std::vector<serialAppl_t> &vecAppl, std::string filename)
 {
     std::ofstream serialLog(filename);
 
     if (!serialLog.is_open())
     {
         std::wcerr << L"Ошибка открытия файла" << std::endl;
-        return;
+        return -1;
     }
 
     timespec min = vecAppl[0].timeStartRead;
@@ -93,4 +101,8 @@ void printVec(std::vector<serialAppl_t> &vecAppl, std::string filename)
         nanosec -= min_nano;
         serialLog << "Заявка " << i << ": end log       " << nanosec << " ns" << std::endl;
     }
+
+    serialLog.close();
+
+    return nanosec;
 }
