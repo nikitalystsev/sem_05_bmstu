@@ -1,0 +1,18 @@
+void thrReadFileFunc(const int numAppl, std::queue<conveyorAppl_t> &q1)
+{
+    for (int i = 0; i < numAppl; ++i)
+    {
+        conveyorAppl_t appl;
+
+        appl.inputFilename = "data/text" + std::to_string(i) + ".txt";
+        appl.outputFilename = "data/outputText" + std::to_string(i) + ".txt";
+
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartRead);
+        parallelVersion::readFile(appl.inputFilename, appl.vecTextStr);
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndRead);
+
+        mq1.lock();
+        q1.push(appl);
+        mq1.unlock();
+    }
+}
