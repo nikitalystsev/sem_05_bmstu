@@ -2,7 +2,7 @@ import numpy as np
 import itertools as it
 
 
-def get_curr_cost(curr_route: list[int], mtr_adj: np.ndarray):
+def get_curr_cost(curr_route: list[int], mtr_adj: np.ndarray) -> int:
     """
     Функция для нахождения стоимости маршрута curr_route
     :param curr_route: маршрут
@@ -18,12 +18,12 @@ def get_curr_cost(curr_route: list[int], mtr_adj: np.ndarray):
     return curr_cost
 
 
-def brute_force_alg(mtr_adj: np.ndarray, size: int):
+def brute_force_alg(mtr_adj: np.ndarray, size: int) -> tuple[list[int], int]:
     """
     Функция для реализации алгоритма полного перебора
     :param mtr_adj: матрица смежности для графа
     :param size: количество городов (размер матрицы)
-    :return:
+    :return: маршрут min_route и его стоимость min_cost
     """
 
     min_route = list()
@@ -33,7 +33,7 @@ def brute_force_alg(mtr_adj: np.ndarray, size: int):
         curr_route = list(perm)
         # незамкнутый маршрут - не добавляем в конец curr_route начальную вершину
 
-        curr_cost = get_curr_cost(curr_route, mtr_adj)
+        curr_cost: int = get_curr_cost(curr_route, mtr_adj)
 
         if curr_cost < min_cost:
             min_route = curr_route
