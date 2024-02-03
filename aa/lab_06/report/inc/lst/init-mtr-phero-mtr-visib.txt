@@ -1,0 +1,9 @@
+def init_mtr_phero(size: int) -> np.ndarray:
+
+    return np.ones((size, size))
+
+def init_mtr_visib(mtr_adj: np.ndarray, size: int) -> np.ndarray:
+    mtr_visib = [[(1.0 / mtr_adj[i][j] if i != j else 0) for j in range(size)] for i in range(size)]
+    mtr_visib = np.array(mtr_visib)
+
+    return mtr_visib

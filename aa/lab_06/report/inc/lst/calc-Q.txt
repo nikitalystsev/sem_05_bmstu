@@ -1,0 +1,11 @@
+def calc_Q(mtr_adj: np.ndarray, size: int) -> float:
+    _sum = 0
+    count = 0
+
+    for i in range(size):
+        for j in range(size):
+            if i != j:
+                _sum += mtr_adj[i][j]
+                count += 1
+
+    return _sum / count

@@ -1,0 +1,21 @@
+def get_prob_numerator(
+        city_from: int,
+        city_to: int,
+        mtr_phero: np.ndarray,
+        mtr_visib: np.ndarray,
+        alpha: float,
+        beta: float
+) -> float:
+    P = (mtr_phero[city_from][city_to] ** alpha) * (mtr_visib[city_from][city_to] ** beta)
+
+    return P
+
+def get_probabilities(
+        size: int,
+        tabu_k: list,
+        mtr_phero: np.ndarray,
+        mtr_visib: np.ndarray,
+        alpha: float,
+        beta: float
+) -> np.ndarray:
+    probabilities = np.zeros(size)

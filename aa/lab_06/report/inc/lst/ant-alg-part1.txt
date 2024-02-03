@@ -1,0 +1,9 @@
+def ant_alg(
+        mtr_adj: np.ndarray,
+        size: int,
+        alpha: float,
+        beta: float,
+        evoparation: float,
+        cnt_days: int
+):
+    Q: float = calc_Q(mtr_adj, size)

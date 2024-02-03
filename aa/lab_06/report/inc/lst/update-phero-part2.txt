@@ -1,0 +1,5 @@
+    for i in range(size):
+        for j in range(size):
+            mtr_phero[i][j] = 0.1 if mtr_phero[i][j] < MIN_PHEROMONE else mtr_phero[i][j]
+
+    return mtr_phero

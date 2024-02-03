@@ -129,6 +129,7 @@ def get_next_city(
     :param beta: пар-р влияния феромона
     :return: выбранный город
     """
+
     probabilities: np.ndarray = get_probabilities(size, tabu_k, mtr_phero, mtr_visib, alpha, beta)
 
     choice: float = random()

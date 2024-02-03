@@ -1,0 +1,11 @@
+    for city in range(size):
+        if city not in tabu_k:
+            curr_city = tabu_k[-1]
+
+            probabilities[city] = get_prob_numerator(curr_city, city, mtr_phero, mtr_visib, alpha, beta)
+
+    denominator = sum(probabilities)
+
+    probabilities /= denominator
+
+    return probabilities

@@ -1,0 +1,16 @@
+def update_phero(
+        mtr_phero: np.ndarray,
+        size: int,
+        ants: list[dict],
+        Q: float,
+        evoparation: float
+) -> np.ndarray:
+    add_mtr_phero = np.zeros((size, size))
+
+    for ant_k in ants:
+        delta = Q / ant_k['cost']
+
+        for i in range(size - 1):
+            add_mtr_phero[ant_k['tabu'][i]][ant_k['tabu'][i + 1]] += delta
+
+    mtr_phero += ((1 - evoparation) * mtr_phero + add_mtr_phero)

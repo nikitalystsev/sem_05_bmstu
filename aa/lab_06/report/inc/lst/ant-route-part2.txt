@@ -1,0 +1,16 @@
+def get_ant_route(
+        ant_k: dict,
+        mtr_adj: np.ndarray,
+        mtr_phero: np.ndarray,
+        mtr_visib: np.ndarray,
+        size: int,
+        alpha: float,
+        beta: float
+) -> dict:
+    while len(ant_k['tabu']) != size:
+        nextCity = get_next_city(ant_k['tabu'], mtr_phero, mtr_visib, size, alpha, beta)
+
+        ant_k['cost'] += mtr_adj[ant_k['tabu'][-1]][nextCity]
+        ant_k['tabu'].append(nextCity)
+
+    return ant_k

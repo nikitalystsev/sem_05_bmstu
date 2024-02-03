@@ -1,0 +1,20 @@
+    min_route = list()
+    min_cost = float("inf")
+
+    mtr_phero: np.ndarray = init_mtr_phero(size)
+    mtr_visib: np.ndarray = init_mtr_visib(mtr_adj, size)
+
+    cnt_ants = size
+
+    for day in range(cnt_days):
+        ants: list[dict] = [{'tabu': [j], 'cost': 0} for j in range(cnt_ants)]
+        for k in range(cnt_ants):
+            ants[k]: dict = get_ant_route(ants[k], mtr_adj, mtr_phero, mtr_visib, size, alpha, beta)
+
+            if ants[k]['cost'] < min_cost:
+                min_cost = ants[k]['cost']
+                min_route = ants[k]['tabu']
+
+        mtr_phero = update_phero(mtr_phero, size, ants, Q, evoparation)
+
+    return min_route, min_cost
