@@ -170,6 +170,8 @@ def get_ant_route(
         ant_k['cost'] += mtr_adj[ant_k['tabu'][-1]][nextCity]
         ant_k['tabu'].append(nextCity)
 
+    # незамкнутый маршрут - не добавляем в конец curr_route начальную вершину
+
     return ant_k
 
 
