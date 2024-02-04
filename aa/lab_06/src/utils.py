@@ -133,7 +133,7 @@ def read_mtr_adj() -> np.ndarray:
     Функция для считывания данных по варианту
     """
 
-    mtr_adj: np.ndarray = read_mtr_adj_from_file("real.csv")
+    mtr_adj: np.ndarray = read_mtr_adj_from_file("rus_cities.txt")
 
     return mtr_adj
 

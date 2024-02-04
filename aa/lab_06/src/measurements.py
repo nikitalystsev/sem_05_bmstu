@@ -97,53 +97,61 @@ def parametrization(_type: int = 1):
 
     size = 10
 
-    mtr_adj1 = utils.read_mtr_adj_from_file("real.csv")
-    mtr_adj2 = utils.read_mtr_adj_from_file("gen.csv")
-    mtr_adj3 = utils.read_mtr_adj_from_file("gen.csv")
+    mtr_adj1 = utils.read_mtr_adj_from_file("rus_cities.txt")
+    mtr_adj2 = utils.read_mtr_adj_from_file("gen1.txt")
+    mtr_adj3 = utils.read_mtr_adj_from_file("gen2.txt")
 
     optimal1: tuple[list[int], int] = brute_force_alg(mtr_adj1, size)
     optimal2: tuple[list[int], int] = brute_force_alg(mtr_adj2, size)
     optimal3: tuple[list[int], int] = brute_force_alg(mtr_adj3, size)
 
-    with open("parametrization_class1.txt", "w") as file1, open("parametrization_class2.txt", "w") as file2, open(
-            "parametrization_class3.txt", "w") as file3:
+    with open("parametrization_graph1.txt", "w") as file1, open("parametrization_graph2.txt", "w") as file2, open(
+            "parametrization_graph3.txt", "w") as file3:
         count = 0
         count_all = len(alpha_arr) * len(eva_arr)
 
         print()
 
-        for alpha in alpha_arr:
-            beta = 1 - alpha
-            for eva in eva_arr:
-                count += 1
+        with open("parametrization_graph1_best.txt", "w") as file1_best, open("parametrization_graph2_best.txt",
+                                                                              "w") as file2_best, open(
+            "parametrization_graph3_best.txt", "w") as file3_best:
+            for alpha in alpha_arr:
+                beta = 1 - alpha
+                for eva in eva_arr:
+                    count += 1
 
-                for days in days_arr:
-                    res1 = ant_alg(mtr_adj1, size, alpha, beta, eva, days)
-                    res2 = ant_alg(mtr_adj2, size, alpha, beta, eva, days)
-                    res3 = ant_alg(mtr_adj2, size, alpha, beta, eva, days)
+                    for days in days_arr:
+                        res1: tuple[list[int], int] = ant_alg(mtr_adj1, size, alpha, beta, eva, days)
+                        res2: tuple[list[int], int] = ant_alg(mtr_adj2, size, alpha, beta, eva, days)
+                        res3: tuple[list[int], int] = ant_alg(mtr_adj3, size, alpha, beta, eva, days)
 
-                    match _type:
-                        case 1:  # csv файлы
-                            sep = ", "
-                            ender = ""
-                        case 2:  # latex файлы
-                            sep = " & "
-                            ender = " \\\\"
-                        case _:
-                            sep = " | "
-                            ender = ""
+                        match _type:
+                            case 1:  # csv файлы
+                                sep = ", "
+                                ender = ""
+                            case 2:  # latex файлы
+                                sep = " & "
+                                ender = " \\\\"
+                            case _:
+                                sep = " | "
+                                ender = ""
 
-                    str1 = "%4.1f%s%4.1f%s%4d%s%5d%s%5d%s\n" \
-                           % (alpha, sep, eva, sep, days, sep, optimal1[1], sep, res1[0] - optimal1[1], ender)
+                        str1 = "%4.1f%s%4.1f%s%4d%s%5d%s%5d%s\n" \
+                               % (alpha, sep, eva, sep, days, sep, optimal1[1], sep, res1[1] - optimal1[1], ender)
+                        file1.write(str1)
+                        if res1[1] - optimal1[1] == 0:
+                            file1_best.write(str1)
 
-                    str2 = "%4.1f%s%4.1f%s%4d%s%5d%s%5d%s\n" \
-                           % (alpha, sep, eva, sep, days, sep, optimal2[1], sep, res2[0] - optimal2[1], ender)
+                        str2 = "%4.1f%s%4.1f%s%4d%s%5d%s%5d%s\n" \
+                               % (alpha, sep, eva, sep, days, sep, optimal2[1], sep, res2[1] - optimal2[1], ender)
+                        file2.write(str2)
+                        if res2[1] - optimal2[1] == 0:
+                            file2_best.write(str2)
 
-                    str3 = "%4.1f%s%4.1f%s%4d%s%5d%s%5d%s\n" \
-                           % (alpha, sep, eva, sep, days, sep, optimal3[1], sep, res3[0] - optimal3[1], ender)
+                        str3 = "%4.1f%s%4.1f%s%4d%s%5d%s%5d%s\n" \
+                               % (alpha, sep, eva, sep, days, sep, optimal3[1], sep, res3[1] - optimal3[1], ender)
+                        file3.write(str3)
+                        if res3[1] - optimal3[1] == 0:
+                            file3_best.write(str3)
 
-                    file1.write(str1)
-                    file2.write(str2)
-                    file3.write(str3)
-
-                print("Progress: %3d%s" % ((count / count_all) * 100, "%"))
+                    print("Progress: %3d%s" % ((count / count_all) * 100, "%"))
