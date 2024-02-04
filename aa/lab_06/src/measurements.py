@@ -28,23 +28,26 @@ def test_time():
     sizes = [i for i in range(size_start, size_end + 1)]
 
     count = 0
+
     print()
 
+    n_reps = 10
     for size in sizes:
         count += 1
-        mtr_adj: np.ndarray = utils.gen_mtr_adj(size, 1, 2)
+        end_bf = end_ant = 0
+        for _ in range(n_reps):
+            mtr_adj: np.ndarray = utils.gen_mtr_adj(size, 5, 10)
 
-        start = process_time()
-        brute_force_alg(mtr_adj, size)
-        end = process_time()
+            start = process_time()
+            brute_force_alg(mtr_adj, size)
+            end_bf += (process_time() - start)
 
-        time_brute_force_alg.append(end - start)
+            start = process_time()
+            ant_alg(mtr_adj, size, 0.5, 0.5, 0.5, 250)
+            end_ant = (process_time() - start)
 
-        start = process_time()
-        ant_alg(mtr_adj, size, 0.5, 0.5, 0.5, 250)
-        end = process_time()
-
-        time_and_alg.append(end - start)
+        time_brute_force_alg.append(end_bf / n_reps)
+        time_and_alg.append(end_ant / n_reps)
 
         print("Progress: %3d%s" % ((count / len(sizes)) * 100, "%"))
 
@@ -63,8 +66,9 @@ def test_time():
     # Graph
     fig = plt.figure(figsize=(10, 7))
     plot = fig.add_subplot()
-    plot.plot(sizes, time_brute_force_alg, label="Полный перебор")
-    plot.plot(sizes, time_and_alg, label="Муравьиный алгоритм")
+    plot.plot(sizes, time_brute_force_alg, marker='o', linestyle='--', label="Полный перебор")
+    plot.plot(sizes, time_and_alg, marker='^', label="Муравьиный алгоритм")
+    plt.yscale('log')  # Включаем логарифмическую шкалу
 
     plt.legend()
     plt.grid()
@@ -72,8 +76,12 @@ def test_time():
     plt.ylabel("Затраченное время (с)")
     plt.xlabel("Размер матрицы")
 
-    plt.show()
+    # Включение отображения сетки
+    plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
+    # Сохранение графика в формате SVG
+    plt.savefig("../report/inc/img/research1.svg", format='svg')
 
+    plt.show()
 
 # def parametrization(type=CSV):
 #     alpha_arr = [num / 10 for num in range(1, 10)]
