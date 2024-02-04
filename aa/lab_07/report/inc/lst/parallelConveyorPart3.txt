@@ -1,6 +1,0 @@
-void thrProcessFunc(const int numAppl, const int N, std::queue<conveyorAppl_t> &q1, std::queue<conveyorAppl_t> &q2)
-{
-    for (int i = 0; i < numAppl; ++i)
-    {
-        while (q1.empty())
-            ;
