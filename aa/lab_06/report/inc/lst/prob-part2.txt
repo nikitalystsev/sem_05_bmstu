@@ -1,3 +1,7 @@
+        beta: float
+) -> np.ndarray:
+    probabilities = np.zeros(size)
+
     for city in range(size):
         if city not in tabu_k:
             curr_city = tabu_k[-1]

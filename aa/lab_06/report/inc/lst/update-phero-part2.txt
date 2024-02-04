@@ -1,3 +1,5 @@
+    mtr_phero += ((1 - evoparation) * mtr_phero + add_mtr_phero)
+    
     for i in range(size):
         for j in range(size):
             mtr_phero[i][j] = 0.1 if mtr_phero[i][j] < MIN_PHEROMONE else mtr_phero[i][j]

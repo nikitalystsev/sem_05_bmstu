@@ -49,12 +49,6 @@
       <text x="575.8926" xml:space="preserve" y="429.1387" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">перестановкам городов</text>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-486,-77)" stroke-linecap="butt">
-      <path fill="none" d="M556 456.5 L748 456.5 L748 507.5 L556 507.5 Z" clip-path="url(#clipPath2)"/>
-      <text x="585.25" xml:space="preserve" y="472.1855" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Получить стоимость </text>
-      <text x="578.251" xml:space="preserve" y="486.1543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">текущей перестановки</text>
-      <text x="624.5166" xml:space="preserve" y="500.123" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">curr_cost</text>
-    </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-486,-77)" stroke-linecap="butt">
       <path fill="none" d="M652 520.5 L748 552.5 L652 584.5 L556 552.5 Z" clip-path="url(#clipPath2)"/>
       <text x="583.8203" xml:space="preserve" y="556.6543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">curr_cost &lt; min_cost ?</text>
     </g>
@@ -77,6 +71,13 @@
       <text x="632.3711" xml:space="preserve" y="836.1543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Конец</text>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-486,-77)" stroke-linecap="butt">
+      <rect fill="none" x="556" width="192" height="49" y="457.5" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M566 457.5 L566 506.5 M738 457.5 L738 506.5 M566 457.5 Z" clip-path="url(#clipPath2)"/>
+      <text x="585.25" xml:space="preserve" y="472.1855" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Получить стоимость </text>
+      <text x="578.251" xml:space="preserve" y="486.1543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">текущей перестановки</text>
+      <text x="624.5166" xml:space="preserve" y="500.123" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">curr_cost</text>
+    </g>
+    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" stroke-dasharray="6,2" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-486,-77)" stroke-linecap="butt">
       <path fill="none" d="M817.0319 162 L748.0134 162" clip-path="url(#clipPath2)"/>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-486,-77)" stroke-linecap="butt">
@@ -84,14 +85,14 @@
       <path fill="none" d="M652 251.4688 L652 264.5257" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M652 315.4688 L652 328.5257" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M652 379.4688 L652 392.5257" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M652 443.4688 L652 456.5257" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M652 507.5081 L652 520.4696" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M748.0339 552.5 L803 552.5 L803 584.4788" clip-path="url(#clipPath2)"/>
       <text x="774.8179" xml:space="preserve" y="550.4463" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Да</text>
       <path fill="none" d="M803 635.5249 L803 659.5377" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M555.9661 552.5 L501 552.5 L501 730.5 L652 730.5 L652 740.519" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M803 710.4604 L803 730.5 L652 730.5 L652 740.519" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M652 791.4912 L652 806.4842" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M652 443.4688 L652 457.5041" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M652 506.4753 L652 520.5434" clip-path="url(#clipPath2)"/>
     </g>
   </g>
 </svg>

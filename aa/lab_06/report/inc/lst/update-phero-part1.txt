@@ -12,5 +12,3 @@ def update_phero(
 
         for i in range(size - 1):
             add_mtr_phero[ant_k['tabu'][i]][ant_k['tabu'][i + 1]] += delta
-
-    mtr_phero += ((1 - evoparation) * mtr_phero + add_mtr_phero)

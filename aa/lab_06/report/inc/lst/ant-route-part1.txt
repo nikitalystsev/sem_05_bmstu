@@ -7,14 +7,10 @@ def get_next_city(
         beta: float
 ) -> int:
     probabilities: np.ndarray = get_probabilities(size, tabu_k, mtr_phero, mtr_visib, alpha, beta)
-
     choice: float = random()
-
     probSum = probabilities[0]
     next_city = 0
-
     while choice > probSum and next_city < size - 1:
         next_city += 1
         probSum += probabilities[next_city]
-
     return next_city

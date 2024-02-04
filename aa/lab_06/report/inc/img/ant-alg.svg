@@ -123,7 +123,7 @@
       <circle fill="none" r="24.5" clip-path="url(#clipPath2)" cx="932" cy="307.5"/>
       <text x="927.8955" xml:space="preserve" y="311.6543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">A</text>
     </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-525,-50)" stroke-linecap="butt">
+    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" stroke-dasharray="6,2" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-525,-50)" stroke-linecap="butt">
       <path fill="none" d="M803.972 156.5 L723.9899 156.5" clip-path="url(#clipPath2)"/>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-525,-50)" stroke-linecap="butt">
