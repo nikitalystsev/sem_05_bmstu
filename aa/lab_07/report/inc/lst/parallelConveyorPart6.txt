@@ -1,0 +1,15 @@
+
+        mq2.lock();
+        conveyorAppl_t appl = q2.front();
+        q2.pop();
+        mq2.unlock();
+
+        clock_gettime(CLOCK_REALTIME, &appl.timeStartLog);
+        logFile << appl.inputFilename << ": " << appl.outputFilename << std::endl;
+        clock_gettime(CLOCK_REALTIME, &appl.timeEndLog);
+
+        vec.push_back(appl);
+    }
+
+    logFile.close();
+}
