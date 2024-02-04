@@ -31,8 +31,7 @@ def main():
             case 3:
                 utils.parse_all()
             case 4:
-                pass
-                # parametrization(type=CSV)
+                mea.parametrization(_type=2)
             case 5:
                 mea.test_time()
             case 6:
