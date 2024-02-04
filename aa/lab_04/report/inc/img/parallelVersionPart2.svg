@@ -74,7 +74,7 @@
       <path fill="none" d="M542 768.145 L770 768.145 L770 819.145 L760 829.145 L552 829.145 L542 819.145 Z" clip-path="url(#clipPath2)"/>
       <text x="602.2695" xml:space="preserve" y="802.7993" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Конец цикла по j</text>
     </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-527,-158)" stroke-linecap="butt">
+    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" stroke-dasharray="6,2" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-527,-158)" stroke-linecap="butt">
       <path fill="none" d="M825.0172 252.5 L770.0123 252.5" clip-path="url(#clipPath2)"/>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-527,-158)" stroke-linecap="butt">

@@ -30,11 +30,6 @@
       <text x="797.3838" xml:space="preserve" y="262.0293" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Файл-словарь</text>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
-      <path fill="none" d="M509 242 L720 242 L720 303 L509 303 Z" clip-path="url(#clipPath2)"/>
-      <text x="550.8115" xml:space="preserve" y="269.6699" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Считывание текста </text>
-      <text x="567.0156" xml:space="preserve" y="283.6387" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">в массив строк</text>
-    </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
       <rect fill="none" x="509" width="211" height="61" y="310" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M519 310 L519 371 M710 310 L710 371 M519 310 Z" clip-path="url(#clipPath2)"/>
       <text x="519.2002" xml:space="preserve" y="323.7012" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Выполнение преобразований </text>
@@ -71,30 +66,37 @@
       <text x="560.7695" xml:space="preserve" y="820.6543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Конец цикла по i</text>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
-      <path fill="none" d="M509 718 L720 718 L720 779 L509 779 Z" clip-path="url(#clipPath2)"/>
+      <rect x="509" y="854" clip-path="url(#clipPath2)" fill="none" width="211" rx="33" ry="33" height="66"/>
+      <text x="594.8711" xml:space="preserve" y="891.1543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Конец</text>
+    </g>
+    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
+      <rect fill="none" x="509" width="211" height="61" y="718" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M519 718 L519 779 M710 718 L710 779 M519 718 Z" clip-path="url(#clipPath2)"/>
       <text x="551.6172" xml:space="preserve" y="731.7012" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Запись N-граммы и </text>
       <text x="567.0361" xml:space="preserve" y="745.6699" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">количество ее </text>
       <text x="562.3516" xml:space="preserve" y="759.6387" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">употребления в </text>
       <text x="570.4316" xml:space="preserve" y="773.6074" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">файл-словарь</text>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
-      <rect x="509" y="854" clip-path="url(#clipPath2)" fill="none" width="211" rx="33" ry="33" height="66"/>
-      <text x="594.8711" xml:space="preserve" y="891.1543" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Конец</text>
+      <rect fill="none" x="509" width="211" height="61" y="242" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M519 242 L519 303 M710 242 L710 303 M519 242 Z" clip-path="url(#clipPath2)"/>
+      <text x="550.8115" xml:space="preserve" y="269.6699" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">Считывание текста </text>
+      <text x="567.0156" xml:space="preserve" y="283.6387" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none">в массив строк</text>
     </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
+    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" stroke-dasharray="6,2" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
       <path fill="none" d="M791.9854 202 L720.012 202" clip-path="url(#clipPath2)"/>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-494,-121)" stroke-linecap="butt">
-      <path fill="none" d="M614.5 235.0125 L614.5 242.0048" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M614.5 303.0137 L614.5 310.0057" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 507.0137 L614.5 514.0057" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 371.0137 L614.5 378.0057" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 439.0137 L614.5 446.0057" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 575.0137 L614.5 582.0057" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 643.0137 L614.5 650.0057" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M614.5 847.0339 L614.5 854.0202" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 711.0137 L614.5 718.0057" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M614.5 779.0137 L614.5 786.0057" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M614.5 847.0339 L614.5 854.0202" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M614.5 235.0125 L614.5 242.0048" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M614.5 303.0137 L614.5 310.0057" clip-path="url(#clipPath2)"/>
     </g>
   </g>
 </svg>
