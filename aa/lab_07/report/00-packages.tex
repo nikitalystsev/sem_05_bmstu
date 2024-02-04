@@ -4,6 +4,20 @@
 \usepackage[inkscapeformat=png]{svg}
 \svgpath{inc/img/}
 
+\usepackage{dcolumn}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+\numberwithin{algorithm}{chapter}
+
+\renewcommand{\listalgorithmname}{Список алгоритмов}
+\floatname{algorithm}{Листинг}
+
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+\captionsetup[algorithm]{name=Листинг}
+
 % Настройка полей
 \usepackage{geometry}
 \geometry{left=30mm}
