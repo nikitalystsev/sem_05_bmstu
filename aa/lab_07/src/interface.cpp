@@ -270,6 +270,16 @@ static bool find_number(tree_t *tree, int number, int *count_compare)
     return false;
 }
 
+static bool find_number_iter(tree_t *tree, int number, int *count_compare)
+{
+    vertex_t *found_elem = search_iter(tree->root, number, count_compare);
+
+    if (found_elem)
+        return true;
+
+    return false;
+}
+
 int find_data(tree_t *bst_tree, tree_t *awl_tree)
 {
     int rc = 0;
@@ -281,12 +291,15 @@ int find_data(tree_t *bst_tree, tree_t *awl_tree)
     }
 
     int number, bst_count_cmp = 0, awl_count_cmp = 0;
+    int bst_count_cmp_iter = 0, awl_count_cmp_iter = 0;
 
     if ((rc = read_find_elem(&number)) != 0)
         return rc;
 
     bool bst_find, awl_find;
+    bool bst_find_iter, awl_find_iter;
     long double beg, end_bst = 0, end_awl = 0;
+    long double end_bst_iter = 0, end_awl_iter = 0;
 
     for (int i = 0; i < N_REPS; i++)
     {
@@ -297,6 +310,14 @@ int find_data(tree_t *bst_tree, tree_t *awl_tree)
         beg = getMicrosecondsCpuTime();
         awl_find = find_number(awl_tree, number, &awl_count_cmp);
         end_awl += getMicrosecondsCpuTime() - beg;
+
+        beg = getMicrosecondsCpuTime();
+        bst_find_iter = find_number_iter(bst_tree, number, &bst_count_cmp_iter);
+        end_bst_iter += getMicrosecondsCpuTime() - beg;
+
+        beg = getMicrosecondsCpuTime();
+        awl_find_iter = find_number_iter(awl_tree, number, &awl_count_cmp_iter);
+        end_awl_iter += getMicrosecondsCpuTime() - beg;
 
         if (i == 0)
         {
@@ -311,6 +332,18 @@ int find_data(tree_t *bst_tree, tree_t *awl_tree)
                    bst_count_cmp);
             printf(YELLOW "\nКоличество сравнений при поиске в АВЛ-дереве: %d\n",
                    awl_count_cmp);
+
+            if (bst_find_iter && awl_find_iter)
+                printf(GREEN "\nЭлемент со значением (%d) был найден в ДДП и в АВЛ-дереве итеративно!\n" RESET,
+                       number);
+            else
+                printf(VIOLET "\nЭлемент со значением (%d) не был найден в ДДП и в АВЛ-дереве итеративно!\n" RESET,
+                       number);
+
+            printf(YELLOW "\nКоличество сравнений при итеративном поиске в ДДП: %d\n",
+                   bst_count_cmp_iter);
+            printf(YELLOW "\nКоличество сравнений при итеративном поиске в АВЛ-дереве: %d\n",
+                   awl_count_cmp_iter);
         }
     }
 

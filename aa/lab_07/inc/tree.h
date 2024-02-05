@@ -25,6 +25,8 @@ vertex_t *add_vertex(vertex_t *root, vertex_t *vertex, bool is_balance);
 
 vertex_t *search(vertex_t *root, int data, int *count_compare);
 
+vertex_t *search_iter(vertex_t *root, int data, int *count_compare);
+
 vertex_t *find_parent(vertex_t *root, vertex_t *vertex);
 
 int delete_vertex(vertex_t **root, int data, bool is_balance);

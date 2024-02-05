@@ -55,6 +55,27 @@ vertex_t *search(vertex_t *root, int data, int *count_compare)
     return root;
 }
 
+vertex_t *search_iter(vertex_t *root, int data, int *count_compare)
+{
+    while (root != NULL && root->data != data)
+    {
+        (*count_compare)++;
+
+        if (data < root->data)
+        {
+            root = root->left;
+        }
+        else
+        {
+            root = root->right;
+        }
+    }
+
+    (*count_compare)++; // фиксируем последнее сравнение
+
+    return root; // Возвращает NULL, если элемент не найден
+}
+
 /*
 Функция для нахождения родителя элемента.
 Случай, когда элементом является корень, не обрабатывается
