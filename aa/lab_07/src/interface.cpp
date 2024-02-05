@@ -237,22 +237,20 @@ int trees_to_dot(tree_t *bst_tree, tree_t *awl_tree)
         return;
     }
 
-    char data_file[MAX_STR_SIZE] = DATA_DIR;
-    char balance_data_file[MAX_STR_SIZE] = DATA_DIR "balance_";
+    std::string bst_data_file = DATA_DIR "bst_";
+    std::string awl_data_file = DATA_DIR "awl_";
+    std::string data_gv;
 
-    char data_gv[MAX_STR_SIZE];
+    std::cout << TURQ "\nВведите имя файла: " RESET;
+    std::cin >> data_gv;
 
-    if ((rc = read_file_name(data_gv)) != 0)
+    bst_data_file += data_gv;
+    awl_data_file += data_gv;
+
+    if ((rc = export_to_dot(bst_data_file, "my_tree", bst_tree)) != 0)
         return rc;
 
-    strcat(data_file, data_gv);
-    strcat(balance_data_file, data_gv);
-
-    if ((rc = export_to_dot(data_file, "my_tree", tree)) != 0)
-        return rc;
-
-    if ((rc = export_to_dot(balance_data_file, "my_tree",
-                            balance_tree)) != 0)
+    if ((rc = export_to_dot(awl_data_file, "my_tree", awl_tree)) != 0)
         return rc;
 
     return rc;
