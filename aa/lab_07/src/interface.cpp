@@ -1,7 +1,5 @@
 #include "interface.h"
 
-#include "tree_visual.h"
-
 void vertex_to_dot(vertex_t *vertex, std::ofstream &file)
 {
     if (vertex->left)
@@ -21,9 +19,7 @@ void vertex_to_dot(vertex_t *vertex, std::ofstream &file)
 void tree_to_dot(vertex_t *root, std::ofstream &file)
 {
     if (!root)
-    {
         return;
-    }
 
     vertex_to_dot(root, file);
 
@@ -198,12 +194,13 @@ int read_data(int &count_data, tree_t *bst_tree, tree_t *awl_tree)
     free_tree(awl_tree);
 
     std::string file_name;
-    std::string data_file;
 
     int rc = 0;
 
     std::cout << TURQ "\nВведите имя файла: " RESET;
-    std::cin >> file_name >> data_file;
+    std::cin >> file_name;
+
+    std::string data_file = DATA_DIR + file_name;
 
     if (!is_exist_file(data_file))
     {
@@ -234,7 +231,7 @@ int trees_to_dot(tree_t *bst_tree, tree_t *awl_tree)
     if (is_empty_tree(bst_tree) || is_empty_tree(awl_tree))
     {
         puts(VIOLET "\nДерево пустое" RESET);
-        return;
+        return 0;
     }
 
     std::string bst_data_file = DATA_DIR "bst_";
