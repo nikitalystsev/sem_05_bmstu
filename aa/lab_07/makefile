@@ -33,4 +33,4 @@ include $(wildcard $(PREF_OUT)*.d)
 .PHONY: clean
 
 clean : 
-	rm -Rf $(PREF_OUT) ./*.exe ./data/*
+	rm -Rf $(PREF_OUT) ./*.exe 
