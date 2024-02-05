@@ -28,7 +28,7 @@ int main()
             exit(0);
             break;
         case 1:
-            if ((rc = rea d_data(count_data, &bst_tree, &awl_tree)) != 0)
+            if ((rc = read_data(count_data, &bst_tree, &awl_tree)) != 0)
                 goto free;
             break;
         case 4:
