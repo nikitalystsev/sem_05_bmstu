@@ -50,17 +50,96 @@ static bool is_exist_file(const std::string &file_name)
     return true;
 }
 
-int read_data(int &count_data, tree_t *tree, tree_t *balance_tree)
+static int read_count_data(int &count_data)
 {
-    free_tree(tree);
-    free_tree(balance_tree);
+    puts("\nВведите количество генерируемых данных "
+         "(целое положительное число):");
+    if (scanf("%d", &count_data) != 1)
+    {
+        puts(RED "\nНекорректный ввод количества генерируемых данных!" RESET);
+        return ERR_COUNT_DATA;
+    }
+
+    if (count_data < 0)
+    {
+        puts(RED "\nНеверный ввод! "
+                 "Количество генерируемых данных - число больше нуля!" RESET);
+        return ERR_COUNT_DATA;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+static void gen_data_file(const std::string &file_name, const int count_data)
+{
+    srand(time(NULL));
+
+    std::ofstream file(file_name);
+
+    if (!file.is_open())
+    {
+        std::cout << RED "\nОшибка открытия файла!" RESET << std::endl;
+        return;
+    }
+
+    file << count_data << std::endl;
+
+    for (int i = 0; i < count_data; i++)
+    {
+        int x = MIN_DATA + rand() % (MAX_DATA - MIN_DATA + 1);
+
+        file << x << std::endl;
+    }
+
+    file.close();
+}
+
+static int read_numbers(const std::string &file_name, tree_t *_tree, bool is_balance)
+{
+    int rc = 0;
+
+    std::ifstream file(file_name);
+
+    if (!file.is_open())
+    {
+        puts(RED "\nОшибка открытия файла!\n" RESET);
+        return ERR_OPEN_FILE;
+    }
+
+    int count, data;
+
+    file >> count;
+
+    for (int i = 0; i < count; i++)
+    {
+        file >> data;
+
+        vertex_t *vertex = create_vertex(data, 0);
+
+        if (!vertex)
+        {
+            file.close();
+            return ERR_READ_DATA;
+        }
+
+        if (is_balance)
+            _tree->root = add_vertex(_tree->root, vertex, true);
+        else
+            _tree->root = add_vertex(_tree->root, vertex, false);
+    }
+
+    file.close();
+
+    return rc;
+}
+
+int read_data(int &count_data, tree_t *bst_tree, tree_t *awl_tree)
+{
+    free_tree(bst_tree);
+    free_tree(awl_tree);
 
     std::string file_name;
     std::string data_file;
-
-    char file_name[MAX_STR_SIZE];
-    char data_file[MAX_STR_SIZE] = DATA_DIR;
-    char data_gv[MAX_STR_SIZE];
 
     int rc = 0;
 
@@ -72,16 +151,15 @@ int read_data(int &count_data, tree_t *tree, tree_t *balance_tree)
         if ((rc = read_count_data(count_data)) != 0)
             return rc;
 
-        gen_data_file(data_file, *count_data);
+        gen_data_file(data_file, count_data);
     }
 
-    strcpy(data_gv, data_file);
-    strcat(data_gv, GV);
+    // std::string data_gv = data_file + GV;
 
-    if ((rc = read_numbers(data_file, tree, false)) != 0)
+    if ((rc = read_numbers(data_file, bst_tree, false)) != 0)
         return rc;
 
-    if ((rc = read_numbers(data_file, balance_tree, true)) != 0)
+    if ((rc = read_numbers(data_file, awl_tree, true)) != 0)
         return rc;
 
     if (rc == 0)
