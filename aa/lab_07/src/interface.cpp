@@ -1,5 +1,64 @@
 #include "interface.h"
 
+#include "tree_visual.h"
+
+void vertex_to_dot(vertex_t *vertex, std::ofstream &file)
+{
+    if (vertex->left)
+    {
+        file << vertex->data << " [label=\"" << vertex->data << ", h = " << vertex->height << "\"]";
+        file << vertex->left->data << " [label=\"" << vertex->left->data << ", h = " << vertex->left->height << "\"]";
+        file << vertex->data << " -> " << vertex->left->data << " [color=blue];" << std::endl;
+    }
+    if (vertex->right)
+    {
+        file << vertex->data << " [label=\"" << vertex->data << ", h = " << vertex->height << "\"]";
+        file << vertex->right->data << " [label=\"" << vertex->right->data << ", h = " << vertex->right->height << "\"]";
+        file << vertex->data << " -> " << vertex->right->data << " [color=blue];" << std::endl;
+    }
+}
+
+void tree_to_dot(vertex_t *root, std::ofstream &file)
+{
+    if (!root)
+    {
+        return;
+    }
+
+    vertex_to_dot(root, file);
+
+    tree_to_dot(root->left, file);
+    tree_to_dot(root->right, file);
+}
+
+int export_to_dot(const std::string &file_name, const std::string &tree_name, tree_t *tree)
+{
+    std::ofstream file(file_name);
+
+    if (!file.is_open())
+    {
+        puts(RED "Ошибка открытия файла!\n" RESET);
+        return ERR_OPEN_FILE;
+    }
+
+    file << "digraph " << tree_name << " {" << std::endl;
+
+    tree_to_dot(tree->root, file);
+
+    file << "}" << std::endl;
+
+    file.close();
+
+    std::string s = "dot -Tpng -O " + file_name;
+
+    int rc = system(s.c_str());
+
+    if (rc == 0)
+        puts(GREEN "\nКартинка была успешно создана!" RESET);
+
+    return rc;
+}
+
 void print_menu(void)
 {
     printf(
@@ -167,3 +226,56 @@ int read_data(int &count_data, tree_t *bst_tree, tree_t *awl_tree)
 
     return rc;
 }
+
+int trees_to_dot(tree_t *bst_tree, tree_t *awl_tree)
+{
+    int rc = 0;
+
+    if (is_empty_tree(bst_tree) || is_empty_tree(awl_tree))
+    {
+        puts(VIOLET "\nДерево пустое" RESET);
+        return;
+    }
+
+    char data_file[MAX_STR_SIZE] = DATA_DIR;
+    char balance_data_file[MAX_STR_SIZE] = DATA_DIR "balance_";
+
+    char data_gv[MAX_STR_SIZE];
+
+    if ((rc = read_file_name(data_gv)) != 0)
+        return rc;
+
+    strcat(data_file, data_gv);
+    strcat(balance_data_file, data_gv);
+
+    if ((rc = export_to_dot(data_file, "my_tree", tree)) != 0)
+        return rc;
+
+    if ((rc = export_to_dot(balance_data_file, "my_tree",
+                            balance_tree)) != 0)
+        return rc;
+
+    return rc;
+}
+
+// void vertex_to_dot(vertex_t *vertex, FILE *file)
+// {
+//     if (vertex->left)
+//     {
+//         fprintf(file, "%d [label=\"%d, h = %d\"]", vertex->data,
+//                 vertex->data, vertex->height);
+//         fprintf(file, "%d [label=\"%d, h = %d\"]", vertex->left->data,
+//                 vertex->left->data, vertex->left->height);
+//         fprintf(file, "%d -> %d [color=blue];\n", vertex->data,
+//                 vertex->left->data);
+//     }
+//     if (vertex->right)
+//     {
+//         fprintf(file, "%d [label=\"%d, h = %d\"]", vertex->data,
+//                 vertex->data, vertex->height);
+//         fprintf(file, "%d [label=\"%d, h = %d\"]", vertex->right->data,
+//                 vertex->right->data, vertex->right->height);
+//         fprintf(file, "%d -> %d [color=red];\n", vertex->data,
+//                 vertex->right->data);
+//     }
+// }
