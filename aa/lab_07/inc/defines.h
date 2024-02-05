@@ -24,7 +24,7 @@
 #define WHITE "\033[0;37m"
 
 #define MIN_DATA 0
-#define MAX_DATA 500
+#define MAX_DATA 2000
 #define NOT_FOUND 1
 #define DATA_DIR "./data/"
 #define GV ".gv"
