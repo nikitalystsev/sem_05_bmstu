@@ -36,34 +36,34 @@
 	\end{algorithmic}
 \end{algorithm}
 
-На рисунке \ref{alg:alg_02} представлен псевдокод итеративного алгоритма поиска узла по ключу в ДДП и АВЛ-дереве.
-
-\begin{algorithm}[H]
-	\caption{Псевдокод итеративного алгоритма поиска узла по ключу в ДДП и АВЛ-дереве}
-	\label{alg:alg_02}
-	\text{\textbf{На входе}: дерево $T$, $k$ --- значение ключа}\\
-	\begin{algorithmic}[1]
-		\Function{TreeItSearch}{$T$, $k$}
-		\State $x \gets root(T)$
-		
-		\While{$x \neq NULL$ \textbf{and} $k \neq key(x)$}
-		\If{$k < key(x)$}
-		\State $x \gets left(x)$
-		\Else
-		\State $x \gets right(x)$
-		\EndIf
-		\EndWhile
-		
-		\State \Return $x$
-		
-		\EndFunction
-	\end{algorithmic}
-\end{algorithm}
+%На рисунке \ref{alg:alg_02} представлен псевдокод итеративного алгоритма поиска узла по ключу в ДДП и АВЛ-дереве.
+%
+%\begin{algorithm}[H]
+%	\caption{Псевдокод итеративного алгоритма поиска узла по ключу в ДДП и АВЛ-дереве}
+%	\label{alg:alg_02}
+%	\text{\textbf{На входе}: дерево $T$, $k$ --- значение ключа}\\
+%	\begin{algorithmic}[1]
+%		\Function{TreeItSearch}{$T$, $k$}
+%		\State $x \gets root(T)$
+%		
+%		\While{$x \neq NULL$ \textbf{and} $k \neq key(x)$}
+%		\If{$k < key(x)$}
+%		\State $x \gets left(x)$
+%		\Else
+%		\State $x \gets right(x)$
+%		\EndIf
+%		\EndWhile
+%		
+%		\State \Return $x$
+%		
+%		\EndFunction
+%	\end{algorithmic}
+%\end{algorithm}
 
 
 \section*{Вывод}
 
-В данном разделе были описаны псевдокоды для алгоритмов рекурсивного и нерекурсивного значения по ключу в несбалансированнном двоичном дереве поиска и в АВЛ-дереве.
+В данном разделе были описан псевдокод для алгоритма поиска значения по ключу в несбалансированнном двоичном дереве поиска и в АВЛ-дереве.
 
 
 
