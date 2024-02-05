@@ -2,7 +2,7 @@
 
 vertex_t *create_vertex(int data, int height)
 {
-    vertex_t *vertex = malloc(sizeof(vertex_t));
+    vertex_t *vertex = new vertex_t;
 
     if (vertex)
     {

@@ -1,6 +1,8 @@
 #ifndef __TREE_H__
 #define __TREE_H__
 
+#include "defines.h"
+
 typedef struct vertex_t vertex_t;
 typedef struct tree_t tree_t;
 
