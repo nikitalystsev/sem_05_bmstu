@@ -35,6 +35,10 @@ int main()
             if ((rc = trees_to_dot(&bst_tree, &awl_tree)) != 0)
                 goto free;
             break;
+        case 5:
+            if ((rc = find_data(&bst_tree, &awl_tree)) != 0)
+                goto free;
+            break;
         default:
             break;
         }

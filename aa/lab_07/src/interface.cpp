@@ -210,8 +210,6 @@ int read_data(int &count_data, tree_t *bst_tree, tree_t *awl_tree)
         gen_data_file(data_file, count_data);
     }
 
-    // std::string data_gv = data_file + GV;
-
     if ((rc = read_numbers(data_file, bst_tree, false)) != 0)
         return rc;
 
@@ -249,6 +247,81 @@ int trees_to_dot(tree_t *bst_tree, tree_t *awl_tree)
 
     if ((rc = export_to_dot(awl_data_file, "my_tree", awl_tree)) != 0)
         return rc;
+
+    return rc;
+}
+
+static int read_find_elem(int *num)
+{
+    puts(TURQ "\nВведите элемент, который требуется найти:" RESET);
+
+    if (scanf("%d", num) != 1)
+    {
+        puts(RED "\nНекорректный ввод элемента дерева!" RESET);
+        return ERR_MENU_ITEM;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+static bool find_number(tree_t *tree, int number, int *count_compare)
+{
+    vertex_t *found_elem = search(tree->root, number, count_compare);
+
+    if (found_elem)
+        return true;
+
+    return false;
+}
+
+int find_data(tree_t *bst_tree, tree_t *awl_tree)
+{
+    int rc = 0;
+
+    if (is_empty_tree(bst_tree) || is_empty_tree(awl_tree))
+    {
+        puts(VIOLET "\nДерево пустое" RESET);
+        return 0;
+    }
+
+    int number, bst_count_cmp = 0, awl_count_cmp = 0;
+
+    if ((rc = read_find_elem(&number)) != 0)
+        return rc;
+
+    bool bst_find, awl_find;
+    long double beg, end_bst = 0, end_awl = 0;
+
+    for (int i = 0; i < N_REPS; i++)
+    {
+        beg = getMicrosecondsCpuTime();
+        bst_find = find_number(bst_tree, number, &bst_count_cmp);
+        end_bst += getMicrosecondsCpuTime() - beg;
+
+        beg = getMicrosecondsCpuTime();
+        awl_find = find_number(awl_tree, number, &awl_count_cmp);
+        end_awl += getMicrosecondsCpuTime() - beg;
+
+        if (i == 0)
+        {
+            if (bst_find && awl_find)
+                printf(GREEN "\nЭлемент со значением (%d) был найден в ДДП и в АВЛ-дереве!\n" RESET,
+                       number);
+            else
+                printf(VIOLET "\nЭлемент со значением (%d) не был найден в ДДП и в АВЛ-дереве!\n" RESET,
+                       number);
+
+            printf(YELLOW "\nКоличество сравнений при поиске в ДДП: %d\n",
+                   bst_count_cmp);
+            printf(YELLOW "\nКоличество сравнений при поиске в АВЛ-дереве: %d\n",
+                   awl_count_cmp);
+        }
+    }
+
+    printf(YELLOW "\nВремя поиска в ДДП (мкс) = %Lf\n" RESET,
+           end_bst / N_REPS);
+    printf(YELLOW "\nВремя поиска в АВЛ-дереве (мкс) = %Lf\n" RESET,
+           end_awl / N_REPS);
 
     return rc;
 }
