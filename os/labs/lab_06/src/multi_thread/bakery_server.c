@@ -22,6 +22,19 @@ pthread_t workers[26];
 int idxThreadCreate = 0;
 int idxThreadJoin = 0;
 
+unsigned long long getMicrosecondsCpuTime()
+{
+    struct timespec t;
+
+    if (clock_gettime(CLOCK_REALTIME, &t))
+    {
+        perror("clock_gettime");
+        return 0;
+    }
+
+    return t.tv_sec * 1000000LL + t.tv_nsec / 1000; // Возвращаем время в микросекундах
+}
+
 int getMaxNumber()
 {
     int currMax = number[0];
@@ -37,9 +50,14 @@ void *bakery(void *arg)
 {
     struct bakery_t *targ = arg;
 
-    printf("Thread (id = %d) started, номер клиента = %d", gettid(), number[targ->number - 1]);
+    // printf("Thread (id = %d) started, номер клиента = %d\n", gettid(), number[targ->number - 1]);
+
+    unsigned long long _time, resTime = 0;
+
+    _time = getMicrosecondsCpuTime();
 
     int i = targ->number - 1;
+
     for (int j = 0; j < 26; j++)
     {
         while (choosing[j])
@@ -51,9 +69,13 @@ void *bakery(void *arg)
     targ->result = symbol;
     symbol++;
 
-    printf("Thread (id = %d) stopped, номер клиента = %d", gettid(), number[i]);
+    // printf("Thread (id = %d) stopped, номер клиента = %d\n", gettid(), number[i]);
 
     number[i] = 0;
+
+    resTime = getMicrosecondsCpuTime() - _time;
+
+    printf("Thread (id = %d) stopped, время обслуживания = %llu\n", gettid(), resTime);
 
     return 0;
 }
@@ -68,6 +90,7 @@ get_number_2_svc(struct bakery_t *argp, struct svc_req *rqstp)
     choosing[idx] = false;
 
     result.number = number[idx];
+
     idx++;
 
     threadsResults[idxThreadCreate].number = argp->number;

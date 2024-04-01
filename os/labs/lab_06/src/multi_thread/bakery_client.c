@@ -6,6 +6,7 @@
 
 #include "bakery.h"
 #include <time.h>
+#include <unistd.h> // sleep
 
 void bakery_prog_2(char *host)
 {
@@ -28,6 +29,7 @@ void bakery_prog_2(char *host)
     sleep(rand() % 5 + 1);
 
     result_1 = get_number_2(&get_number_1_arg, clnt);
+
     if (result_1 == (struct bakery_t *)NULL)
     {
         clnt_perror(clnt, "call failed");
@@ -52,6 +54,7 @@ void bakery_prog_2(char *host)
     get_result_1_arg.number = result_1->number;
 
     result_2 = get_result_2(&get_result_1_arg, clnt);
+
     if (result_2 == (struct bakery_t *)NULL)
     {
         clnt_perror(clnt, "call failed");
@@ -63,6 +66,7 @@ void bakery_prog_2(char *host)
     strftime(time_buf, 80, "%H:%M:%S", timeinfo);
 
     printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", getpid(), result_2->result, time_buf, current_time.tv_usec);
+    // printf("Клиент (pid = %d) получил ответ %c; время обслуживания = %llu\n", getpid(), result_2->result, resTime);
 
 #ifndef DEBUG
     clnt_destroy(clnt);
