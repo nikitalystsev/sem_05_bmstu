@@ -25,8 +25,13 @@ void bakery_prog_2(char *host)
     }
 #endif /* DEBUG */
 
+    time_t start_numb, end_numb, start_wait, end_wait, start_serv, end_serv;
+
     srand(time(NULL));
-    sleep(rand() % 5 + 1);
+    double sleep_time = (double)rand() / RAND_MAX * 1000000;
+    usleep(sleep_time);
+
+    start_numb = clock();
 
     result_1 = get_number_2(&get_number_1_arg, clnt);
 
@@ -35,23 +40,13 @@ void bakery_prog_2(char *host)
         clnt_perror(clnt, "call failed");
     }
 
-    struct timeval current_time;
+    end_numb = clock();
 
-    time_t raw_time;
-    struct tm *timeinfo;
-    char time_buf[80];
-
-    time(&raw_time);
-    timeinfo = localtime(&raw_time);
-    gettimeofday(&current_time, NULL);
-    strftime(time_buf, 80, "%H:%M:%S", timeinfo);
-
-    printf("Клиент (pid = %d) получил номер %d, time = %s:%ld\n", getpid(), result_1->number, time_buf, current_time.tv_usec);
-
-    srand(time(NULL));
-    sleep(rand() % 7 + 1);
+    sleep(rand() % 5 + 1);
 
     get_result_1_arg.number = result_1->number;
+
+    start_wait = clock();
 
     result_2 = get_result_2(&get_result_1_arg, clnt);
 
@@ -60,13 +55,17 @@ void bakery_prog_2(char *host)
         clnt_perror(clnt, "call failed");
     }
 
-    time(&raw_time);
-    timeinfo = localtime(&raw_time);
-    gettimeofday(&current_time, NULL);
-    strftime(time_buf, 80, "%H:%M:%S", timeinfo);
+    end_wait = clock();
 
-    printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", getpid(), result_2->result, time_buf, current_time.tv_usec);
-    // printf("Клиент (pid = %d) получил ответ %c; время обслуживания = %llu\n", getpid(), result_2->result, resTime);
+    printf("Клиент (pid = %d) получил %c за время %lf \n", getpid(), result_2->result, (difftime(end_numb, start_numb) + difftime(end_wait, start_wait)));
+
+    // time(&raw_time);
+    // timeinfo = localtime(&raw_time);
+    // gettimeofday(&current_time, NULL);
+    // strftime(time_buf, 80, "%H:%M:%S", timeinfo);
+
+    // printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", getpid(), result_2->result, time_buf, current_time.tv_usec);
+    // // printf("Клиент (pid = %d) получил ответ %c; время обслуживания = %llu\n", getpid(), result_2->result, resTime);
 
 #ifndef DEBUG
     clnt_destroy(clnt);

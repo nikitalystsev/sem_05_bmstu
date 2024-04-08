@@ -8,19 +8,6 @@
 #include <time.h>
 #include <unistd.h> // sleep
 
-unsigned long long getMicrosecondsCpuTime()
-{
-    struct timespec t;
-
-    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t))
-    {
-        perror("clock_gettime");
-        return 0;
-    }
-
-    return t.tv_sec * 1000000LL + t.tv_nsec / 1000; // Возвращаем время в микросекундах
-}
-
 void bakery_prog_2(char *host)
 {
     CLIENT *clnt;
@@ -38,44 +25,40 @@ void bakery_prog_2(char *host)
     }
 #endif /* DEBUG */
 
-    struct timeval current_time;
-
-    time_t raw_time;
-    struct tm *timeinfo;
-    char time_buf[80];
+    time_t start_numb, end_numb, start_wait, end_wait, start_serv, end_serv;
 
     srand(time(NULL));
-    int interval = rand() % 5 + 1;
-    sleep(interval);
+    double sleep_time = (double)rand() / RAND_MAX * 1000000 * 1.5;
+    usleep(sleep_time);
 
+    start_numb = clock();
+
+    // получил номер клиента на обслуживание
     result_1 = get_number_2(&get_number_2_arg, clnt);
+
     if (result_1 == (struct bakery_t *)NULL)
     {
         clnt_perror(clnt, "call failed");
     }
 
-    srand(time(NULL));
-    interval = rand() % 5 + 1;
-    sleep(interval);
+    end_numb = clock();
 
-    unsigned long long time, resTime = 0;
+    sleep(rand() % 5 + 1);
 
-    time = getMicrosecondsCpuTime();
+    bakery_service_2_arg.number = result_1->number;
+
+    start_wait = clock();
+    // обслуживание клиента
     result_2 = bakery_service_2(&bakery_service_2_arg, clnt);
-    resTime = getMicrosecondsCpuTime() - time;
 
     if (result_2 == (struct bakery_t *)NULL)
     {
         clnt_perror(clnt, "call failed");
     }
 
-    // time(&raw_time);
-    // timeinfo = localtime(&raw_time);
-    // gettimeofday(&current_time, NULL);
-    // strftime(time_buf, 80, "%H:%M:%S", timeinfo);
+    end_wait = clock();
 
-    // printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", getpid(), result_2->result, time_buf, current_time.tv_usec);
-    printf("Клиент (pid = %d) получил ответ %c; время обслуживания = %llu\n", getpid(), result_2->result, resTime);
+    printf("Клиент (pid = %d) получил %c за время %lf \n", getpid(), result_2->result, (difftime(end_numb, start_numb) + difftime(end_wait, start_wait)));
 
 #ifndef DEBUG
     clnt_destroy(clnt);

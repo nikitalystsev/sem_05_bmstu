@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #define _GNU_SOURCE
+#include <time.h>
 #include <unistd.h>
 
 int choosing[26] = {0};
@@ -51,12 +52,26 @@ bakery_service_2_svc(struct bakery_t *argp, struct svc_req *rqstp)
 
     int i = argp->number - 1;
 
+    time_t start, end;
+
     for (int j = 0; j < 26; j++)
     {
         while (choosing[j])
             ;
+
+        start = clock();
         while ((number[j] > 0) && (number[j] < number[i] || (number[j] == number[i] && j < i)))
-            ;
+        {
+            end = clock();
+
+            if ((end - start) / CLOCKS_PER_SEC > 1)
+            {
+                printf("timeout\n");
+                number[i] = 0;
+                result.result = '0';
+                return &result;
+            }
+        }
     }
 
     result.number = argp->number;
