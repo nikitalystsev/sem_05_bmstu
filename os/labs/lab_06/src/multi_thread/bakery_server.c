@@ -39,6 +39,8 @@ void *bakery(void *arg)
 
     int i = targ->number - 1;
 
+    // printf("Thread id = '%d' started, client's number = %d\n", gettid(), targ->number);
+
     for (int j = 0; j < 26; j++)
     {
         while (choosing[j])
@@ -49,6 +51,11 @@ void *bakery(void *arg)
 
     targ->result = symbol;
     symbol++;
+
+    srand(time(NULL));
+    sleep(rand() % 10 + 1);
+
+    // printf("Thread id = '%d' stopped, client's number = %d\n", gettid(), targ->number);
 
     number[i] = 0;
 
@@ -68,7 +75,7 @@ get_number_2_svc(struct bakery_t *argp, struct svc_req *rqstp)
 
     idx++;
 
-    threadsResults[idxThreadCreate].number = argp->number;
+    threadsResults[idxThreadCreate].number = result.number;
 
     pthread_create(&workers[idxThreadCreate], NULL, bakery, &threadsResults[idxThreadCreate]);
 
