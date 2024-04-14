@@ -69,7 +69,7 @@ bakery_service_2_svc(struct bakery_t *argp, struct svc_req *rqstp)
                 printf("timeout\n");
                 number[i] = 0;
                 result.result = '0';
-                return &result;
+                break;
             }
         }
     }

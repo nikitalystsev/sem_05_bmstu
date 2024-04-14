@@ -27,9 +27,11 @@ void bakery_prog_2(char *host)
 
     time_t start_numb, end_numb, start_wait, end_wait, start_serv, end_serv;
 
-    srand(time(NULL));
-    double sleep_time = (double)rand() / RAND_MAX * 1000000;
-    usleep(sleep_time);
+    // srand(time(NULL));
+    // double sleep_time = (double)rand() / RAND_MAX * 1000000;
+    // usleep(sleep_time);
+
+    sleep(rand() % 10 + 1);
 
     start_numb = clock();
 
@@ -42,7 +44,9 @@ void bakery_prog_2(char *host)
 
     end_numb = clock();
 
-    sleep(rand() % 5 + 1);
+    printf("Клиент (pid = %d) получил номер %d за время %lf \n", getpid(), result_1->number, difftime(end_numb, start_numb));
+
+    sleep(rand() % 10 + 1);
 
     get_result_1_arg.number = result_1->number;
 
@@ -81,6 +85,7 @@ int main(int argc, char *argv[])
         printf("usage: %s server_host\n", argv[0]);
         exit(1);
     }
+
     host = argv[1];
     bakery_prog_2(host);
     exit(0);

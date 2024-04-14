@@ -43,6 +43,8 @@ void bakery_prog_2(char *host)
 
     end_numb = clock();
 
+    printf("Клиент (pid = %d) получил %d за время %lf \n", getpid(), result_1->number, difftime(end_numb, start_numb));
+
     sleep(rand() % 5 + 1);
 
     bakery_service_2_arg.number = result_1->number;
