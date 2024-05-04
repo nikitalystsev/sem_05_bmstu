@@ -59,13 +59,21 @@ void bakery_prog_2(char *host)
 
     printf("Клиент (pid = %d) получил %c за время %lf \n", getpid(), result_2->result, (difftime(end_numb, start_numb) + difftime(end_wait, start_wait)));
 
-    // time(&raw_time);
-    // timeinfo = localtime(&raw_time);
-    // gettimeofday(&current_time, NULL);
-    // strftime(time_buf, 80, "%H:%M:%S", timeinfo);
+    setbuf(stdout, NULL);
 
-    // printf("Клиент (pid = %d) получил ответ %c, time = %s:%ld\n", getpid(), result_2->result, time_buf, current_time.tv_usec);
-    // // printf("Клиент (pid = %d) получил ответ %c; время обслуживания = %llu\n", getpid(), result_2->result, resTime);
+    struct timeval current_time;
+    time_t raw_time;
+    struct tm *timeinfo;
+
+    char time_buf[80];
+
+    time(&raw_time);
+    timeinfo = localtime(&raw_time);
+    gettimeofday(&current_time, NULL);
+    strftime(time_buf, 80, "%H:%M:%S", timeinfo);
+
+    printf("Время завершения обслуживания  клиента (pid = %d) time = %s:%ld\n", getpid(), time_buf, current_time.tv_usec);
+    // printf("Клиент (pid = %d) получил ответ %c; время обслуживания = %llu\n", getpid(), result_2->result, resTime);
 
 #ifndef DEBUG
     clnt_destroy(clnt);
